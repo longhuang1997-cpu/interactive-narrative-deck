@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "interactive-narrative-deck",
+  "owner": { "name": "longhuang1997-cpu", "url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck" },
+  "metadata": { "description": "结构化交互叙事演示 — Block积木组件+渐进揭示+数据可视化+克制动效,对标Slack/Figma质感", "version": "1.0.0" },
+  "plugins": [
+    {
+      "name": "interactive-narrative-deck",
+      "source": { "source": "git-subdir", "url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck.git", "path": "." },
+      "description": "把演讲材料做成结构化交互叙事:Block积木(标题/指标/对比/图表/时间线/引用/标签页)自由组合+渐进揭示+数字滚动+图表生长,对标Slack Block Kit与Figma微交互。单文件HTML+GSAP/Chart.js(CDN离线降级),翻页笔可用。适合发布会/战略汇报/数据复盘/路演/技术分享。",
+      "homepage": "https://github.com/longhuang1997-cpu/interactive-narrative-deck",
+      "repository": "https://github.com/longhuang1997-cpu/interactive-narrative-deck",
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": ["presentation","interactive","narrative","block-kit","data-viz","scrollytelling","deck","html","gsap","chart","business","report","pitch"]
+    }
+  ]
+}
