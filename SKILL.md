@@ -1,62 +1,177 @@
 ---
 name: interactive-narrative-deck
-description: 把演讲/汇报材料做成"结构化交互叙事"演示——不是翻页PPT,而是 Block 积木组件 + 渐进揭示 + 数据可视化 + 克制动效,自由组合。对标 Slack Block Kit 结构化交互与 Figma 组件/微交互质感。当用户要做发布会/战略汇报/数据复盘/路演/技术分享,要"高级、专业、可交互、可组合"的现场演示(区别于年会派对游戏)时使用。单文件HTML+精选库(GSAP/Chart.js),浏览器投屏、翻页笔可用。
+description: 把演讲/汇报材料做成"结构化交互叙事"演示——不是翻页PPT,而是 Block 积木组件 + 渐进揭示 + 数据可视化 + 克制动效。核心价值是AI化的汇报经验萃取:自动判断叙事框架、选择合适Block组合、把用户自然语言转成专业演示。当用户要做发布会/战略汇报/数据复盘/路演/技术分享时使用。
 ---
 
-# 结构化交互叙事演示(Interactive Narrative Deck)
+# Interactive Narrative Deck
 
-把一份演讲材料,做成由交互积木(Block)自由组合、随节奏渐进揭示、数据会动的高级演示。区别于:线性翻页PPT(太静)、年会闯关游戏(太娱乐)。定位职场正式场合的"高级交互演讲"。
+## 这个skill的本质
 
-## 定位:三个维度的交叉(不是游戏化)
-经调研,"高级"落在三维交叉:
-1. 结构化组件(Slack Block Kit 精髓):每页=Block 积木组合(标题/指标/对比/图表/时间线),职责单一、可交互、可复用,不是自由画布乱摆。
-2. 渐进叙事(reveal.js/scrollytelling 精髓):内容随推进层层揭示,演讲者控节奏。
-3. 数据可视化+克制动效(D3/Chart.js/GSAP 精髓):数字滚动、图表生长、平滑补间,但克制不炫技。
+**不是工具，是汇报经验的AI化萃取。**
 
-## 核心心法
-- 内容即结构:一份 deck.js(结构化脚本)定义整场,引擎渲染成交互页。改脚本=改演示,不碰引擎。
-- Block 自由组合:每页 blocks 任意拼装;任意 block 加 frag:true 即渐进揭示。
-- 精选库增强质感:GSAP(动效)+Chart.js(数据图)CDN 引入;离线自动降级不阻塞。
+优秀汇报者积累10年的判断力——向高管汇报要先结论、数据对比要用图不用表、问题拆解要配合演讲节奏逐条揭示——这些隐性经验，沉淀在这里，由AI代为执行。
 
-## 快速开始
-1. 复制 templates/(index.html + deck.js)成你的项目。
-2. 改 deck.js 里的 window.NARRATIVE_DECK:填 slides、每页选 layout、拼 blocks。
-3. 双击 index.html,F11 全屏,左右键/翻页笔翻页、空格渐进、O 键总览。
+用户只需说清楚"给谁汇报、汇报什么"，AI完成结构判断、叙事设计、视觉决策。
 
-## deck 脚本结构
-window.NARRATIVE_DECK = { theme:{blue,gold,bg}, slides:[ {title, layout, blocks:[...]} ] }
-layout: center 居中 / left 左对齐 / grid 两列 / scroll 滚动叙事。
-## Block 组件清单(可自由组合,加 frag:true 渐进)
+---
+
+## 核心经验库：汇报判断力
+
+### 判断1：受众决定结构
+
+| 受众 | 核心原则 | 结构偏好 |
+|------|---------|---------|
+| 董事会/高管 | 先结论再过程，数字说话 | 封面→结论→数据→行动，≤6页 |
+| 管理层 | 问题-方案-资源，要可操作 | 问题→分析→方案→计划，8页 |
+| 客户/投资人 | 价值主张优先，建立信任 | 痛点→解法→证明→下一步 |
+| 团队 | 上下文完整，执行导向 | 背景→目标→分工→时间线 |
+
+**高管汇报铁律**：第一页就给结论，后面都是支撑。永远不要让高管猜"你到底想说什么"。
+
+### 判断2：数据类型决定图表
+
+| 数据特征 | 正确图表 | 错误图表 |
+|---------|---------|---------|
+| 时间趋势（月/季/年） | line折线图 | bar柱状图 |
+| 分类对比（部门/产品） | bar柱状图 | pie饼图 |
+| 占比构成（<5个类别） | pie/doughnut | line折线 |
+| 多维对比（2+指标同期） | 双系列bar | 单系列 |
+| 关键数字强调 | metric数字卡 | 埋在bullets里 |
+
+**数据汇报铁律**：一页只讲一个数据结论。把所有数据堆一页等于没有重点。
+
+### 判断3：内容特征决定Block
+
+| 内容特征 | 选用Block | 原因 |
+|---------|---------|-----|
+| 有3个以上并列要点 | bullets+stagger | 渐进揭示配合讲解，不一次砸完 |
+| 需要做决策/选型 | compare | 左右对比一目了然，比bullets更直观 |
+| 有时间顺序/路线图 | timeline | 视觉呈现进度感，比文字清晰 |
+| 核心论点/行动号召 | quote | 放大重点，制造记忆点 |
+| 数字是亮点 | metric | 数字滚动动效吸引注意力 |
+| 多个方案/视角并列 | tabs | 节省页面，让观众按需查看 |
+
+### 判断4：渐进揭示的时机
+
+**用渐进（stagger:true / frag:true）**：
+- 问题分析——逐条揭示，配合讲解节奏，让观众跟着思考
+- 行动计划——一步步呈现，避免观众提前看到结论跑偏
+- 对比论证——先出A，再出B，形成对比冲击
+
+**不用渐进**：
+- 数据总览页——观众需要整体感知
+- 封面/收尾——仪式感页面无需拆分
+- 图表——数据是整体，不宜拆分
+
+### 判断5：页数与深度的匹配
+
+| 场景 | 建议页数 | 每页密度 |
+|------|---------|---------|
+| 5分钟汇报 | 5页 | 1个核心信息/页 |
+| 15分钟汇报 | 8页 | 1-2个Block/页 |
+| 30分钟汇报 | 12页 | 2-3个Block/页，含备份页 |
+| 路演/发布会 | 10-15页 | 视觉冲击为主，文字从简 |
+
+---
+
+## 交互流程（AI主导，用户说话即可）
+
+当用户说"做汇报/演示/deck/presentation"时，Claude按以下步骤执行：
+
+### Step 1：一次性问完关键信息
+
+```
+我来帮你做交互演示。请告诉我：
+
+1. 【受众】给谁看？（高管/管理层/客户/团队）
+2. 【主题】这次演示的核心是什么？（一句话）
+3. 【内容】有哪些数据、要点、素材？（直接粘贴最好）
+4. 【时长】大概讲多久？（5分钟/15分钟/30分钟）
+5. 【风格】视觉偏好？不说就用默认深蓝专业
+```
+
+### Step 2：AI自主判断，告知用户
+
+根据受众+内容，调用本文件的「核心经验库」，输出：
+
+```
+我的判断：
+- 叙事框架：[框架名+原因]
+- 页数结构：P1→P2→...→PN（每页一句话说明）
+- 关键决策：[说明1-2个重要的结构选择和原因]
+
+如需调整直接说，否则开始生成。
+```
+
+**不等用户逐项确认，直接给出判断并说明理由。**
+
+### Step 3：生成首页预览
+
+生成封面页完整HTML写到桌面 `deck-preview.html`，说：
+> "封面已生成，打开看风格是否满意，满意说'继续'，不满意说'换[XX]'"
+
+### Step 4：生成完整deck.js
+
+一次性生成所有页面，严格按以下规则：
+- 内容100%来自用户提供的素材，缺数据用`【待填入】`
+- 每页≤3个Block
+- 参考 `knowledge/layout-patterns.md` 选layout
+- 参考 `knowledge/anti-hallucination.md` 自检类型
+- 生成后扫描所有type字段报告自检
+
+### Step 5：交付+说明
+
+输出完整文件，并告诉用户：
+- 哪些地方需要填真实数据
+- 如需可视化微调：打开 `config_ui/config_ui.html`
+- 双击 `index.html` 预览，F11全屏，翻页笔可用
+
+---
+
+## 四层架构
+
+1. **主控层**（本文件）：经验判断 + 交互流程
+2. **知识层**（knowledge/）：block-reference / layout-patterns / anti-hallucination / narrative-engine
+3. **规范层**（templates/）：strategy-report / product-launch / diy-blank
+4. **执行层**（engine/）：渲染引擎，不改动
+
+---
+
+## 生成铁律
+
+- 受众是高管/董事会 → 结论优先，页数≤6，数字用metric不用bullets
+- 有趋势数据 → 必用line图，不用bar
+- 有3个以上要点 → bullets+stagger，不堆compare
+- 没有用户提供的数据 → 用`【待填入】`，绝不编造
+- 每页block数量≤3
+- chart.data.datasets必须是数组
+- 生成后自检所有type字段
+
+---
+
+## Block清单（执行参考）
+
 | block | 用途 | 关键字段 |
 |-------|------|---------|
-| hero | 标题卡/章节封面 | kick, title, sub |
-| metric | 数据指标卡(数字滚动) | items:[{value,unit,label,delta}] |
-| bullets | 要点列表(stagger逐条渐进) | title, items[], stagger |
-| compare | 左右对比(VS) | left{title,items[]}, right{...} |
-| timeline | 横向时间线/路线图 | items:[{time,text}] |
+| hero | 封面/章节 | kick, title, sub |
+| metric | 数字指标（滚动） | items:[{value,unit,label,delta}] |
+| bullets | 要点列表 | title, items[], stagger |
+| compare | 左右对比 | left{title,items[]}, right{...} |
+| timeline | 时间线/路线图 | items:[{time,text}] |
 | quote | 金句/引用 | text, by |
-| chart | 数据图(bar/line/pie/doughnut) | chart, title, data, options |
-| media | 图片/视频 | img 或 video, autoplay |
-| tabs | 标签页切换(多视角) | tabs:[{label, html/text}] |
+| chart | 图表 | chart, title, data{labels,datasets} |
+| media | 图片/视频 | img 或 video |
+| tabs | 标签页 | tabs:[{label,html}] |
 
-扩展新 block:在 engine/engine.js 的 Blocks 里加一个同名方法,返回 DOM 元素即可。
+---
 
-## 技术选型
-- 单文件 HTML + engine/(engine.js 引擎 + style.css)。deck.js 是你的内容。
-- 精选库 CDN:GSAP(数字滚动/入场/补间)、Chart.js(图表)。离线自动降级:GSAP缺失→CSS动画;Chart.js缺失→提示。现场无网就把两库下到本地改 script src。
-- 键盘/翻页笔:左右键 / PageUp PageDown / 空格(渐进) / Home End / O(总览)。进度 localStorage 持久化。
+## 技术规格
 
-## 版面与体验铁律
-- 克制动效:只在有意义处动(数字滚动、图表生长、切换补间),不满屏乱飞。
-- 层级清晰:一页一个主 block+辅助,别堆砌;留白是高级感来源。
-- 渐进揭示讲重点:要点/论据用 frag 逐条出,跟着讲。
-- 深色专业底+金色点缀,对标 Slack/Figma,不是 PPT 模板套壳。
+- 单文件HTML + engine/（不改动）
+- GSAP + Chart.js CDN，离线自动降级
+- 键盘：左右键/PageUp/PageDown/空格(渐进)/O(总览)/F11全屏
+- config_ui/config_ui.html：生成后的可视化微调工具
 
-## 与其他范式的分工(同属"高能级职场汇报产品"矩阵)
-- 要可编辑 pptx → PPT-Master
-- 要印刷手册/说明书 → a4-manual-maker
-- 要传播动效视频 → Remotion
-- 要年会/团建游戏化闯关 → interactive-quest-deck(娱乐场景)
-- 要正式场合高级交互演讲 → 本 skill(发布会/战略汇报/数据复盘/路演/技术分享)
+---
 
-一句话:这是"高级交互演讲"这一环——比 PPT 更活、比游戏更专业。
+一句话：AI负责判断，用户负责提供内容，engine负责渲染。

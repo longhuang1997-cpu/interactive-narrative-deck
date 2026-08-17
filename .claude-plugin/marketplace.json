@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "interactive-narrative-deck",
   "owner": { "name": "longhuang1997-cpu", "url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck" },
-  "metadata": { "description": "结构化交互叙事演示 — Block积木组件+渐进揭示+数据可视化+克制动效,对标Slack/Figma质感", "version": "1.0.0" },
+  "metadata": { "description": "结构化交互叙事演示 — Block积木组件+渐进揭示+数据可视化+克制动效,对标Slack/Figma质感", "version": "2.0.0" },
   "plugins": [
     {
       "name": "interactive-narrative-deck",
