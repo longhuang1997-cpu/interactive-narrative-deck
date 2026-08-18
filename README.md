@@ -4,8 +4,38 @@
 > 区别于静态PPT和娱乐游戏，定位职场正式场合的高级演讲
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-2.0.1-green.svg)
+![Version](https://img.shields.io/badge/version-2.0.2-green.svg)
 ![Claude](https://img.shields.io/badge/Claude-Skill-orange.svg)
+
+## 📸 快速预览
+
+<details>
+<summary><b>👁️ 点击查看实际效果（7页完整截图）</b></summary>
+
+### P1 - 封面
+![封面](examples/screenshots/strategy-report/page1-cover.png)
+
+### P2 - 数字指标卡片
+![数字指标](examples/screenshots/strategy-report/page2-metrics.png)
+
+### P3 - 折线图数据对比
+![折线图](examples/screenshots/strategy-report/page3-chart.png)
+
+### P4 - 左右对比卡片
+![对比](examples/screenshots/strategy-report/page4-compare.png)
+
+### P5 - 时间线路线图
+![时间线](examples/screenshots/strategy-report/page5-timeline.png)
+
+### P6 - 渐进揭示要点
+![要点](examples/screenshots/strategy-report/page6-bullets.png)
+
+### P7 - 金句收尾
+![金句](examples/screenshots/strategy-report/page7-quote.png)
+
+</details>
+
+**🎯 立即验证**：双击打开 [`examples/strategy-report-standalone.html`](examples/strategy-report-standalone.html)（无需安装任何依赖）
 
 ## 🚀 3分钟快速开始
 
