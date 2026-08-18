@@ -9,8 +9,14 @@
 
 ## 📸 快速预览
 
+### 🎬 完整演示
+
+![演示动画](examples/demo.gif)
+
+*7页完整演示：封面 → 数字指标 → 折线图 → 左右对比 → 时间线 → 要点列表 → 金句收尾*
+
 <details>
-<summary><b>👁️ 点击查看实际效果（7页完整截图）</b></summary>
+<summary><b>👁️ 点击查看高清截图</b></summary>
 
 ### P1 - 封面
 ![封面](examples/screenshots/strategy-report/page1-cover.png)
