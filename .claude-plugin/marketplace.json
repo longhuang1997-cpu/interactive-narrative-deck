@@ -1,8 +1,18 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "interactive-narrative-deck",
-  "owner": { "name": "longhuang1997-cpu", "url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck" },
-  "metadata": { "description": "结构化交互叙事演示 — Block积木组件+渐进揭示+数据可视化+克制动效,对标Slack/Figma质感", "version": "2.0.0" },
+  "owner": {
+    "name": "longhuang1997-cpu",
+    "url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck",
+    "author_handle": "longhuang1997-cpu"
+  },
+  "metadata": {
+    "description": "结构化交互叙事演示 — Block积木组件+渐进揭示+数据可视化+克制动效,对标Slack/Figma质感",
+    "version": "2.0.0",
+    "author": "longhuang1997-cpu",
+    "demo_url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck/tree/main/examples",
+    "verified_cases": "https://github.com/longhuang1997-cpu/interactive-narrative-deck/blob/main/CASES.md"
+  },
   "plugins": [
     {
       "name": "interactive-narrative-deck",
@@ -12,7 +22,9 @@
       "repository": "https://github.com/longhuang1997-cpu/interactive-narrative-deck",
       "license": "MIT",
       "category": "productivity",
-      "keywords": ["presentation","interactive","narrative","block-kit","data-viz","scrollytelling","deck","html","gsap","chart","business","report","pitch"]
+      "keywords": ["presentation","interactive","narrative","block-kit","data-viz","scrollytelling","deck","html","gsap","chart","business","report","pitch"],
+      "author": "longhuang1997-cpu",
+      "version": "2.0.0"
     }
   ]
 }

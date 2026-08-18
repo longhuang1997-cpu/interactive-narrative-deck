@@ -115,6 +115,16 @@ AI determines framework → generates preview → outputs complete deck.js → o
 
 ---
 
+## 📚 Documentation
+
+- **[Quick Start Guide](./QUICKSTART.md)** - Installation to first presentation in 3 minutes
+- **[Runnable Examples & Verification](./EXAMPLES.md)** - 3 complete demos + test scripts + implementation audit
+- **[Block Reference](./knowledge/block-reference.md)** - Complete API documentation
+- **[Use Cases](./CASES.md)** - Typical scenarios and value analysis
+- **[Change Log](./CHANGELOG.md)** - Version history
+
+---
+
 ## Architecture
 
 ```

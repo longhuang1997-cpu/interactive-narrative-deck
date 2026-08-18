@@ -47,7 +47,17 @@ cd my-presentation/
 ```
 
 **零依赖** - 纯HTML，浏览器直接打开  
-**离线可用** - CDN失败自动降级到CSS动画  
+**离线可用** - CDN失败自动降级到CSS动画
+
+---
+
+## 📚 完整文档
+
+- **[3分钟上手指南](./QUICKSTART.md)** - 从安装到第一个演示
+- **[可运行示例 & 验证](./EXAMPLES.md)** - 3个完整Demo + 测试脚本 + 实现细节审计
+- **[Block组件参考](./knowledge/block-reference.md)** - 完整API文档
+- **[使用场景说明](./CASES.md)** - 典型场景与价值分析
+- **[更新日志](./CHANGELOG.md)** - 版本迭代记录  
 **翻页笔友好** - PageUp/PageDown/方向键全支持
 
 ## 📐 项目结构
