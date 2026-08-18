@@ -1,41 +1,195 @@
-/* 示例3：技术分享 - 6页 */
-window.NARRATIVE_DECK = {
-  theme: { blue: "#7c3aed", gold: "#f0abfc", bg: "#0d0d1a" },
-  slides: [
-    { title: "开场", layout: "center", blocks: [
-      { type: "hero", kick: "TECH TALK · 2026",
-        title: "从零搭建 AI 自动化流水线", sub: "踩坑记录 + 可复用模式" }
-    ]},
-    { title: "背景", layout: "left", blocks: [
-      { type: "bullets", title: "为什么要做这件事", stagger: true, items: [
-        "痛点：每天重复性工作占用2小时，纯人工低效",
-        "触发：看到某开源方案，发现可以用AI代劳",
-        "目标：让AI自动完成数据采集→处理→分发全链路"
-      ]}
-    ]},
-    { title: "架构", layout: "center", blocks: [
-      { type: "hero", kick: "二、系统设计", title: "三层架构", sub: "" },
-      { type: "compare",
-        left:  { title: "之前（人工）", items: ["手动采集数据", "Excel处理", "逐人发送", "耗时2小时/天"] },
-        right: { title: "之后（AI流水线）", items: ["定时自动采集", "AI处理+校验", "一键推送全员", "耗时5分钟/天"] }
+// 技术分享Demo - 微服务架构演进
+// 受众：技术团队
+// 结构：背景→问题→方案→Demo→Q&A
+// 特点：代码演示、技术细节、tabs切换
+
+const DECK = [
+  // P1: 封面
+  {
+    type: "hero",
+    kick: "技术分享",
+    title: "微服务架构演进",
+    sub: "从单体到微服务的实战经验"
+  },
+
+  // P2: 背景
+  {
+    type: "hero",
+    kick: "背景",
+    title: "为什么要拆分？",
+    sub: "单体架构的三大痛点"
+  },
+  {
+    type: "bullets",
+    title: "单体架构痛点",
+    items: [
+      "部署慢 - 每次上线需要30分钟，影响所有模块",
+      "扩展难 - 高峰期只能整体扩容，成本高昂",
+      "协作乱 - 10个团队改同一个代码库，冲突频繁"
+    ],
+    stagger: true
+  },
+
+  // P3: 架构对比
+  {
+    type: "hero",
+    kick: "方案",
+    title: "微服务架构设计",
+    sub: "服务拆分 + API网关 + 服务治理"
+  },
+  {
+    type: "compare",
+    left: {
+      title: "单体架构",
+      items: [
+        "一个代码库",
+        "一个部署单元",
+        "一个数据库",
+        "团队紧耦合"
+      ]
+    },
+    right: {
+      title: "微服务架构",
+      items: [
+        "12个独立服务",
+        "独立部署/扩展",
+        "数据库隔离",
+        "团队自治"
+      ]
+    }
+  },
+
+  // P4: 技术栈选型
+  {
+    type: "hero",
+    kick: "技术栈",
+    title: "核心组件",
+    sub: "Spring Cloud + Kubernetes + Istio"
+  },
+  {
+    type: "tabs",
+    tabs: [
+      {
+        label: "服务框架",
+        html: `
+          <div style="padding:2rem;font-size:0.9rem;line-height:1.8;">
+            <strong style="color:#38BDF8;">Spring Cloud Alibaba</strong><br>
+            • Nacos - 服务注册与配置中心<br>
+            • Sentinel - 流量控制与熔断降级<br>
+            • Seata - 分布式事务<br>
+            • Gateway - API网关
+          </div>
+        `
+      },
+      {
+        label: "容器编排",
+        html: `
+          <div style="padding:2rem;font-size:0.9rem;line-height:1.8;">
+            <strong style="color:#10B981;">Kubernetes</strong><br>
+            • Deployment - 服务部署<br>
+            • Service - 负载均衡<br>
+            • Ingress - 路由转发<br>
+            • HPA - 自动扩缩容
+          </div>
+        `
+      },
+      {
+        label: "服务网格",
+        html: `
+          <div style="padding:2rem;font-size:0.9rem;line-height:1.8;">
+            <strong style="color:#F59E0B;">Istio</strong><br>
+            • 流量管理 - 灰度发布<br>
+            • 可观测性 - 链路追踪<br>
+            • 安全 - mTLS加密<br>
+            • 策略 - 访问控制
+          </div>
+        `
       }
-    ]},
-    { title: "效果", layout: "center", blocks: [
-      { type: "metric", items: [
-        { value: "5",  unit: "分钟", label: "每日耗时", delta: "原2小时" },
-        { value: "96", unit: "%",   label: "准确率",   delta: "+12%"    },
-        { value: "30", unit: "天",  label: "累计运行", delta: "零故障"   }
-      ]}
-    ]},
-    { title: "踩坑", layout: "left", blocks: [
-      { type: "bullets", title: "三个必须知道的坑", stagger: true, items: [
-        "坑①：AI输出不稳定 → 解法：加校验层+人工兜底",
-        "坑②：定时任务静默失败 → 解法：加心跳监控+告警",
-        "坑③：中文路径乱码 → 解法：统一UTF-8无BOM编码"
-      ]}
-    ]},
-    { title: "收尾", layout: "center", blocks: [
-      { type: "quote", text: "最好的自动化，是让你忘记它还在运行。", by: "—— 实践总结" }
-    ]}
-  ]
+    ]
+  },
+
+  // P5: 迁移时间线
+  {
+    type: "hero",
+    kick: "实施",
+    title: "分三阶段迁移",
+    sub: "6个月完成全量切换"
+  },
+  {
+    type: "timeline",
+    items: [
+      { time: "Phase 1", text: "基础设施搭建 - K8s集群+Nacos+网关（2个月）" },
+      { time: "Phase 2", text: "核心服务拆分 - 用户/订单/支付独立（3个月）" },
+      { time: "Phase 3", text: "全量切换+优化 - 监控告警+性能调优（1个月）" }
+    ]
+  },
+
+  // P6: 效果数据
+  {
+    type: "hero",
+    kick: "成果",
+    title: "关键指标提升",
+    sub: "部署效率与系统稳定性显著改善"
+  },
+  {
+    type: "metric",
+    title: "迁移前后对比",
+    items: [
+      {
+        value: "5",
+        unit: "分钟",
+        label: "部署时间",
+        delta: "从30分钟",
+        trend: "down"
+      },
+      {
+        value: "99.95",
+        unit: "%",
+        label: "可用性",
+        delta: "+0.5%",
+        trend: "up"
+      },
+      {
+        value: "200",
+        unit: "ms",
+        label: "P95响应时间",
+        delta: "-100ms",
+        trend: "down"
+      }
+    ]
+  },
+
+  // P7: 踩坑与经验
+  {
+    type: "hero",
+    kick: "经验",
+    title: "三个关键教训",
+    sub: "避免重复踩坑"
+  },
+  {
+    type: "bullets",
+    title: "踩坑总结",
+    items: [
+      "服务拆分粒度 - 太细导致运维成本高，建议按业务域聚合",
+      "数据一致性 - 分布式事务性能差，80%场景用最终一致性",
+      "链路追踪 - 必须第一天就上，否则后期排查问题困难"
+    ],
+    stagger: true
+  },
+
+  // P8: Q&A
+  {
+    type: "quote",
+    text: "微服务不是银弹，但对我们来说是正确的选择",
+    by: "架构组 · 2026.10"
+  }
+];
+
+// 配色方案（科技蓝风格）
+const PAGE_CONFIG = {
+  bgColor: "#0B0E14",
+  textColor: "#F8FAFC",
+  accentColor: "#38BDF8",
+  secondaryColor: "#10B981",
+  chartColors: ["#38BDF8", "#10B981", "#F59E0B", "#EF4444"]
 };
