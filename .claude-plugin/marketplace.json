@@ -8,7 +8,7 @@
   },
   "metadata": {
     "description": "把汇报做成Block积木式交互演示 — AI判断叙事框架+Block自由组合+渐进揭示+数据可视化,对标Slack Block Kit交互与Figma微交互质感,区别于静态PPT和娱乐游戏",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "author": "longhuang1997-cpu",
     "demo_url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck#-完整案例",
     "screenshot_url": "https://raw.githubusercontent.com/longhuang1997-cpu/interactive-narrative-deck/main/assets/demo.gif",
@@ -39,7 +39,7 @@
       "category": "productivity",
       "keywords": ["presentation","interactive","narrative","block-kit","data-viz","scrollytelling","deck","html","gsap","chart","business","report","pitch"],
       "author": "longhuang1997-cpu",
-      "version": "2.0.2"
+      "version": "2.0.3"
     }
   ]
 }

@@ -4,7 +4,7 @@
 > 区别于静态PPT和娱乐游戏，定位职场正式场合的高级演讲
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-2.0.2-green.svg)
+![Version](https://img.shields.io/badge/version-2.0.3-green.svg)
 ![Claude](https://img.shields.io/badge/Claude-Skill-orange.svg)
 
 ## 📸 快速预览
