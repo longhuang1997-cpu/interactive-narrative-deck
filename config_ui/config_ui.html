@@ -619,7 +619,7 @@ const ND={deck:null,cur:0,root:null,
   render(){const s=this.deck.slides[this.cur];this.root.innerHTML="";
     const slide=document.createElement("section");
     slide.className="nd-slide nd-layout-"+(s.layout||"center");
-    (s.blocks||[]).forEach((b,i)=>{const el=Blocks.render(b,i);if(el){slide.appendChild(el);el.style.animation="ndIn .5s ease "+(i*0.08)+"s both";}});
+    (s.blocks||[]).forEach((b,i)=>{const el=BlockRegistry?BlockRegistry.render(b,i):Blocks.render(b,i);if(el){slide.appendChild(el);el.style.animation="ndIn .5s ease "+(i*0.08)+"s both";}});
     this.root.appendChild(slide);this.updateProgress();},
   buildProgress(){let bar=document.getElementById("nd-progress");if(!bar){bar=document.createElement("div");bar.id="nd-progress";document.body.appendChild(bar);}
     bar.innerHTML="";this.deck.slides.forEach((s,i)=>{const d=document.createElement("div");d.className="nd-dot"+(i===this.cur?" on":"");bar.appendChild(d);});},
@@ -650,6 +650,9 @@ function renderPreview(){
 <div id="nd-stage"></div><div id="nd-progress"></div>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"><\/script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>
+<script src="../engine/block-registry.js"><\/script>
+<script src="../engine/core-blocks.js"><\/script>
+<script src="../engine/business-blocks.js"><\/script>
 <script>${singleDeck}<\/script><script>${ENGINE_JS}<\/script></body></html>`;
   document.getElementById('canvas-preview').srcdoc=html;
   document.getElementById('status-blocks').textContent=sl.blocks.length+' 个Block';
