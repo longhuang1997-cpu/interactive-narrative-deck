@@ -100,4 +100,49 @@ h2{font-size:40px;font-weight:700;margin-bottom:8px;}
 .nd-swot-legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
 @keyframes swotItemIn{from{opacity:0;transform:translateX(-12px);}to{opacity:1;transform:none;}}
 
-@media(max-width:900px){.nd-hero h1{font-size:44px;}.nd-layout-grid{grid-template-columns:1fr;}.nd-swot-matrix{grid-template-columns:1fr;}.nd-swot-legend{flex-direction:column;align-items:flex-start;}}
+/* ============================================================================
+   Custom Blocks - code / split / grid (增强交互版)
+   ============================================================================ */
+
+/* code - 代码展示 */
+.nd-code-wrap{width:100%;max-width:920px;}
+.nd-code-head{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.06);border:1px solid var(--nd-line);border-bottom:none;border-radius:12px 12px 0 0;padding:10px 18px;}
+.nd-code-title{font-size:16px;font-weight:600;color:var(--nd-sub);}
+.nd-code-lang{font-size:13px;color:var(--nd-gold);letter-spacing:1px;border:1px solid rgba(232,200,116,.35);border-radius:10px;padding:2px 10px;transition:all .3s;}
+.nd-code-lang:hover{background:rgba(232,200,116,.15);border-color:var(--nd-gold);}
+.nd-code{width:100%;max-width:920px;max-height:60vh;overflow:auto;margin:0;background:#0a101d;border:1px solid var(--nd-line);border-radius:0 0 12px 12px;padding:14px 0;transition:border-color .3s;}
+.nd-code-wrap:hover .nd-code{border-color:var(--nd-blue);}
+.nd-code-row{display:flex;padding:0 18px;line-height:1.7;transition:background .2s;}
+.nd-code-row:hover{background:rgba(255,255,255,.06);cursor:pointer;}
+.nd-code-no{min-width:34px;text-align:right;margin-right:16px;color:rgba(159,176,202,.45);user-select:none;transition:color .2s;}
+.nd-code-row:hover .nd-code-no{color:var(--nd-gold);}
+.nd-code code{font-family:Consolas,"JetBrains Mono","Courier New",monospace;font-size:16px;color:#dbe7ff;white-space:pre;}
+
+/* split - 左图右文 */
+.nd-split{display:flex;align-items:center;gap:36px;width:100%;max-width:1100px;}
+.nd-split-rev{flex-direction:row-reverse;}
+.nd-split-media{flex:0 0 44%;transition:transform .3s;}
+.nd-split:hover .nd-split-media{transform:scale(1.05);}
+.nd-split-content{flex:1;text-align:left;}
+.nd-split-content h2{margin-bottom:14px;transition:color .3s;}
+.nd-split:hover .nd-split-content h2{color:var(--nd-gold);}
+.nd-split-content p{font-size:24px;color:var(--nd-ink);line-height:1.7;margin-bottom:16px;}
+.nd-split-content ul{list-style:none;}
+.nd-split-content li{font-size:21px;line-height:1.5;margin:12px 0;padding-left:26px;position:relative;color:var(--nd-ink);transition:transform .3s,color .3s;}
+.nd-split-content li:hover{transform:translateX(6px);color:#fff;}
+.nd-split-content li::before{content:"›";position:absolute;left:6px;color:var(--nd-gold);font-weight:bold;transition:transform .3s;}
+.nd-split-content li:hover::before{transform:scale(1.4);}
+
+/* grid - 网格卡片 */
+.nd-grid{display:grid;grid-template-columns:repeat(var(--nd-cols,3),1fr);gap:22px;width:100%;max-width:1100px;}
+.nd-grid-card{background:var(--nd-card);border:1px solid var(--nd-line);border-radius:18px;padding:26px 24px;text-align:left;transition:transform .3s,border-color .3s,box-shadow .3s;cursor:pointer;}
+.nd-grid-card:hover{transform:translateY(-6px) scale(1.02);border-color:var(--nd-gold);box-shadow:0 10px 30px rgba(0,0,0,.4);}
+.nd-grid-ic{font-size:34px;line-height:1;margin-bottom:14px;transition:transform .3s;}
+.nd-grid-card:hover .nd-grid-ic{transform:scale(1.2) rotate(5deg);}
+.nd-grid-t{font-size:22px;font-weight:700;color:var(--nd-ink);margin-bottom:8px;transition:color .3s;}
+.nd-grid-card:hover .nd-grid-t{color:var(--nd-gold);}
+.nd-grid-x{font-size:17px;color:var(--nd-sub);line-height:1.55;}
+.nd-grid-tag{display:inline-block;margin-top:14px;font-size:14px;color:var(--nd-gold);border:1px solid rgba(232,200,116,.35);border-radius:10px;padding:3px 10px;transition:all .3s;}
+.nd-grid-card:hover .nd-grid-tag{background:rgba(232,200,116,.15);border-color:var(--nd-gold);}
+
+@media(max-width:900px){.nd-hero h1{font-size:44px;}.nd-layout-grid{grid-template-columns:1fr;}.nd-swot-matrix{grid-template-columns:1fr;}.nd-swot-legend{flex-direction:column;align-items:flex-start;}.nd-split{flex-direction:column;}.nd-split-media{flex:1 1 auto;max-width:100%;}.nd-grid{grid-template-columns:1fr;}}
