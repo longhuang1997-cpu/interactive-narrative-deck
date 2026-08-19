@@ -8,7 +8,7 @@
   },
   "metadata": {
     "description": "把汇报做成Block积木式交互演示 — AI判断叙事框架+Block自由组合+渐进揭示+数据可视化,对标Slack Block Kit交互与Figma微交互质感,区别于静态PPT和娱乐游戏",
-    "version": "2.0.3",
+    "version": "2.1.0",
     "author": "longhuang1997-cpu",
     "demo_url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck#-完整案例",
     "screenshot_url": "https://raw.githubusercontent.com/longhuang1997-cpu/interactive-narrative-deck/main/assets/demo.gif",
@@ -26,7 +26,27 @@
       "防幻觉机制：100%使用用户素材，缺数据用【待填入】不编造"
     ],
     "value_vs_ppt": "制作时间节省70% | 数据更新维护成本降低80% | 交互性提升3倍 | Git版本控制 | 跨平台零依赖",
-    "reliability_score": 85
+    "reliability_score": 85,
+    "security": {
+      "permissions": ["文件读取(仅读取用户提供的素材)", "文件写入(生成HTML到桌面)"],
+      "no_data_collection": true,
+      "offline_capable": true,
+      "third_party_cdn": ["GSAP (CDN)", "Chart.js (CDN)"],
+      "cdn_fallback": "CDN失败时自动降级为纯CSS动画",
+      "data_privacy": "100%本地运行，无数据上传，无追踪代码"
+    },
+    "trust": {
+      "open_source": true,
+      "license": "MIT",
+      "code_review": "所有代码开源可审计",
+      "no_remote_execution": true,
+      "browser_sandbox": "在浏览器沙箱内运行，无系统权限"
+    },
+    "extensibility": {
+      "plugin_system": "BlockRegistry插件系统 (v2.1.0+)",
+      "custom_blocks": "用户可扩展自定义Block无需fork项目",
+      "developer_guide": "docs/BLOCK_EXTENSION_GUIDE.md"
+    }
   },
   "plugins": [
     {
@@ -39,7 +59,7 @@
       "category": "productivity",
       "keywords": ["presentation","interactive","narrative","block-kit","data-viz","scrollytelling","deck","html","gsap","chart","business","report","pitch"],
       "author": "longhuang1997-cpu",
-      "version": "2.0.3"
+      "version": "2.1.0"
     }
   ]
 }

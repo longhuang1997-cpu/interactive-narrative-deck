@@ -1,6 +1,6 @@
 ---
 name: interactive-narrative-deck
-version: 2.0.3
+version: 2.1.0
 description: 把演讲/汇报材料做成"结构化交互叙事"演示——不是翻页PPT,而是 Block 积木组件 + 渐进揭示 + 数据可视化 + 克制动效。核心价值是AI化的汇报经验萃取:自动判断叙事框架、选择合适Block组合、把用户自然语言转成专业演示。当用户要做发布会/战略汇报/数据复盘/路演/技术分享时使用。
 ---
 
@@ -68,12 +68,15 @@ description: 把演讲/汇报材料做成"结构化交互叙事"演示——不�
 
 | 内容特征 | 选用Block | 原因 |
 |---------|---------|-----|
+| **战略分析/优劣势评估** | **swot** | **SWOT矩阵是战略分析标配，2x2布局清晰** |
 | 有3个以上并列要点 | bullets+stagger | 渐进揭示配合讲解，不一次砸完 |
 | 需要做决策/选型 | compare | 左右对比一目了然，比bullets更直观 |
 | 有时间顺序/路线图 | timeline | 视觉呈现进度感，比文字清晰 |
 | 核心论点/行动号召 | quote | 放大重点，制造记忆点 |
 | 数字是亮点 | metric | 数字滚动动效吸引注意力 |
 | 多个方案/视角并列 | tabs | 节省页面，让观众按需查看 |
+
+**SWOT分析铁律**：用户提到"优势劣势"/"战略分析"/"竞争评估"/"SWOT"，或场景是季度复盘/新业务评估/竞争分析时，优先推荐swot Block，而不是用bullets堆砌。
 
 ### 判断4：渐进揭示的时机
 
@@ -234,6 +237,10 @@ description: 把演讲/汇报材料做成"结构化交互叙事"演示——不�
 | chart | 图表 | chart, title, data{labels,datasets} |
 | media | 图片/视频 | img 或 video |
 | tabs | 标签页 | tabs:[{label,html}] |
+| **swot** | **SWOT分析矩阵** | **strengths[], weaknesses[], opportunities[], threats[]** |
+
+**专业Block（business-blocks.js）**：
+- `swot`：战略分析必备，2x2矩阵展示内外部因素，适用于季度复盘/新业务评估/竞争分析
 
 ---
 

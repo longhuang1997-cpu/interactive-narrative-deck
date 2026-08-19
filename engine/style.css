@@ -67,4 +67,28 @@ h2{font-size:40px;font-weight:700;margin-bottom:8px;}
 .nd-sticky{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:.5s;}
 .nd-sticky.on{opacity:1;}
 #nd-hint{position:fixed;bottom:20px;right:24px;font-size:13px;color:rgba(159,176,202,.6);z-index:30;}
-@media(max-width:900px){.nd-hero h1{font-size:44px;}.nd-layout-grid{grid-template-columns:1fr;}}
+
+/* ============================================================================
+   SWOT Analysis Matrix - Business Block
+   ============================================================================ */
+.nd-swot-wrapper{width:100%;max-width:1100px;}
+.nd-swot-title{font-size:32px;font-weight:700;text-align:center;margin-bottom:24px;color:var(--nd-ink);}
+.nd-swot-matrix{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.nd-swot-quad{background:var(--nd-card);border:2px solid var(--quad-color);border-radius:16px;overflow:hidden;backdrop-filter:blur(8px);transition:transform .3s,box-shadow .3s;}
+.nd-swot-quad:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.3),0 0 0 1px var(--quad-color);}
+.nd-swot-header{background:linear-gradient(135deg,var(--quad-color),var(--quad-color-dark));padding:16px 20px;display:flex;align-items:center;gap:12px;}
+.nd-swot-icon{font-size:24px;}
+.nd-swot-header-text{flex:1;}
+.nd-swot-title-en{font-size:20px;font-weight:700;color:#fff;line-height:1.2;}
+.nd-swot-title-cn{font-size:14px;color:rgba(255,255,255,.8);margin-top:2px;}
+.nd-swot-content{padding:20px 24px;min-height:180px;}
+.nd-swot-list{list-style:none;}
+.nd-swot-item{font-size:18px;line-height:1.5;color:var(--nd-ink);margin:12px 0;padding-left:24px;position:relative;opacity:0;animation:swotItemIn .4s ease calc(var(--item-index) * .08s) forwards;}
+.nd-swot-item::before{content:"▸";position:absolute;left:4px;color:var(--quad-color);font-weight:bold;font-size:20px;}
+.nd-swot-empty{font-size:16px;color:var(--nd-sub);text-align:center;padding:40px 0;font-style:italic;}
+.nd-swot-legend{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;padding:16px 0;border-top:1px solid var(--nd-line);margin-top:8px;}
+.nd-swot-legend-item{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--nd-sub);}
+.nd-swot-legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+@keyframes swotItemIn{from{opacity:0;transform:translateX(-12px);}to{opacity:1;transform:none;}}
+
+@media(max-width:900px){.nd-hero h1{font-size:44px;}.nd-layout-grid{grid-template-columns:1fr;}.nd-swot-matrix{grid-template-columns:1fr;}.nd-swot-legend{flex-direction:column;align-items:flex-start;}}
