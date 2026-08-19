@@ -1,6 +1,6 @@
 # Interactive Narrative Deck
 
-![Version](https://img.shields.io/badge/version-2.1.0-blue)
+![Version](https://img.shields.io/badge/version-2.2.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Claude](https://img.shields.io/badge/Claude-Skill-orange)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
@@ -64,7 +64,7 @@ F11                       # 全屏演示
 
 ---
 
-## 🧩 9种Block积木
+## 🧩 13种Block积木
 
 | Block | 用途 | 最佳场景 |
 |-------|------|---------|
@@ -87,6 +87,16 @@ F11                       # 全屏演示
 **v2.1.0新增**：SWOT分析Block，2x2矩阵展示优势/劣势/机会/威胁，适用于季度复盘、新业务评估、竞争分析。
 
 [完整SWOT使用指南 →](knowledge/frameworks/swot-analysis.md)
+
+### 🎨 自定义扩展Block（v2.2.0）
+
+| Block | 用途 | 场景 |
+|-------|------|------|
+| **`code`** | **代码展示（行号+语法高亮）** | **技术分享/API文档** |
+| **`split`** | **左图右文分栏** | **产品介绍/架构说明** |
+| **`grid`** | **多列网格卡片（2-4列）** | **能力矩阵/特性并列** |
+
+**v2.2.0新增**：3个自定义Block + 全Block交互动效增强（hover/transition/animation），让每个Block都"会呼吸"。
 
 ---
 
@@ -258,7 +268,7 @@ theme: {
 | **入门** | [3分钟快速开始](#-3分钟开始) | 零基础上手 |
 | | [完整案例](examples/) | 3个真实场景Demo |
 | | [常见问题](#-常见问题) | FAQ快速解决 |
-| **进阶** | [Block参考手册](knowledge/block-reference.md) | 9种Block完整API |
+| **进阶** | [Block参考手册](knowledge/block-reference.md) | 13种Block完整API |
 | | [SWOT使用指南](knowledge/frameworks/swot-analysis.md) | SWOT分析完整教程 |
 | | [可视化配置工具](config_ui/config_ui.html) | 拖拽式编辑器 |
 | | [布局模式选择](knowledge/layout-patterns.md) | center/left/grid/scroll |
