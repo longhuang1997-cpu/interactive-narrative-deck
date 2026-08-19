@@ -1,5 +1,10 @@
 # Interactive Narrative Deck
 
+![Version](https://img.shields.io/badge/version-2.1.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Claude](https://img.shields.io/badge/Claude-Skill-orange)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
+
 > 30分钟做出专业汇报演示 · Block积木 + SWOT分析 + 渐进揭示
 
 ![演示动画](examples/demo.gif)
@@ -142,15 +147,128 @@ BlockRegistry.register('myblock', function(data) {
 ✅ **CDN失败自动降级** - GSAP/Chart.js加载失败时回退到基础CSS动画  
 ✅ **无执行权限** - 不运行系统命令，不修改配置
 
+### 权限清单
+
+| 权限类型 | 需要/不需要 | 说明 |
+|---------|-----------|------|
+| 文件读取 | ❌ | 不读取用户文件系统 |
+| 文件写入 | ✅ | 只写入用户指定的输出目录 |
+| 网络访问 | ⚠️ | 仅CDN加载GSAP/Chart.js（可完全离线） |
+| 系统命令 | ❌ | 不执行任何系统命令 |
+| 敏感数据 | ❌ | 不访问环境变量、配置文件 |
+
+### 数据流向
+
+```
+用户输入(文本/数据) → Claude生成deck.js → 写入本地HTML → 浏览器渲染
+                                   ↓
+                              无网络传输
+```
+
 [完整安全说明 →](docs/SECURITY_AND_PRIVACY.md)
 
 ---
 
-## 📚 完整文档
+## 🆚 对比类似工具
 
-- [SKILL.md](SKILL.md) - AI调用定义和判断规则
-- [CHANGELOG.md](CHANGELOG.md) - 版本历史
-- [产品战略路线图](docs/PRODUCT_STRATEGY_ROADMAP.md) - 从工具到平台的演进
+| 特性 | Interactive Deck | Reveal.js | Marp | Slidev |
+|------|-----------------|-----------|------|--------|
+| 学习曲线 | AI生成，零代码 | 需要HTML/JS | Markdown | Vue.js |
+| SWOT分析 | ✅ 内置 | ❌ | ❌ | ❌ |
+| 数据图表 | ✅ Chart.js集成 | 需要插件 | ❌ | 需要配置 |
+| 渐进揭示 | ✅ 自动 | 手动配置 | 有限支持 | 手动配置 |
+| 翻页笔支持 | ✅ 原生 | ✅ | ⚠️ | ✅ |
+| 适用场景 | **商业汇报** | 技术演讲 | 文档演示 | 开发分享 |
+
+**定位差异**：Interactive Deck专注**商业汇报场景**（战略复盘、数据分析、高管汇报），内置SWOT等专业方法论Block，AI自动判断叙事结构。其他工具更适合技术演讲或开发者分享。
+
+---
+
+## 🌐 浏览器兼容性
+
+| 浏览器 | 最低版本 | 状态 | 说明 |
+|--------|---------|------|------|
+| Chrome | 90+ | ✅ 完全支持 | 推荐使用 |
+| Edge | 90+ | ✅ 完全支持 | 推荐使用 |
+| Firefox | 88+ | ✅ 完全支持 | - |
+| Safari | 14+ | ⚠️ 部分特性降级 | CSS Grid兼容性 |
+| IE11 | - | ❌ 不支持 | 不支持ES6 |
+
+**性能指标**：
+- 首次加载时间：< 1秒（含CDN）
+- 渲染性能：支持50+页流畅翻页
+- 离线可用：下载后无需网络
+
+---
+
+## ❓ 常见问题
+
+<details>
+<summary><b>图表不显示怎么办？</b></summary>
+
+检查Chart.js CDN是否加载失败：
+1. 打开浏览器控制台（F12）
+2. 查看Network标签是否有404错误
+3. 解决方案：
+   - 检查网络连接
+   - 或下载Chart.js到本地并修改引用路径
+
+</details>
+
+<details>
+<summary><b>如何修改主题颜色？</b></summary>
+
+编辑deck.js中的theme配置：
+```javascript
+theme: {
+  blue: '#2563eb',  // 改成你喜欢的颜色
+  gold: '#e8c874',
+  bg: '#0b1220'
+}
+```
+
+或使用可视化配置工具：`config_ui/config_ui.html`
+
+</details>
+
+<details>
+<summary><b>支持导出PDF吗？</b></summary>
+
+支持！使用浏览器打印功能：
+1. 按F11全屏演示
+2. Ctrl/Cmd + P打印
+3. 选择"另存为PDF"
+4. 调整设置：横向、去掉页眉页脚
+
+</details>
+
+<details>
+<summary><b>翻页笔可以用吗？</b></summary>
+
+✅ 完全支持！翻页笔的左右键会触发PageUp/PageDown事件，与键盘操作一致。
+
+</details>
+
+---
+
+## 📚 文档导航
+
+| 类别 | 文档 | 说明 |
+|------|------|------|
+| **入门** | [3分钟快速开始](#-3分钟开始) | 零基础上手 |
+| | [完整案例](examples/) | 3个真实场景Demo |
+| | [常见问题](#-常见问题) | FAQ快速解决 |
+| **进阶** | [Block参考手册](knowledge/block-reference.md) | 9种Block完整API |
+| | [SWOT使用指南](knowledge/frameworks/swot-analysis.md) | SWOT分析完整教程 |
+| | [可视化配置工具](config_ui/config_ui.html) | 拖拽式编辑器 |
+| | [布局模式选择](knowledge/layout-patterns.md) | center/left/grid/scroll |
+| | [叙事框架引擎](knowledge/narrative-engine.md) | AI自动匹配4种框架 |
+| **开发** | [Block扩展指南](docs/BLOCK_EXTENSION_GUIDE.md) | 自定义Block开发 |
+| | [产品战略路线图](docs/PRODUCT_STRATEGY_ROADMAP.md) | 未来规划 |
+| **其他** | [故障排查](knowledge/troubleshooting.md) | 常见问题解决 |
+| | [安全与隐私](docs/SECURITY_AND_PRIVACY.md) | 完整安全说明 |
+| | [CHANGELOG](CHANGELOG.md) | 版本历史 |
+| | [SKILL.md](SKILL.md) | AI调用定义和判断规则 |
 
 ---
 
@@ -172,3 +290,15 @@ MIT © 2026 [longhuang1997-cpu](https://github.com/longhuang1997-cpu)
 
 **GitHub**: https://github.com/longhuang1997-cpu/interactive-narrative-deck  
 **技能市场**: [待发布]
+
+---
+
+## 🤝 参与贡献
+
+欢迎贡献代码、报告问题或提出建议！
+
+- 🐛 [报告Bug](https://github.com/longhuang1997-cpu/interactive-narrative-deck/issues)
+- 💡 [功能建议](https://github.com/longhuang1997-cpu/interactive-narrative-deck/issues)
+- 🔧 [提交PR](https://github.com/longhuang1997-cpu/interactive-narrative-deck/pulls)
+
+贡献前请阅读 [贡献指南](CONTRIBUTING.md)（如有）
