@@ -110,6 +110,8 @@ F11                     # 全屏演示
 
 ## 🧩 Block积木清单
 
+### 内置Block（9种）
+
 | Block | 用途 | 最佳场景 |
 |-------|------|---------|
 | `hero` | 封面/章节标题 | 每页开头、过渡页 |
@@ -121,6 +123,30 @@ F11                     # 全屏演示
 | `chart` | 图表（line/bar/pie/doughnut） | 趋势分析、占比构成 |
 | `tabs` | 标签页切换 | 多方案并列、深度展开 |
 | `media` | 图片/视频 | 产品截图、演示视频 |
+
+### 🔌 插件化架构（v2.0.3+）
+
+从v2.0.3开始，Block采用插件化注册机制，**用户可以扩展自定义Block而无需修改engine.js**：
+
+```javascript
+// 注册自定义Block
+BlockRegistry.register('accordion', function(data) {
+  const div = document.createElement('div');
+  div.className = 'nd-accordion';
+  // 自定义渲染逻辑...
+  return div;
+}, {
+  description: 'FAQ折叠面板',
+  author: 'yourname'
+});
+
+// 在deck.js中使用
+{type: 'accordion', items: [{title: '...', content: '...'}]}
+```
+
+**扩展Block指南**：[docs/BLOCK_EXTENSION_GUIDE.md](./docs/BLOCK_EXTENSION_GUIDE.md)
+
+**示例自定义Block**：[engine/custom-blocks.js](./engine/custom-blocks.js)（accordion/progress/alert）
 
 **组合示例**：
 ```javascript

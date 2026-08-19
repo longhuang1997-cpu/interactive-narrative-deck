@@ -5,6 +5,72 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-08-19
+
+### 🔌 架构升级：Block插件化系统
+
+#### Added
+- ✨ **BlockRegistry插件注册系统** - 用户可扩展自定义Block无需修改engine.js
+  - `BlockRegistry.register(type, renderer, meta)` - 注册新Block
+  - `BlockRegistry.render(blockData, index)` - 统一渲染接口
+  - `BlockRegistry.has/list/getMeta` - 工具方法
+  - 自动错误处理和降级显示
+  
+- 📦 **核心Block模块化** - 将原engine.js的Blocks拆分为独立文件
+  - `engine/block-registry.js` - 插件注册系统
+  - `engine/core-blocks.js` - 9个内置Block（hero/metric/bullets等）
+  - `engine/custom-blocks.js` - 3个自定义示例（accordion/progress/alert）
+  
+- 📚 **开发者文档**
+  - `docs/BLOCK_EXTENSION_GUIDE.md` - Block扩展开发完整指南
+  - `tests/skill-golden-cases.md` - 8个核心场景的Golden Test Cases
+  - API参考、完整示例、注意事项
+
+#### Changed
+- 🏗️ **engine.js架构优化** - 从1200行精简至300行
+  - 移除Blocks对象（迁移至core-blocks.js）
+  - 使用`BlockRegistry.render()`替代`Blocks.render()`
+  - 保持API向后兼容
+
+- 📄 **模板更新** - templates/index.html引入新架构文件
+  ```html
+  <script src="../engine/block-registry.js"></script>
+  <script src="../engine/core-blocks.js"></script>
+  <script src="../engine/engine.js"></script>
+  ```
+
+#### Technical Details
+- **插件化收益**：
+  - ✅ 开发者可贡献Block而不fork整个项目
+  - ✅ 用户可扩展企业内部专用Block（如OKR卡片、审批流程）
+  - ✅ 支持Block热插拔，按需加载
+  - ✅ 错误隔离，单个Block渲染失败不影响整体
+  
+- **测试覆盖**：
+  - 8个Golden Test Cases覆盖核心场景
+  - 高管汇报/技术分享/产品发布/混合受众/反幻觉检查/边界情况
+
+- **代码质量**：
+  - ES5语法兼容旧浏览器
+  - 完整的错误处理和降级方案
+  - console日志辅助调试
+
+#### Migration Guide
+现有deck.js无需修改，完全向后兼容。如需扩展自定义Block：
+
+```javascript
+// 在HTML中引入custom-blocks.js或自定义脚本
+BlockRegistry.register('myblock', function(data) {
+  const div = document.createElement('div');
+  div.textContent = data.content;
+  return div;
+});
+```
+
+详见：[docs/BLOCK_EXTENSION_GUIDE.md](./docs/BLOCK_EXTENSION_GUIDE.md)
+
+---
+
 ## [2.0.1] - 2026-08-18
 
 ### Added
