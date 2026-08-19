@@ -207,6 +207,7 @@ const BLOCK_DEFS = [
   {type:'quote',   icon:'💬', name:'金句'},
   {type:'tabs',    icon:'📑', name:'标签页'},
   {type:'media',   icon:'🖼️', name:'图片/视频'},
+  {type:'swot',    icon:'🎯', name:'SWOT矩阵'},
 ];
 
 let state = {
@@ -231,6 +232,7 @@ function defaultBlock(type){
     case 'chart':   return {id:mkId(),type:'chart',chart:'bar',title:'数据图表',labels:['Q1','Q2','Q3','Q4'],datasets:[{label:'本年',data:[95,105,128,145],color:'#e8c874'}],frag:false};
     case 'tabs':    return {id:mkId(),type:'tabs',tabs:[{label:'视角A',text:'内容A'},{label:'视角B',text:'内容B'}],frag:false};
     case 'media':   return {id:mkId(),type:'media',img:'',alt:'图片说明',frag:false};
+    case 'swot':    return {id:mkId(),type:'swot',title:'SWOT分析',S:['优势1','优势2','优势3','优势4'],W:['劣势1','劣势2','劣势3','劣势4'],O:['机会1','机会2','机会3','机会4'],T:['威胁1','威胁2','威胁3','威胁4'],frag:false};
     default:        return {id:mkId(),type,frag:false};
   }
 }
@@ -400,6 +402,28 @@ function renderPropsEditor(){
     html += `</div><button class="add-item-btn" onclick="addTabItem()">＋ 添加标签</button></div>`;
   } else if(b.type==='media'){
     html += field('图片路径 img','img',b.img,'text') + field('说明文字 alt','alt',b.alt,'text');
+  } else if(b.type==='swot'){
+    html += field('标题（可选）','title',b.title||'','text');
+    html += `<div class="prop-row"><label>优势 Strengths</label><div class="items-list">`;
+    (b.S||[]).forEach((item,i)=>{
+      html += `<div class="item-row"><input value="${item}" oninput="updateSwotItem('S',${i},this.value)"><button class="item-del" onclick="removeSwotItem('S',${i})">✕</button></div>`;
+    });
+    html += `</div><button class="add-item-btn" onclick="addSwotItem('S','新优势')">＋ 添加优势</button></div>`;
+    html += `<div class="prop-row"><label>劣势 Weaknesses</label><div class="items-list">`;
+    (b.W||[]).forEach((item,i)=>{
+      html += `<div class="item-row"><input value="${item}" oninput="updateSwotItem('W',${i},this.value)"><button class="item-del" onclick="removeSwotItem('W',${i})">✕</button></div>`;
+    });
+    html += `</div><button class="add-item-btn" onclick="addSwotItem('W','新劣势')">＋ 添加劣势</button></div>`;
+    html += `<div class="prop-row"><label>机会 Opportunities</label><div class="items-list">`;
+    (b.O||[]).forEach((item,i)=>{
+      html += `<div class="item-row"><input value="${item}" oninput="updateSwotItem('O',${i},this.value)"><button class="item-del" onclick="removeSwotItem('O',${i})">✕</button></div>`;
+    });
+    html += `</div><button class="add-item-btn" onclick="addSwotItem('O','新机会')">＋ 添加机会</button></div>`;
+    html += `<div class="prop-row"><label>威胁 Threats</label><div class="items-list">`;
+    (b.T||[]).forEach((item,i)=>{
+      html += `<div class="item-row"><input value="${item}" oninput="updateSwotItem('T',${i},this.value)"><button class="item-del" onclick="removeSwotItem('T',${i})">✕</button></div>`;
+    });
+    html += `</div><button class="add-item-btn" onclick="addSwotItem('T','新威胁')">＋ 添加威胁</button></div>`;
   }
 
   html += checkField('渐进揭示 frag','frag',b.frag);
@@ -490,6 +514,9 @@ function removeDataset(i){ const b=state.slides[state.curSlide].blocks[state.cur
 function updateTabItem(i,k,v){ const b=state.slides[state.curSlide].blocks[state.curBlock]; b.tabs[i][k]=v; renderPreview(); }
 function addTabItem(){ const b=state.slides[state.curSlide].blocks[state.curBlock]; b.tabs.push({label:'新标签',text:'内容'}); refresh(); }
 function removeTabItem(i){ const b=state.slides[state.curSlide].blocks[state.curBlock]; b.tabs.splice(i,1); refresh(); }
+function updateSwotItem(quad,i,val){ const b=state.slides[state.curSlide].blocks[state.curBlock]; b[quad][i]=val; renderPreview(); }
+function addSwotItem(quad,val){ const b=state.slides[state.curSlide].blocks[state.curBlock]; if(!b[quad])b[quad]=[]; b[quad].push(val); refresh(); }
+function removeSwotItem(quad,i){ const b=state.slides[state.curSlide].blocks[state.curBlock]; b[quad].splice(i,1); refresh(); }
 function setAnim(v,el){ state.slides[state.curSlide].anim=v; document.querySelectorAll('.anim-opt').forEach(e=>e.classList.remove('active')); if(el)el.classList.add('active'); }
 function setStaggerDelay(v){ state.slides[state.curSlide].staggerDelay=+v; document.getElementById('stagger-val').textContent=v+'ms'; }
 function setTransition(v,el){ state.slides[state.curSlide].transition=v; renderAnimPanel(); }
@@ -513,6 +540,7 @@ function buildBlockJS(b){
       return `{type:"chart",chart:"${b.chart||'bar'}",title:${JSON.stringify(b.title||"")},data:{labels:${JSON.stringify(b.labels||[])},datasets:[${datasets}]}${b.frag?',frag:true':''}}`;
     case 'tabs': return `{type:"tabs",tabs:[${(b.tabs||[]).map(tab=>`{label:${JSON.stringify(tab.label||"")},text:${JSON.stringify(tab.text||tab.html||"")}}`).join(',')}]${b.frag?',frag:true':''}}`;
     case 'media': return `{type:"media",img:${JSON.stringify(b.img||"")}${b.alt?',alt:'+JSON.stringify(b.alt):''}${b.frag?',frag:true':''}}`;
+    case 'swot': return `{type:"swot"${b.title?',title:'+JSON.stringify(b.title):''},strengths:${JSON.stringify(b.S||[])},weaknesses:${JSON.stringify(b.W||[])},opportunities:${JSON.stringify(b.O||[])},threats:${JSON.stringify(b.T||[])}${b.frag?',frag:true':''}}`;
     default: return `{type:"${b.type}"}`;
   }
 }
