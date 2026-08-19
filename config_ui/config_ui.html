@@ -642,11 +642,13 @@ window.addEventListener("DOMContentLoaded",function(){if(window.NARRATIVE_DECK)N
 
 function renderPreview(){
   const t=THEMES[state.themeKey];
-  const css=ENGINE_CSS.replace(/\{\{B\}\}/g,t.blue).replace(/\{\{G\}\}/g,t.gold).replace(/\{\{BG\}\}/g,t.bg);
   const deckJS=buildDeckJS();
   const sl=state.slides[state.curSlide];
   const singleDeck=`window.NARRATIVE_DECK={theme:{blue:"${t.blue}",gold:"${t.gold}",bg:"${t.bg}"},slides:[{title:${JSON.stringify(sl.title||"")},layout:"${sl.layout||'center'}",blocks:[${(sl.blocks||[]).map(buildBlockJS).join(',')}]}]};`;
-  const html=`<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><style>${css}</style></head><body>
+  const html=`<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../engine/style.css">
+<style>:root{--nd-blue:${t.blue};--nd-gold:${t.gold};--nd-bg:${t.bg};}</style>
+</head><body>
 <div id="nd-stage"></div><div id="nd-progress"></div>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"><\/script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>
