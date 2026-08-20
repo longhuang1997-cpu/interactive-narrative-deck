@@ -1,7 +1,7 @@
 ---
 name: interactive-narrative-deck
-version: 2.3.0
-description: 把演讲/汇报材料做成"结构化交互叙事"演示——不是翻页PPT,而是 Block 积木组件 + 渐进揭示 + 数据可视化 + 克制动效。核心价值是AI化的汇报经验萃取:自动判断叙事框架、选择合适Block组合、把用户自然语言转成专业演示。当用户要做发布会/战略汇报/数据复盘/路演/技术分享时使用。
+version: 3.0.0
+description: 把演讲/汇报材料做成"结构化交互叙事"演示——不是翻页PPT,而是 Block 积木组件 + 渐进揭示 + 数据可视化 + 克制动效。核心价值是AI化的汇报经验萃取:自动判断叙事框架、选择合适Block组合、把用户自然语言转成专业演示。当用户要做发布会/战略汇报/数据复盘/路演/技术分享时使用。v3.0新增：完整知识层体系（6大叙事框架+15种Block+11种反模式检测）。
 ---
 
 # Interactive Narrative Deck
@@ -128,13 +128,19 @@ description: 把演讲/汇报材料做成"结构化交互叙事"演示——不�
 
 ### Step 2：AI自主判断，告知用户
 
-根据受众+内容，调用本文件的「核心经验库」，输出：
+**必读知识文件**（按顺序调用）：
+1. **`knowledge/narrative-patterns.md`** - 匹配叙事框架（6种框架决策树）
+2. **`knowledge/block-reference.md`** - 选择合适的Block组件（15种Block API）
+3. **`knowledge/visual-design-rules.md`** - 遵循视觉规范（配色/字体/间距）
+
+根据受众+内容，调用知识文件后输出：
 
 ```
 我的判断：
-- 叙事框架：[框架名+原因]
+- 叙事框架：[框架名+原因]（来自narrative-patterns.md）
 - 页数结构：P1→P2→...→PN（每页一句话说明）
-- 关键决策：[说明1-2个重要的结构选择和原因]
+- 关键Block：[说明选用了哪些Block及原因]（来自block-reference.md）
+- 视觉风格：[配色方案]（来自visual-design-rules.md）
 
 如需调整直接说，否则开始生成。
 ```
@@ -148,28 +154,73 @@ description: 把演讲/汇报材料做成"结构化交互叙事"演示——不�
 
 ### Step 4：生成完整deck.js
 
-一次性生成所有页面，严格按以下规则：
-- 内容100%来自用户提供的素材，缺数据用`【待填入】`
-- 每页≤3个Block
-- 参考 `knowledge/layout-patterns.md` 选layout
-- 参考 `knowledge/anti-hallucination.md` 自检类型
-- 生成后扫描所有type字段报告自检
+**生成时遵循规则**（参考知识文件，AI内部自检）：
+1. **`knowledge/anti-patterns.md`** - 生成时自动规避11种反模式
+   - 反模式1-3：无数据用`【待填入】`，不编造
+   - 反模式4：每页≤3个Block
+   - 反模式7：主题色≤2种
+   - 反模式11：chart.datasets必须是数组
+2. **`knowledge/layout-patterns.md`** - 选择合适的layout（center/left/right）
+3. **`knowledge/visual-design-rules.md`** - 确保配色/字体/间距一致性
+4. **内置质量门控**（engine/validation.js）- 生成时静默执行：
+   - SWOT/BCG/Fishbone/Kanban/Pyramid等商业模型自动校验
+   - 数据完整性检查（必填字段、数值范围、结构完整性）
+   - 仅当检测到严重错误时（如空数据、字段缺失）才拒绝生成并说明原因
+   - 通过验证则直接生成，不输出验证报告
 
-### Step 5：交付+说明
+**生成规则**（AI自动遵守，不是生成后检查）：
+- 内容100%来自用户素材，缺数据用`【待填入】`
+- 每页≤3个Block，超过需拆分
+- chart.datasets用数组格式：`datasets: [{ data: [...] }]`
+- 主题色≤2种（一主一辅）
+- 时长匹配页数：5分钟→5-6页，10分钟→8-10页，15分钟→12-15页
 
-输出完整文件，并告诉用户：
-- 哪些地方需要填真实数据
-- 如需可视化微调：打开 `config_ui/config_ui.html`
-- 双击 `index.html` 预览，F11全屏，翻页笔可用
+### Step 5：交付+简洁提示
+
+生成完成后，给用户**简洁实用**的提示：
+
+```
+✅ 已生成 [项目名称]/
+
+📝 后续操作：
+- 有X处【待填入】需补充真实数据（已在deck.js中标记）
+- 双击 index.html 预览，F11全屏演示
+- 如需调整配色/布局：打开 config_ui/config_ui.html 可视化编辑
+- 翻页：左右键/空格(渐进)/O(总览)/F11(全屏)
+
+💡 生成说明：遵循[叙事框架名]，使用[Block清单]专业组件
+```
+
+**交付原则**：
+- ✅ 直接交付成果，不输出技术检查报告、验证日志、质量评分
+- ✅ 仅告诉用户下一步做什么（待填入数据、预览方式、快捷键）
+- ✅ 质量门控在后台静默执行，通过则生成，不通过则说明具体缺失内容
+
+**Debug模式**（仅在用户反馈"有问题"时启动）：
+- 读取 `anti-patterns.md` 诊断具体错误
+- 读取 `troubleshooting.md` 匹配故障场景
+- 输出修复建议（如"P5页面有4个Block，建议拆分为两页"）
+- 修复后重新交付
 
 ---
 
 ## 四层架构
 
-1. **主控层**（本文件）：经验判断 + 交互流程
-2. **知识层**（knowledge/）：block-reference / layout-patterns / anti-hallucination / narrative-engine
+1. **主控层**（本文件 skill.md）：交互流程 + 经验判断入口
+2. **知识层**（knowledge/）：
+   - `narrative-patterns.md` - 6大叙事框架决策树
+   - `block-reference.md` - 15种Block完整API
+   - `visual-design-rules.md` - 配色/字体/间距/动效规范
+   - `anti-patterns.md` - 11种反模式 + 质量检查清单
+   - `layout-patterns.md` - center/left/right布局规则
+   - `troubleshooting.md` - 故障排查手册
 3. **规范层**（templates/）：strategy-report / product-launch / diy-blank
 4. **执行层**（engine/）：渲染引擎，不改动
+
+**知识层调用时机**：
+- Step 2（判断） → 读 narrative-patterns.md + block-reference.md + visual-design-rules.md
+- Step 4（生成） → 读 anti-patterns.md + layout-patterns.md
+- Step 5（交付） → 可选读 troubleshooting.md（若用户报告问题）
 
 ---
 
@@ -221,48 +272,59 @@ description: 把演讲/汇报材料做成"结构化交互叙事"演示——不�
 
 ---
 
-## 生成铁律
+## 生成铁律（v3.0增强版）
 
-- 受众是高管/董事会 → 结论优先，页数≤6，数字用metric不用bullets
-- 有趋势数据 → 必用line图，不用bar
-- 有3个以上要点 → bullets+stagger，不堆compare
-- 没有用户提供的数据 → 用`【待填入】`，绝不编造
-- 每页block数量≤3
-- chart.data.datasets必须是数组
-- 生成后自检所有type字段
+**必须遵守**（来自 `knowledge/anti-patterns.md` 金线规则）：
+1. **不编造数据** - 宁可用【待填入】，不可捏造数字
+2. **不捏造案例** - 无客户证言/人名就不写
+3. **不堆叠Block** - 单页最多3个，超过必须拆页
+4. **datasets必须是数组** - `datasets: [{...}]` 不是 `datasets: {...}`
+5. **主题色≤2种** - 默认蓝+橙，绿/红仅用于delta
+6. **受众=高管 → 结论先行框架** - 页数≤6，第一页给结论
+7. **时长匹配页数** - 5分钟→5-6页，10分钟→8-10页
+
+**Block选择规则**（来自 `knowledge/block-reference.md`）：
+- 战略分析/优劣势 → **swot**（2x2矩阵）
+- 目标管理/OKR → **okr**（O→KR树+进度条）
+- 项目进度/时间线 → **gantt**（任务条+百分比）
+- 趋势数据 → **chart:line**（不用bar）
+- 关键数字 → **metric**（不埋在bullets里）
+- 3+并列要点 → **bullets+stagger**（不堆compare）
+
+**视觉规则**（来自 `knowledge/visual-design-rules.md`）：
+- 单页Block总高度≤850px（留150px呼吸空间）
+- 数字卡片：顶部padding 48px（为delta留空），右上角16px定位delta
+- 对比度≥4.5:1（WCAG AA标准）
+- 字号层级：标题72-96px > 数字68px > 区块标题36-48px > 正文24-28px
 
 ---
 
 ## Block清单（执行参考）
 
-| block | 用途 | 关键字段 |
-|-------|------|---------|
-| hero | 封面/章节 | kick, title, sub |
-| metric | 数字指标（滚动） | items:[{value,unit,label,delta}] |
-| bullets | 要点列表 | title, items[], stagger |
-| compare | 左右对比 | left{title,items[]}, right{...} |
-| timeline | 时间线/路线图 | items:[{time,text}] |
-| quote | 金句/引用 | text, by |
-| chart | 图表 | chart, title, data{labels,datasets} |
-| media | 图片/视频 | img 或 video |
-| tabs | 标签页 | tabs:[{label,html}] |
-| **swot** | **SWOT分析矩阵** | **strengths[], weaknesses[], opportunities[], threats[]** |
-| **okr** | **OKR树状图** | **objective, keyResults:[{kr,progress,status}]** |
-| **gantt** | **甘特图** | **start, end, tasks:[{name,start,duration,progress}]** |
-| **code** | **代码展示** | **code, language, title** |
-| **split** | **左图右文分栏** | **img/video, content, reverse** |
-| **grid** | **多列网格卡片** | **columns, cards:[{icon,title,text,tag}]** |
+**完整Block API详见 `knowledge/block-reference.md`，这里是快速索引：**
 
-**专业Block（business-blocks.js）**：
-- `swot`：战略分析必备，2x2矩阵展示内外部因素，适用于季度复盘/新业务评估/竞争分析
-- `okr`：目标管理可视化，O→KR树状结构+进度条，适用于季度/年度目标汇报、团队OKR对齐
-- `gantt`：项目时间线，任务条+进度百分比，适用于项目进度汇报、产品路线图、里程碑规划
+| block | 用途 | 关键字段 | 触发关键词 |
+|-------|------|---------|-----------|
+| hero | 封面/章节 | kick, title, sub | 标题、封面 |
+| metric | 数字指标（滚动） | items:[{value,unit,label,delta}] | 关键数据、KPI |
+| bullets | 要点列表 | title, items[], stagger | 要点、清单 |
+| compare | 左右对比 | left{title,items[]}, right{...} | 对比、VS、新旧 |
+| timeline | 时间线/路线图 | items:[{time,text}] | 时间线、历史 |
+| quote | 金句/引用 | text, by | 金句、引用 |
+| chart | 图表 | chart, title, data{labels,datasets} | 趋势、占比 |
+| media | 图片/视频 | img 或 video | 图片、视频 |
+| tabs | 标签页 | tabs:[{label,html}] | 多方案、切换 |
+| **swot** | **SWOT矩阵** | **strengths[], weaknesses[], opportunities[], threats[]** | **SWOT、优劣势、战略分析** |
+| **okr** | **OKR树状图** | **objective, keyResults:[{kr,progress,status}]** | **OKR、目标管理、KR进度** |
+| **gantt** | **甘特图** | **start, end, tasks:[{name,start,duration,progress}]** | **项目进度、时间线、里程碑** |
+| **code** | **代码展示** | **code, language, title** | **代码、API、技术** |
+| **split** | **左图右文** | **img/video, content, reverse** | **图文混排、产品介绍** |
+| **grid** | **网格卡片** | **columns, cards:[{icon,title,text,tag}]** | **能力矩阵、特性列表** |
 
-**自定义Block（custom-blocks.js）**：
-- `code`：代码展示，行号+语法高亮+语言徽标，适用于技术分享/API文档
-- `split`：左图右文分栏，图文混排，适用于产品介绍/架构说明
-- `grid`：多列网格卡片，2-4列布局，适用于能力矩阵/特性并列/团队展示
-- `grid`：多列网格卡片（2-4列），适用于能力矩阵/特性并列
+**Block引擎位置**：
+- 基础Block：`engine/narrative-deck.js`
+- 专业Block：`engine/business-blocks.js`（swot/okr/gantt）
+- 自定义Block：`engine/custom-blocks.js`（code/split/grid）
 
 ---
 
@@ -303,4 +365,26 @@ description: 把演讲/汇报材料做成"结构化交互叙事"演示——不�
 
 ---
 
-一句话：AI负责判断，用户负责提供内容，engine负责渲染。
+## v3.0 更新日志
+
+### 知识层体系建立（2026-01-20）
+- ✅ **新增** `knowledge/visual-design-rules.md`（243行）- 配色/字体/间距/动效统一规范
+- ✅ **新增** `knowledge/narrative-patterns.md`（320行）- 6大叙事框架决策树
+- ✅ **新增** `knowledge/anti-patterns.md`（533行）- 11种反模式 + 质量检查清单
+- ✅ **增强** `knowledge/block-reference.md`（357行）- 补充swot/okr/gantt/code/split/grid完整API
+
+### 主控层升级
+- ✅ Step 2增加知识文件调用流程（narrative-patterns + block-reference + visual-design-rules）
+- ✅ Step 4增加自动质量检查（anti-patterns检查清单）
+- ✅ 生成铁律重构（引用知识层规则）
+- ✅ 版本号升级至3.0.0
+
+### 核心价值
+- **AI判断更准确**：6大叙事框架自动匹配，不再靠"经验猜测"
+- **视觉更统一**：配色/字体/间距有明确规范，生成的deck视觉一致
+- **质量更可靠**：11种反模式自动检测，幻觉内容零容忍
+- **Block更完整**：15种Block完整API，swot/okr/gantt专业场景覆盖
+
+---
+
+一句话：AI负责判断（调用知识层），用户负责提供内容，engine负责渲染。

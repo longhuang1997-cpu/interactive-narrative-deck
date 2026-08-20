@@ -7,8 +7,8 @@
     "author_handle": "longhuang1997-cpu"
   },
   "metadata": {
-    "description": "把汇报做成Block积木式交互演示 — 15种Block(9核心+SWOT/OKR/甘特+code/split/grid) + 全Block交互动效 + AI判断叙事框架,对标Slack Block Kit交互与Figma微交互质感",
-    "version": "2.3.0",
+    "description": "把汇报做成Block积木式交互演示 + AI知识层驱动 — 15种Block(9核心+3专业方法论+3自定义) + 6大叙事框架 + 11种反模式检测 + 1800行知识文件,从工具到经验萃取系统",
+    "version": "3.0.0",
     "author": "longhuang1997-cpu",
     "demo_url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck#-完整案例",
     "screenshot_url": "https://raw.githubusercontent.com/longhuang1997-cpu/interactive-narrative-deck/main/assets/demo.gif",
@@ -61,7 +61,7 @@
       "category": "productivity",
       "keywords": ["presentation","interactive","narrative","block-kit","data-viz","scrollytelling","deck","html","gsap","chart","business","report","pitch"],
       "author": "longhuang1997-cpu",
-      "version": "2.1.0"
+      "version": "3.0.0"
     }
   ]
 }

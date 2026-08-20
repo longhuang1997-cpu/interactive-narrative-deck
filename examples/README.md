@@ -1,128 +1,104 @@
-# 完整示例
+# Business Blocks 演示案例
 
-三个真实场景的完整Demo，可直接双击`index.html`预览。
+本演示展示三个专业商业分析Block的实际应用场景。
 
-## 📊 战略汇报 - Q3业务复盘
+## 📂 文件说明
 
-**场景**: 向董事会/高管汇报季度业绩  
-**受众**: 高层管理者  
-**时长**: 5-8分钟  
-**结构**: 封面 → 核心结论 → 数据支撑 → 行动计划
+- `business-blocks-demo.html` - 演示入口（双击打开）
+- `business-blocks-demo.js` - 演示内容配置
 
-**核心特点**:
-- ✅ **结论优先** - 第一页就给关键指标，不让高管猜
-- ✅ **数字驱动** - metric数字卡 + line趋势图
-- ✅ **简洁高效** - 6页讲清楚，每页1个核心信息
+## 🎯 三个专业Block
 
-**适用场景**: 季度/年度复盘、业务汇报、投资人沟通
+### 1. fishbone（鱼骨图）
+**用途**：问题根因分析、质量管理  
+**结构**：6M分类（人/机/料/法/环/测） + 中心问题  
+**适用场景**：
+- 质量问题根因分析
+- 故障排查复盘
+- 流程优化诊断
+- 客诉问题分析
 
-[📁 查看源码](./strategy-report/) | [🚀 在线预览](./strategy-report/index.html)
+### 2. bcg（BCG矩阵）
+**用途**：业务组合分析、战略规划  
+**结构**：2x2矩阵（明星/金牛/问题/瘦狗） + 气泡图  
+**适用场景**：
+- 业务组合战略分析
+- 产品portfolio评估
+- 投资决策优化
+- 资源分配规划
 
----
+### 3. kanban（看板）
+**用途**：任务流程管理、敏捷开发  
+**结构**：多列泳道 + 卡片 + 状态流转  
+**适用场景**：
+- 敏捷开发进度展示
+- 工作流管理
+- 任务分配追踪
+- 项目状态汇报
 
-## 💻 技术分享 - 微服务架构演进
+## 🚀 如何使用
 
-**场景**: 团队技术分享会  
-**受众**: 开发团队  
-**时长**: 15-20分钟  
-**结构**: 背景 → 问题 → 方案 → 实施 → 成果 → 经验
-
-**核心特点**:
-- ✅ **技术深度** - tabs展示多个技术栈细节
-- ✅ **实战经验** - 踩坑总结与最佳实践
-- ✅ **数据说话** - 迁移前后指标对比
-
-**适用场景**: 技术分享、架构评审、团队培训
-
-[📁 查看源码](./tech-talk/) | [🚀 在线预览](./tech-talk/index.html)
-
----
-
-## 🚀 产品发布 - AI智能助手2.0
-
-**场景**: 产品发布会  
-**受众**: 客户/媒体/投资人  
-**时长**: 10-15分钟  
-**结构**: 痛点 → 解法 → 能力 → 验证 → 定价 → 行动
-
-**核心特点**:
-- ✅ **价值主张** - 先讲痛点再讲产品
-- ✅ **视觉冲击** - 对比、引用、数字卡组合
-- ✅ **行动号召** - 明确的下一步（免费试用）
-
-**适用场景**: 产品发布、客户演示、路演pitch
-
-[📁 查看源码](./product-launch/) | [🚀 在线预览](./product-launch/index.html)
-
----
-
-## 🎨 如何使用
-
-### 方式1：直接预览
-双击任意example下的`index.html`，浏览器打开即可演示。
-
-### 方式2：改成你的内容
-1. 复制任意example目录
-2. 修改`deck.js`中的`DECK`数组（改文字、数字、图表数据）
-3. 可选：修改`PAGE_CONFIG`改配色
-4. 双击`index.html`预览
-
-### 方式3：用Claude生成
+### 预览演示
 ```bash
-# 进入skill目录
-cd ~/.claude/skills/interactive-narrative-deck
-
-# 调用skill
-claude
-
-# 在对话中说：
-"帮我做一个战略汇报，给高管看，主题是Q3营销数据复盘"
+# 在当前目录双击打开
+business-blocks-demo.html
 ```
 
+### 集成到自己的项目
+```javascript
+// 1. 在deck.js中引用对应Block
+{
+  type: 'fishbone',
+  problem: '核心问题描述',
+  causes: {
+    people: ['人员因素1', '人员因素2'],
+    machine: ['设备因素1'],
+    // ... 其他分类
+  }
+}
+
+// 2. 确保HTML引入了business-blocks.js和.css
+<script src="engine/business-blocks.js"></script>
+<link rel="stylesheet" href="engine/business-blocks.css">
+```
+
+## 📚 完整API文档
+
+详见 `../knowledge/block-reference.md`：
+- fishbone: L253-285
+- bcg: L288-314
+- kanban: L317-362
+
+## 🎮 演示操作
+
+- **翻页**：左右方向键
+- **总览**：按 `O` 键
+- **全屏**：按 `F11`
+- **退出全屏**：按 `ESC`
+
+## 💡 演示内容概览
+
+| 页码 | 内容 | Block类型 |
+|------|------|-----------|
+| P1 | 封面 | hero |
+| P2 | 鱼骨图演示 | hero + fishbone |
+| P3 | 鱼骨图应用场景 | bullets + quote |
+| P4 | BCG矩阵演示 | hero + bcg |
+| P5 | BCG战略决策 | grid |
+| P6 | Kanban看板演示 | hero + kanban |
+| P7 | Kanban应用场景 | bullets + metric |
+| P8 | 三个Block对比 | hero + compare |
+| P9 | 收尾总结 | quote + bullets |
+
+## 🎨 视觉特点
+
+- **统一配色**：商业分析蓝(#3b82f6) + 决策橙(#f59e0b)
+- **专业动画**：渐进揭示、气泡弹出、卡片滑入
+- **响应式布局**：桌面/移动端自适应
+- **深色主题**：专业演示风格
+
 ---
 
-## 📖 学习路径
-
-1. **新手** - 先看3个example，理解Block组合规律
-2. **进阶** - 复制一个example改成你的内容
-3. **高级** - 看`knowledge/block-reference.md`学所有Block用法
-4. **专家** - 用Claude skill直接生成，AI帮你判断结构
-
----
-
-## 💡 设计原则（从examples提炼）
-
-### 受众决定结构
-- **高管** → 结论优先，≤6页，数字用metric
-- **团队** → 上下文完整，技术细节用tabs
-- **客户** → 痛点优先，价值主张清晰
-
-### 数据类型决定图表
-- **趋势** → line折线图（strategy-report的营收趋势）
-- **对比** → compare左右对比（所有example都用）
-- **关键数字** → metric数字卡（强调效果）
-
-### 渐进揭示的时机
-- **要点分析** → stagger:true（逐条配合讲解）
-- **数据总览** → 不用渐进（整体感知）
-- **行动计划** → stagger:true（引导节奏）
-
----
-
-## 🔥 快速改造清单
-
-想把example改成你的内容？照着这个清单改：
-
-**必改项**：
-- [ ] P1封面：kick + title + sub
-- [ ] 每页的title和items内容
-- [ ] 图表数据：chart.data.labels和datasets
-
-**可选项**：
-- [ ] PAGE_CONFIG配色（bgColor/accentColor）
-- [ ] 增删页面（DECK数组增删对象）
-- [ ] Block类型（bullets改timeline、compare改tabs等）
-
----
-
-更多用法看主目录 [README.md](../../README.md)
+**创建时间**：2026-01-20  
+**版本**：v3.0.0  
+**维护**：Interactive Narrative Deck Skill

@@ -1,319 +1,285 @@
-# Interactive Narrative Deck
+# Interactive Narrative Deck v3.0
 
-![Version](https://img.shields.io/badge/version-2.3.0-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
-![Claude](https://img.shields.io/badge/Claude-Skill-orange)
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
+## 一句话介绍
 
-> 30分钟做出专业汇报演示 · Block积木 + SWOT分析 + OKR树 + 甘特图 + 渐进揭示
-
-![演示动画](assets/demo-v2.3.0.gif)
+把汇报经验AI化——10年汇报者的判断力（向高管要结论先行、数据对比要用图、问题拆解要渐进揭示）沉淀成知识文件，由AI代为执行。
 
 ---
 
-## ⚡ 3分钟开始
+## 核心价值
 
-### 1️⃣ 安装
-```bash
-# Claude Code中安装
-/skill install https://github.com/longhuang1997-cpu/interactive-narrative-deck
+**不是PPT生成器，是汇报经验的萃取系统。**
+
+| 传统做法 | AI化后 |
+|---------|--------|
+| 人工判断"给高管汇报要先结论" | AI读`narrative-patterns.md`自动匹配"结论先行框架" |
+| 人工记忆"趋势数据用折线图" | AI读`block-reference.md`自动选chart:line |
+| 人工检查"有没有编造数据" | AI读`anti-patterns.md`自动扫描11种反模式 |
+| 每次做汇报重新设计配色 | AI读`visual-design-rules.md`统一深蓝医疗风格 |
+
+---
+
+## 架构（四层）
+
+```
+skill.md (主控层)
+  ↓ 调用
+knowledge/ (知识层)
+  ├── narrative-patterns.md      - 6大叙事框架决策树
+  ├── block-reference.md          - 15种Block完整API
+  ├── visual-design-rules.md      - 配色/字体/间距规范
+  ├── anti-patterns.md            - 11种反模式检测
+  └── layout-patterns.md          - center/left/right布局规则
+  ↓ 指导
+templates/ (规范层)
+  ├── strategy-report/            - 战略汇报模板
+  └── product-launch/             - 产品发布模板
+  ↓ 调用
+engine/ (执行层)
+  ├── narrative-deck.js           - 渲染引擎（不改动）
+  ├── business-blocks.js          - swot/okr/gantt
+  └── custom-blocks.js            - code/split/grid
 ```
 
-### 2️⃣ 使用
-在Claude Code中说：
+---
+
+## 知识层清单
+
+### 1. narrative-patterns.md（320行）
+**作用**：根据受众+场景自动匹配叙事框架
+
+**6大框架**：
+- 结论先行（高管/董事会）
+- 价值主张优先（客户/投资人）
+- OKR进展汇报（团队/季度复盘）
+- 产品发布叙事（发布会/路演）
+- 问题-方案架构（管理层/项目汇报）
+- 通用三段式（教学/培训）
+
+**决策树示例**：
 ```
-做Q3战略汇报，给董事会看，有SWOT分析，
-数据：营收+25%，用户留存78%，新增120家客户
-```
-
-Claude自动判断：
-- ✅ 受众=董事会 → 结论优先结构
-- ✅ 有优劣势分析 → 推荐SWOT Block
-- ✅ 数据是亮点 → 用metric数字卡
-
-### 3️⃣ 预览
-```bash
-# 双击打开
-index.html
-
-# 快捷键
-左右键 / PageUp/PageDown  # 翻页
-空格                      # 渐进揭示
-O                         # 总览模式
-F11                       # 全屏演示
+受众=高管 + 场景=季度汇报 → 结论先行框架
+  ├── P1: 封面
+  ├── P2: 核心结论（metric数字卡）
+  ├── P3: 数据支撑（chart图表）
+  └── P4: 行动计划（timeline时间线）
 ```
 
 ---
 
-## 💡 核心价值
+### 2. block-reference.md（357行）
+**作用**：15种Block完整API文档
 
-### 不是工具，是汇报经验的AI化
+**基础Block**（9种）：
+- hero, metric, bullets, compare, timeline, quote, chart, media, tabs
 
-10年汇报者的判断力——向高管先结论、数据对比用图、问题拆解配合节奏——由AI代为执行。
+**专业Block**（6种）：
+- swot（战略分析矩阵）
+- okr（目标管理树状图）
+- gantt（项目时间线）
+- fishbone（鱼骨图/根因分析）
+- bcg（BCG矩阵/业务组合）
+- kanban（看板/任务流程）
 
-### 对比PPT
+**自定义Block**（3种）：
+- code（代码展示）
+- split（左图右文）
+- grid（网格卡片）
 
-| 维度 | PowerPoint | Interactive Deck |
-|------|-----------|------------------|
-| 制作时间 | 2-4小时 | **30分钟** ⚡ |
-| 数据更新 | 逐页改 | **改1处全局更新** 🔄 |
-| 交互性 | 静态翻页 | **实时图表+渐进** 🎯 |
-| 版本控制 | final_v2_真最终.pptx | **Git diff** 📦 |
-
-**真实场景**：高管说"把上周数据改成本周" → PPT需30分钟，Deck改1处1分钟 ✅
-
----
-
-## 🧩 15种Block积木
-
-| Block | 用途 | 最佳场景 |
-|-------|------|---------|
-| `hero` | 封面/章节 | 每页开头 |
-| `metric` | 数字指标（滚动动效） | KPI展示 |
-| `bullets` | 要点列表（渐进揭示） | 问题分析 |
-| `compare` | 左右对比 | 方案选型 |
-| `timeline` | 时间线/路线图 | 项目进度 |
-| `quote` | 金句/引用 | 行动号召 |
-| `chart` | 图表（line/bar/pie） | 趋势分析 |
-| `tabs` | 标签页切换 | 多方案并列 |
-| `media` | 图片/视频 | 产品截图 |
-
-### 🎯 专业方法论Block
-
-| Block | 用途 | 场景 |
-|-------|------|------|
-| **`swot`** | **SWOT分析矩阵** | **战略复盘/竞争分析** |
-| **`okr`** | **OKR树状图** | **目标管理/战略执行** |
-| **`gantt`** | **甘特图** | **项目进度/路线图** |
-
-**v2.1.0新增**：SWOT分析Block，2x2矩阵展示优势/劣势/机会/威胁，适用于季度复盘、新业务评估、竞争分析。
-
-**v2.3.0新增**：OKR树和甘特图两大专业方法论Block，让目标管理和项目进度可视化。OKR树展示目标→关键结果的树状结构+进度条，甘特图展示时间轴+任务条，都带交互动效。
-
-[完整SWOT使用指南 →](knowledge/frameworks/swot-analysis.md)
-
-### 🎨 自定义扩展Block（v2.2.0）
-
-| Block | 用途 | 场景 |
-|-------|------|------|
-| **`code`** | **代码展示（行号+语法高亮）** | **技术分享/API文档** |
-| **`split`** | **左图右文分栏** | **产品介绍/架构说明** |
-| **`grid`** | **多列网格卡片（2-4列）** | **能力矩阵/特性并列** |
-
-**v2.2.0新增**：3个自定义Block + 全Block交互动效增强（hover/transition/animation），让每个Block都"会呼吸"。
-
----
-
-## 📦 3个完整案例
-
-### 1. 战略汇报（给高管）
-**路径**：`examples/strategy-report/`  
-**结构**：封面 → 数据 → 分析 → 行动  
-**页数**：7页
-
-### 2. 技术分享（给团队）
-**路径**：`examples/tech-talk/`  
-**结构**：背景 → 方案 → Demo → Q&A  
-**页数**：8页
-
-### 3. SWOT分析（专业能力展示）
-**路径**：`examples/swot-demo/`  
-**结构**：封面 → 数据 → SWOT → 战略 → 计划  
-**页数**：6页
-
-[查看所有案例 →](examples/)
-
----
-
-## 🔧 进阶使用
-
-### 自定义Block
-从v2.1.0开始，Block采用插件化架构，可扩展自定义Block：
-
+**API示例**：
 ```javascript
-BlockRegistry.register('myblock', function(data) {
-  const div = document.createElement('div');
-  // 自定义渲染逻辑
-  return div;
-}, {
-  description: '我的自定义Block'
-});
-```
+// SWOT矩阵
+{
+  type: "swot",
+  strengths: ["团队经验丰富", "市场先发优势"],
+  weaknesses: ["技术债务较高"],
+  opportunities: ["市场增长迅速"],
+  threats: ["竞争加剧"]
+}
 
-[Block扩展开发指南 →](docs/BLOCK_EXTENSION_GUIDE.md)
+// 鱼骨图（新增）
+{
+  type: "fishbone",
+  problem: "客户投诉率达8%",
+  causes: {
+    people: ["客服培训不足", "响应速度慢"],
+    machine: ["系统频繁宕机"],
+    method: ["流程不规范", "无SOP"]
+  }
+}
 
-### 可视化配置工具
-打开 `config_ui/config_ui.html` 进行可视化微调（选择叙事风格、模板类型、视觉效果等）
+// BCG矩阵（新增）
+{
+  type: "bcg",
+  items: [
+    {name: "产品A", marketGrowth: 80, marketShare: 30, size: 50},
+    {name: "产品B", marketGrowth: 60, marketShare: 70, size: 120}
+  ]
+}
 
-### 方法论知识库
-- [SWOT分析完整指南](knowledge/frameworks/swot-analysis.md)
-- [Block参考手册](knowledge/block-reference.md)
-- [布局模式选择](knowledge/layout-patterns.md)
-- [叙事框架引擎](knowledge/narrative-engine.md)
-- [故障排查](knowledge/troubleshooting.md)
-
----
-
-## 🔒 安全与隐私
-
-✅ **100%本地运行** - 所有内容生成在本地，无数据上传  
-✅ **开源可审计** - MIT许可证，代码完全透明  
-✅ **CDN失败自动降级** - GSAP/Chart.js加载失败时回退到基础CSS动画  
-✅ **无执行权限** - 不运行系统命令，不修改配置
-
-### 权限清单
-
-| 权限类型 | 需要/不需要 | 说明 |
-|---------|-----------|------|
-| 文件读取 | ❌ | 不读取用户文件系统 |
-| 文件写入 | ✅ | 只写入用户指定的输出目录 |
-| 网络访问 | ⚠️ | 仅CDN加载GSAP/Chart.js（可完全离线） |
-| 系统命令 | ❌ | 不执行任何系统命令 |
-| 敏感数据 | ❌ | 不访问环境变量、配置文件 |
-
-### 数据流向
-
-```
-用户输入(文本/数据) → Claude生成deck.js → 写入本地HTML → 浏览器渲染
-                                   ↓
-                              无网络传输
-```
-
-[完整安全说明 →](docs/SECURITY_AND_PRIVACY.md)
-
----
-
-## 🆚 对比类似工具
-
-| 特性 | Interactive Deck | Reveal.js | Marp | Slidev |
-|------|-----------------|-----------|------|--------|
-| 学习曲线 | AI生成，零代码 | 需要HTML/JS | Markdown | Vue.js |
-| SWOT分析 | ✅ 内置 | ❌ | ❌ | ❌ |
-| 数据图表 | ✅ Chart.js集成 | 需要插件 | ❌ | 需要配置 |
-| 渐进揭示 | ✅ 自动 | 手动配置 | 有限支持 | 手动配置 |
-| 翻页笔支持 | ✅ 原生 | ✅ | ⚠️ | ✅ |
-| 适用场景 | **商业汇报** | 技术演讲 | 文档演示 | 开发分享 |
-
-**定位差异**：Interactive Deck专注**商业汇报场景**（战略复盘、数据分析、高管汇报），内置SWOT等专业方法论Block，AI自动判断叙事结构。其他工具更适合技术演讲或开发者分享。
-
----
-
-## 🌐 浏览器兼容性
-
-| 浏览器 | 最低版本 | 状态 | 说明 |
-|--------|---------|------|------|
-| Chrome | 90+ | ✅ 完全支持 | 推荐使用 |
-| Edge | 90+ | ✅ 完全支持 | 推荐使用 |
-| Firefox | 88+ | ✅ 完全支持 | - |
-| Safari | 14+ | ⚠️ 部分特性降级 | CSS Grid兼容性 |
-| IE11 | - | ❌ 不支持 | 不支持ES6 |
-
-**性能指标**：
-- 首次加载时间：< 1秒（含CDN）
-- 渲染性能：支持50+页流畅翻页
-- 离线可用：下载后无需网络
-
----
-
-## ❓ 常见问题
-
-<details>
-<summary><b>图表不显示怎么办？</b></summary>
-
-检查Chart.js CDN是否加载失败：
-1. 打开浏览器控制台（F12）
-2. 查看Network标签是否有404错误
-3. 解决方案：
-   - 检查网络连接
-   - 或下载Chart.js到本地并修改引用路径
-
-</details>
-
-<details>
-<summary><b>如何修改主题颜色？</b></summary>
-
-编辑deck.js中的theme配置：
-```javascript
-theme: {
-  blue: '#2563eb',  // 改成你喜欢的颜色
-  gold: '#e8c874',
-  bg: '#0b1220'
+// 看板（新增）
+{
+  type: "kanban",
+  columns: [
+    {
+      title: "待开发",
+      color: "#6b7280",
+      cards: [{title: "工单看板", tag: "P1", assignee: "张三"}]
+    }
+  ]
 }
 ```
 
-或使用可视化配置工具：`config_ui/config_ui.html`
+---
 
-</details>
+### 3. visual-design-rules.md（243行）
+**作用**：统一视觉规范，避免每次生成风格不一致
 
-<details>
-<summary><b>支持导出PDF吗？</b></summary>
+**核心规范**：
+- **配色系统**：主色1（蓝#0ea5e9）+ 主色2（橙#f59e0b）+ 背景（深蓝#0f172a）
+- **字体层级**：标题72-96px > 数字68px > 区块标题36-48px > 正文24-28px
+- **间距系统**：Block间距48px，段落间距16-24px，卡片内边距32-40px
+- **动效规则**：渐进揭示0.6s stagger，数字滚动2s，hover lift 2px
 
-支持！使用浏览器打印功能：
-1. 按F11全屏演示
-2. Ctrl/Cmd + P打印
-3. 选择"另存为PDF"
-4. 调整设置：横向、去掉页眉页脚
-
-</details>
-
-<details>
-<summary><b>翻页笔可以用吗？</b></summary>
-
-✅ 完全支持！翻页笔的左右键会触发PageUp/PageDown事件，与键盘操作一致。
-
-</details>
+**对比度检查**：
+- 所有文字≥4.5:1（WCAG AA标准）
+- Delta标签用绿#10b981或红#ef4444
 
 ---
 
-## 📚 文档导航
+### 4. anti-patterns.md（533行）
+**作用**：防止11种常见错误，质量检查自动化
 
-| 类别 | 文档 | 说明 |
-|------|------|------|
-| **入门** | [3分钟快速开始](#-3分钟开始) | 零基础上手 |
-| | [完整案例](examples/) | 3个真实场景Demo |
-| | [常见问题](#-常见问题) | FAQ快速解决 |
-| **进阶** | [Block参考手册](knowledge/block-reference.md) | 13种Block完整API |
-| | [SWOT使用指南](knowledge/frameworks/swot-analysis.md) | SWOT分析完整教程 |
-| | [可视化配置工具](config_ui/config_ui.html) | 拖拽式编辑器 |
-| | [布局模式选择](knowledge/layout-patterns.md) | center/left/grid/scroll |
-| | [叙事框架引擎](knowledge/narrative-engine.md) | AI自动匹配4种框架 |
-| **开发** | [Block扩展指南](docs/BLOCK_EXTENSION_GUIDE.md) | 自定义Block开发 |
-| | [产品战略路线图](docs/PRODUCT_STRATEGY_ROADMAP.md) | 未来规划 |
-| **其他** | [故障排查](knowledge/troubleshooting.md) | 常见问题解决 |
-| | [安全与隐私](docs/SECURITY_AND_PRIVACY.md) | 完整安全说明 |
-| | [CHANGELOG](CHANGELOG.md) | 版本历史 |
-| | [SKILL.md](SKILL.md) | AI调用定义和判断规则 |
+**11种反模式**：
+1. 编造数据（幻觉最高危）
+2. 捏造案例/客户证言
+3. 内容过载（单页>3个Block）
+4. 图表结构错误（datasets不是数组）
+5. 配色混乱（主题色>2种）
+6. 字号失控（正文<20px或>32px）
+7. 动效过度（stagger用于静态数据）
+8. 时长不匹配（5分钟讲15页）
+9. 受众错配（给高管讲技术细节）
+10. 渐进揭示滥用（数据总览也拆分）
+11. Block类型错误（趋势用bar不用line）
 
----
-
-## 📄 许可证
-
-MIT © 2026 [longhuang1997-cpu](https://github.com/longhuang1997-cpu)
-
----
-
-## 🚀 产品路线图
-
-- **v2.1.0** - SWOT分析Block + 插件化架构
-- **v2.2.0** - code/split/grid自定义Block + 全Block交互动效
-- **v2.3.0** (当前) - OKR树 + 甘特图专业方法论Block
-- **v3.0.0** (愿景) - 更多专业方法论可视化（鱼骨图/波士顿矩阵/PDCA）
-
-从"演示工具"到"方法论平台"，让专业分析可视化。
+**质量检查清单**（生成后自动执行）：
+```javascript
+✅ 数据完整性：共X处【待填入】需手动补充
+✅ Block数量：所有页面≤3个Block
+✅ 图表结构：datasets均为数组
+✅ 配色检查：主题色2种（蓝+橙）
+✅ 页数匹配：10分钟汇报=8页
+```
 
 ---
 
-**GitHub**: https://github.com/longhuang1997-cpu/interactive-narrative-deck  
-**技能市场**: [待发布]
+### 5. layout-patterns.md（已存在）
+**作用**：根据Block数量和类型选择布局
+
+**三种布局**：
+- center：单Block居中（封面/结论页）
+- left：多Block左对齐（要点列表页）
+- right：图文混排右对齐（产品介绍页）
 
 ---
 
-## 🤝 参与贡献
+## v3.0 vs v2.3 对比
 
-欢迎贡献代码、报告问题或提出建议！
+| 维度 | v2.3 | v3.0 | 提升 |
+|------|------|------|------|
+| **叙事判断** | skill.md内嵌经验 | narrative-patterns.md（6框架） | 结构化、可复用 |
+| **Block覆盖** | 9种基础Block | 15种（+swot/okr/gantt/code/split/grid） | 专业场景覆盖 |
+| **视觉规范** | 口头描述 | visual-design-rules.md（243行） | 统一、可检查 |
+| **质量保障** | 人工检查 | anti-patterns.md（11种自动检测） | 幻觉零容忍 |
+| **知识沉淀** | 0个知识文件 | 4个新增+1个增强 | 经验可积累 |
 
-- 🐛 [报告Bug](https://github.com/longhuang1997-cpu/interactive-narrative-deck/issues)
-- 💡 [功能建议](https://github.com/longhuang1997-cpu/interactive-narrative-deck/issues)
-- 🔧 [提交PR](https://github.com/longhuang1997-cpu/interactive-narrative-deck/pulls)
+---
 
-贡献前请阅读 [贡献指南](CONTRIBUTING.md)（如有）
+## 使用场景
+
+### ✅ 适合
+- 战略汇报（季度/年度复盘）
+- 产品发布（路演/demo day）
+- 数据分析（BI报表/增长汇报）
+- 技术分享（架构/API文档）
+- OKR汇报（目标管理/进度同步）
+
+### ❌ 不适合
+- 需要打印的纸质文档（用a4-manual-maker skill）
+- 超过50页的培训课件（性能考虑）
+- 需要非技术同事编辑的场景（PPT更合适）
+
+---
+
+## 快速上手
+
+### 1. 用户触发
+说"做汇报/演示/deck"或调用 `/interactive-narrative-deck`
+
+### 2. AI收集信息
+```
+1. 【受众】给谁看？（高管/管理层/客户/团队）
+2. 【主题】核心是什么？（一句话）
+3. 【内容】有哪些数据、要点、素材？（粘贴最好）
+4. 【时长】讲多久？（5分钟/15分钟/30分钟）
+5. 【风格】视觉偏好？（不说用默认深蓝）
+```
+
+### 3. AI判断并告知
+```
+我的判断：
+- 叙事框架：结论先行（受众=高管）
+- 页数结构：P1封面 → P2结论 → P3数据 → P4行动
+- 关键Block：metric数字卡 + chart折线图 + timeline时间线
+- 视觉风格：医疗深蓝（#0f172a背景 + #0ea5e9主色）
+```
+
+### 4. 生成 + 质量检查
+- 生成 `deck.js`（所有页面）
+- 自动扫描11种反模式
+- 输出质量报告
+
+### 5. 交付
+- 双击 `index.html` 预览
+- F11全屏演示
+- 翻页笔/方向键控制
+
+---
+
+## 技术规格
+
+- **单文件HTML** - 所有内容打包，分享便捷
+- **CDN依赖** - GSAP动画 + Chart.js图表（离线自动降级）
+- **浏览器兼容** - Chrome/Edge/Safari/Firefox 90+（不支持IE11）
+- **键盘快捷键** - 左右键翻页、空格渐进、O总览、F11全屏
+- **可视化调试** - `config_ui/config_ui.html` 微调工具
+
+---
+
+## 贡献指南
+
+### 添加新Block
+1. 在 `engine/custom-blocks.js` 定义渲染逻辑
+2. 在 `knowledge/block-reference.md` 补充API文档
+3. 在 `skill.md` Block清单添加索引
+
+### 添加新叙事框架
+1. 在 `knowledge/narrative-patterns.md` 添加决策树
+2. 定义触发条件（受众+场景）
+3. 给出页数结构模板
+
+### 添加新反模式
+1. 在 `knowledge/anti-patterns.md` 描述错误特征
+2. 提供检测方法（正则/逻辑判断）
+3. 给出修复方案
+
+---
+
+## License
+
+MIT
+
+---
+
+**一句话总结**：把10年汇报经验沉淀成AI可调用的知识文件，用户只需说清楚"给谁汇报什么"，AI自动匹配框架+选Block+检查质量。

@@ -1,0 +1,121 @@
+/**
+ * 验证错误提示样式
+ * 用于显示数据验证失败时的专业错误提示
+ */
+
+.nd-validation-error {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(251, 146, 60, 0.1));
+  border: 2px solid rgba(239, 68, 68, 0.4);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem auto;
+  max-width: 900px;
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.2);
+}
+
+.nd-validation-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.nd-validation-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.nd-validation-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fef2f2;
+  flex: 1;
+}
+
+.nd-validation-quality {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.2);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+}
+
+.nd-validation-section {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.3);
+}
+
+.nd-validation-section:last-child {
+  margin-bottom: 0;
+}
+
+.nd-validation-errors {
+  border-left: 4px solid #ef4444;
+}
+
+.nd-validation-warnings {
+  border-left: 4px solid #f59e0b;
+}
+
+.nd-validation-suggestions {
+  border-left: 4px solid #3b82f6;
+}
+
+.nd-validation-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #f8fafc;
+}
+
+.nd-validation-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nd-validation-section li {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.nd-validation-section li::before {
+  content: '•';
+  position: absolute;
+  left: 0.5rem;
+  color: #94a3b8;
+  font-weight: bold;
+}
+
+.nd-validation-errors li {
+  color: #fca5a5;
+}
+
+.nd-validation-errors li::before {
+  color: #ef4444;
+}
+
+.nd-validation-warnings li {
+  color: #fcd34d;
+}
+
+.nd-validation-warnings li::before {
+  color: #f59e0b;
+}
+
+.nd-validation-suggestions li {
+  color: #93c5fd;
+}
+
+.nd-validation-suggestions li::before {
+  color: #3b82f6;
+}
