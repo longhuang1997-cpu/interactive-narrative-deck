@@ -193,3 +193,16 @@ const PAGE_CONFIG = {
   secondaryColor: "#10B981",
   chartColors: ["#38BDF8", "#10B981", "#F59E0B", "#EF4444"]
 };
+
+// 导出为window.NARRATIVE_DECK供engine.js使用
+window.NARRATIVE_DECK = {
+  theme: {
+    blue: PAGE_CONFIG.accentColor,
+    gold: PAGE_CONFIG.secondaryColor,
+    bg: PAGE_CONFIG.bgColor
+  },
+  slides: DECK.map(block => ({
+    layout: 'center',
+    blocks: [block]
+  }))
+};
