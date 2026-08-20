@@ -69,6 +69,8 @@ description: 把演讲/汇报材料做成"结构化交互叙事"演示——不�
 | 内容特征 | 选用Block | 原因 |
 |---------|---------|-----|
 | **战略分析/优劣势评估** | **swot** | **SWOT矩阵是战略分析标配，2x2布局清晰** |
+| **目标管理/OKR汇报** | **okr** | **O→KR树状结构，进度条直观** |
+| **项目进度/路线图** | **gantt** | **时间轴+任务条，里程碑清晰** |
 | 有3个以上并列要点 | bullets+stagger | 渐进揭示配合讲解，不一次砸完 |
 | 需要做决策/选型 | compare | 左右对比一目了然，比bullets更直观 |
 | 有时间顺序/路线图 | timeline | 视觉呈现进度感，比文字清晰 |
@@ -80,6 +82,10 @@ description: 把演讲/汇报材料做成"结构化交互叙事"演示——不�
 | **能力矩阵/特性并列** | **grid** | **2-4列卡片，信息密度高且美观** |
 
 **SWOT分析铁律**：用户提到"优势劣势"/"战略分析"/"竞争评估"/"SWOT"，或场景是季度复盘/新业务评估/竞争分析时，优先推荐swot Block，而不是用bullets堆砌。
+
+**OKR铁律**：用户提到"目标管理"/"OKR"/"KR进度"/"战略执行"时，优先推荐okr Block。
+
+**甘特图铁律**：用户提到"项目进度"/"时间线"/"里程碑"/"路线图"时，优先推荐gantt Block。
 
 ### 判断4：渐进揭示的时机
 
@@ -241,9 +247,21 @@ description: 把演讲/汇报材料做成"结构化交互叙事"演示——不�
 | media | 图片/视频 | img 或 video |
 | tabs | 标签页 | tabs:[{label,html}] |
 | **swot** | **SWOT分析矩阵** | **strengths[], weaknesses[], opportunities[], threats[]** |
+| **okr** | **OKR树状图** | **objective, keyResults:[{kr,progress,status}]** |
+| **gantt** | **甘特图** | **start, end, tasks:[{name,start,duration,progress}]** |
+| **code** | **代码展示** | **code, language, title** |
+| **split** | **左图右文分栏** | **img/video, content, reverse** |
+| **grid** | **多列网格卡片** | **columns, cards:[{icon,title,text,tag}]** |
 
 **专业Block（business-blocks.js）**：
 - `swot`：战略分析必备，2x2矩阵展示内外部因素，适用于季度复盘/新业务评估/竞争分析
+- `okr`：目标管理可视化，O→KR树状结构+进度条，适用于季度/年度目标汇报、团队OKR对齐
+- `gantt`：项目时间线，任务条+进度百分比，适用于项目进度汇报、产品路线图、里程碑规划
+
+**自定义Block（custom-blocks.js）**：
+- `code`：代码展示，行号+语法高亮+语言徽标，适用于技术分享/API文档
+- `split`：左图右文分栏，图文混排，适用于产品介绍/架构说明
+- `grid`：多列网格卡片（2-4列），适用于能力矩阵/特性并列
 
 ---
 

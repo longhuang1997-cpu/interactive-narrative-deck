@@ -5,7 +5,7 @@
 ![Claude](https://img.shields.io/badge/Claude-Skill-orange)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
-> 30分钟做出专业汇报演示 · Block积木 + SWOT分析 + 渐进揭示
+> 30分钟做出专业汇报演示 · Block积木 + SWOT分析 + OKR树 + 甘特图 + 渐进揭示
 
 ![演示动画](examples/demo.gif)
 
@@ -64,7 +64,7 @@ F11                       # 全屏演示
 
 ---
 
-## 🧩 13种Block积木
+## 🧩 15种Block积木
 
 | Block | 用途 | 最佳场景 |
 |-------|------|---------|
@@ -83,8 +83,12 @@ F11                       # 全屏演示
 | Block | 用途 | 场景 |
 |-------|------|------|
 | **`swot`** | **SWOT分析矩阵** | **战略复盘/竞争分析** |
+| **`okr`** | **OKR树状图** | **目标管理/战略执行** |
+| **`gantt`** | **甘特图** | **项目进度/路线图** |
 
 **v2.1.0新增**：SWOT分析Block，2x2矩阵展示优势/劣势/机会/威胁，适用于季度复盘、新业务评估、竞争分析。
+
+**v2.2.0新增**：OKR树和甘特图两大专业方法论Block，让目标管理和项目进度可视化。OKR树展示目标→关键结果的树状结构+进度条，甘特图展示时间轴+任务条，都带交互动效。
 
 [完整SWOT使用指南 →](knowledge/frameworks/swot-analysis.md)
 

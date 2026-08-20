@@ -145,4 +145,47 @@ h2{font-size:40px;font-weight:700;margin-bottom:8px;}
 .nd-grid-tag{display:inline-block;margin-top:14px;font-size:14px;color:var(--nd-gold);border:1px solid rgba(232,200,116,.35);border-radius:10px;padding:3px 10px;transition:all .3s;}
 .nd-grid-card:hover .nd-grid-tag{background:rgba(232,200,116,.15);border-color:var(--nd-gold);}
 
-@media(max-width:900px){.nd-hero h1{font-size:44px;}.nd-layout-grid{grid-template-columns:1fr;}.nd-swot-matrix{grid-template-columns:1fr;}.nd-swot-legend{flex-direction:column;align-items:flex-start;}.nd-split{flex-direction:column;}.nd-split-media{flex:1 1 auto;max-width:100%;}.nd-grid{grid-template-columns:1fr;}}
+/* ============================================================================
+   OKR Tree - 目标与关键结果可视化
+   ============================================================================ */
+.nd-okr-wrapper{width:100%;max-width:1000px;}
+.nd-okr-title{font-size:32px;font-weight:700;text-align:center;margin-bottom:24px;color:var(--nd-ink);}
+.nd-okr-objective{background:linear-gradient(135deg,var(--nd-blue),#3b82f6);border-radius:18px;padding:28px 32px;margin-bottom:32px;text-align:center;transition:transform .3s,box-shadow .3s;cursor:pointer;}
+.nd-okr-objective:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 12px 40px rgba(37,99,235,.5);}
+.nd-okr-obj-label{font-size:16px;color:rgba(255,255,255,.8);letter-spacing:2px;margin-bottom:8px;}
+.nd-okr-obj-text{font-size:28px;font-weight:700;color:#fff;line-height:1.4;}
+.nd-okr-krs{display:flex;flex-direction:column;gap:18px;}
+.nd-okr-kr{background:var(--nd-card);border:1px solid var(--nd-line);border-left:4px solid var(--kr-color);border-radius:14px;padding:20px 24px;transition:transform .3s,box-shadow .3s,border-left-width .3s;opacity:0;animation:okrKrIn .4s ease calc(var(--kr-index) * .1s) forwards;cursor:pointer;}
+.nd-okr-kr:hover{transform:translateX(8px) scale(1.02);box-shadow:0 8px 24px rgba(0,0,0,.3);border-left-width:6px;}
+.nd-okr-kr-content{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.nd-okr-kr-text{font-size:20px;color:var(--nd-ink);font-weight:600;flex:1;}
+.nd-okr-kr-status{font-size:15px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:12px;background:rgba(255,255,255,.08);transition:background .3s;}
+.nd-okr-kr:hover .nd-okr-kr-status{background:rgba(255,255,255,.15);}
+.nd-okr-progress-bar{position:relative;height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;margin-bottom:8px;}
+.nd-okr-progress-fill{height:100%;border-radius:4px;transition:width 1.2s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;}
+.nd-okr-progress-fill::after{content:"";position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:shimmer 1.5s infinite;}
+.nd-okr-progress-label{font-size:14px;color:var(--nd-sub);text-align:right;}
+@keyframes okrKrIn{from{opacity:0;transform:translateX(-20px);}to{opacity:1;transform:none;}}
+@keyframes shimmer{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
+
+/* ============================================================================
+   Gantt Chart - 甘特图项目时间线
+   ============================================================================ */
+.nd-gantt-wrapper{width:100%;max-width:1100px;overflow-x:auto;}
+.nd-gantt-title{font-size:32px;font-weight:700;text-align:center;margin-bottom:24px;color:var(--nd-ink);}
+.nd-gantt-timeline{min-width:800px;}
+.nd-gantt-months{display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:0;border-bottom:2px solid var(--nd-gold);margin-bottom:20px;padding-bottom:10px;}
+.nd-gantt-month{font-size:14px;color:var(--nd-sub);text-align:center;padding:4px;transition:color .3s,transform .3s;cursor:pointer;}
+.nd-gantt-month:hover{color:var(--nd-gold);transform:scale(1.1);}
+.nd-gantt-tasks{display:flex;flex-direction:column;gap:16px;}
+.nd-gantt-task-row{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center;opacity:0;animation:ganttTaskIn .4s ease calc(var(--task-index) * .12s) forwards;}
+.nd-gantt-task-name{font-size:18px;color:var(--nd-ink);font-weight:600;padding:10px 0;transition:color .3s;}
+.nd-gantt-task-row:hover .nd-gantt-task-name{color:var(--nd-gold);}
+.nd-gantt-task-timeline{position:relative;height:40px;background:rgba(255,255,255,.04);border-radius:8px;}
+.nd-gantt-task-bar{position:absolute;top:6px;height:28px;background:linear-gradient(135deg,var(--nd-blue),#3b82f6);border-radius:6px;overflow:hidden;transition:transform .3s,box-shadow .3s;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.nd-gantt-task-bar:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(37,99,235,.5);z-index:2;}
+.nd-gantt-task-progress{position:absolute;top:0;left:0;height:100%;background:linear-gradient(135deg,var(--nd-gold),#f59e0b);transition:width 1.2s cubic-bezier(.4,0,.2,1);border-radius:6px;}
+.nd-gantt-task-progress-label{position:relative;z-index:1;font-size:13px;color:#fff;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.3);}
+@keyframes ganttTaskIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+@media(max-width:900px){.nd-hero h1{font-size:44px;}.nd-layout-grid{grid-template-columns:1fr;}.nd-swot-matrix{grid-template-columns:1fr;}.nd-swot-legend{flex-direction:column;align-items:flex-start;}.nd-split{flex-direction:column;}.nd-split-media{flex:1 1 auto;max-width:100%;}.nd-grid{grid-template-columns:1fr;}.nd-gantt-task-row{grid-template-columns:1fr;}.nd-okr-kr-content{flex-direction:column;align-items:flex-start;gap:8px;}}

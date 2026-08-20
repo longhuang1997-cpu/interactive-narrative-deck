@@ -7,7 +7,7 @@
     "author_handle": "longhuang1997-cpu"
   },
   "metadata": {
-    "description": "把汇报做成Block积木式交互演示 — 13种Block(9核心+SWOT+code/split/grid) + 全Block交互动效 + AI判断叙事框架,对标Slack Block Kit交互与Figma微交互质感",
+    "description": "把汇报做成Block积木式交互演示 — 15种Block(9核心+SWOT/OKR/甘特+code/split/grid) + 全Block交互动效 + AI判断叙事框架,对标Slack Block Kit交互与Figma微交互质感",
     "version": "2.2.0",
     "author": "longhuang1997-cpu",
     "demo_url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck#-完整案例",
@@ -17,7 +17,9 @@
       "战略汇报：向高管汇报Q3业绩，数据驱动+结论优先",
       "产品路演：给投资人展示产品，痛点-解法-证明",
       "技术分享：团队技术架构分享，代码演示+渐进揭示",
-      "数据复盘：业务数据复盘，实时图表+趋势分析"
+      "数据复盘：业务数据复盘，实时图表+趋势分析",
+      "目标管理：OKR季度汇报，目标→KR进度可视化",
+      "项目进度：甘特图路线图，里程碑+时间线展示"
     ],
     "ai_features": [
       "自动判断叙事框架：根据受众(高管/客户/团队)选择最优结构",
