@@ -8,7 +8,7 @@
   },
   "metadata": {
     "description": "把汇报做成Block积木式交互演示 — 15种Block(9核心+SWOT/OKR/甘特+code/split/grid) + 全Block交互动效 + AI判断叙事框架,对标Slack Block Kit交互与Figma微交互质感",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "author": "longhuang1997-cpu",
     "demo_url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck#-完整案例",
     "screenshot_url": "https://raw.githubusercontent.com/longhuang1997-cpu/interactive-narrative-deck/main/assets/demo.gif",

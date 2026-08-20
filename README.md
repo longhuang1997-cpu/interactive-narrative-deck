@@ -1,6 +1,6 @@
 # Interactive Narrative Deck
 
-![Version](https://img.shields.io/badge/version-2.2.0-blue)
+![Version](https://img.shields.io/badge/version-2.3.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Claude](https://img.shields.io/badge/Claude-Skill-orange)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
@@ -88,7 +88,7 @@ F11                       # 全屏演示
 
 **v2.1.0新增**：SWOT分析Block，2x2矩阵展示优势/劣势/机会/威胁，适用于季度复盘、新业务评估、竞争分析。
 
-**v2.2.0新增**：OKR树和甘特图两大专业方法论Block，让目标管理和项目进度可视化。OKR树展示目标→关键结果的树状结构+进度条，甘特图展示时间轴+任务条，都带交互动效。
+**v2.3.0新增**：OKR树和甘特图两大专业方法论Block，让目标管理和项目进度可视化。OKR树展示目标→关键结果的树状结构+进度条，甘特图展示时间轴+任务条，都带交互动效。
 
 [完整SWOT使用指南 →](knowledge/frameworks/swot-analysis.md)
 
@@ -294,9 +294,10 @@ MIT © 2026 [longhuang1997-cpu](https://github.com/longhuang1997-cpu)
 
 ## 🚀 产品路线图
 
-- **v2.1.0** (当前) - SWOT分析Block + 插件化架构
-- **v2.2.0** (规划中) - OKR树 + 甘特图
-- **v3.0.0** (愿景) - 专业方法论可视化平台
+- **v2.1.0** - SWOT分析Block + 插件化架构
+- **v2.2.0** - code/split/grid自定义Block + 全Block交互动效
+- **v2.3.0** (当前) - OKR树 + 甘特图专业方法论Block
+- **v3.0.0** (愿景) - 更多专业方法论可视化（鱼骨图/波士顿矩阵/PDCA）
 
 从"演示工具"到"方法论平台"，让专业分析可视化。
 
