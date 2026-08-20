@@ -7,7 +7,7 @@
 
 > 30分钟做出专业汇报演示 · Block积木 + SWOT分析 + OKR树 + 甘特图 + 渐进揭示
 
-![演示动画](examples/demo.gif)
+![演示动画](assets/demo-v2.3.0.gif)
 
 ---
 
