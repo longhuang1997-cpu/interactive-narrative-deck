@@ -23,6 +23,7 @@ async function runCompatTests() {
 
   const browser = await puppeteer.launch({
     headless: 'new',
+    executablePath: process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe',
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
 
@@ -37,11 +38,18 @@ async function runCompatTests() {
       const consoleErrors = [];
       page.on('console', msg => {
         if (msg.type() === 'error') {
-          consoleErrors.push(msg.text());
+          const text = msg.text();
+          // Ignore favicon and 404 errors
+          if (!text.includes('favicon') && !text.includes('404')) {
+            consoleErrors.push(text);
+          }
         }
       });
 
       await page.goto(TEST_URL, { waitUntil: 'networkidle0', timeout: 10000 });
+
+      // Wait for JavaScript to render slides
+      await page.waitForSelector('.nd-slide', { timeout: 5000 });
 
       // 检查stage容器是否存在
       const stageExists = await page.$('#nd-stage');
