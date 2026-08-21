@@ -11,7 +11,7 @@
 ## 🎬 演示效果
 
 ### 在线Demo
-👉 [查看完整演示](https://yourname.github.io/interactive-narrative-deck/examples/all-professional-blocks/)  
+👉 [查看完整演示](assets/demo-v2.3.0.gif)  
 （部署后替换链接）
 
 ### 预览截图
