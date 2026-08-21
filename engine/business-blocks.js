@@ -536,11 +536,14 @@
       const taskTimeline = document.createElement('div');
       taskTimeline.className = 'nd-gantt-task-timeline';
 
-      // 计算任务条位置和宽度
+      // 计算任务条位置和宽度（确保不超出画布）
       const taskStart = parseMonth(task.start);
       const offsetMonths = (taskStart.getFullYear() - startDate.getFullYear()) * 12
                           + (taskStart.getMonth() - startDate.getMonth());
-      const widthPercent = (task.duration / totalMonths) * 100;
+
+      // 限制任务条不超出时间轴范围
+      const actualDuration = Math.min(task.duration, totalMonths - offsetMonths);
+      const widthPercent = (actualDuration / totalMonths) * 100;
       const leftPercent = (offsetMonths / totalMonths) * 100;
 
       const taskBar = document.createElement('div');
@@ -599,196 +602,252 @@
   // 鱼骨图（Fishbone / Ishikawa Diagram）
   // ============================================================================
 
-  /**
-   * 鱼骨图Block
-   *
-   * 用途：问题根因分析、质量管理、故障排查
-   * 结构：中心问题 + 6大类原因（人/机/料/法/环/测）
-   *
-   * @param {Object} data - 鱼骨图数据
-   * @param {string} data.problem - 核心问题（鱼头）
-   * @param {Object} data.causes - 原因分类
-   * @param {Array<string>} [data.causes.people] - 人员因素
-   * @param {Array<string>} [data.causes.machine] - 设备/技术因素
-   * @param {Array<string>} [data.causes.material] - 材料/资源因素
-   * @param {Array<string>} [data.causes.method] - 方法/流程因素
-   * @param {Array<string>} [data.causes.environment] - 环境因素
-   * @param {Array<string>} [data.causes.measurement] - 测量/监控因素
-   * @param {string} [data.title] - 可选标题
-   *
-   * @example
-   * {
-   *   type: 'fishbone',
-   *   title: '客户投诉率偏高根因分析',
-   *   problem: '客户投诉率达8%',
-   *   causes: {
-   *     people: ['客服培训不足', '响应速度慢'],
-   *     machine: ['系统频繁宕机', '工单派发延迟'],
-   *     material: ['产品质量不稳定'],
-   *     method: ['流程不规范', '无SOP'],
-   *     environment: ['高峰期压力大'],
-   *     measurement: ['投诉数据统计不准']
-   *   }
-   * }
-   */
-  BlockRegistry.register('fishbone', function(data) {
-    // ========== 数据验证 ==========
-    if (window.ModelValidator) {
-      const validation = window.ModelValidator.fishbone(data);
+// 特点：真正的鱼形骨架 + 动效 + 点击展开/收起 + 不密集
 
-      if (!validation.valid) {
-        return createValidationError('Fishbone鱼骨图', validation);
-      }
-
-      if (validation.warnings.length > 0 || validation.suggestions.length > 0) {
-        console.warn('[Fishbone验证]', validation);
-      }
+BlockRegistry.register('fishbone', function(data) {
+  // 数据验证
+  if (window.ModelValidator) {
+    const validation = window.ModelValidator.fishbone(data);
+    if (!validation.valid) {
+      return createValidationError('鱼骨图', validation);
     }
-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'nd-block nd-fishbone-wrapper';
-
-    if (data.title) {
-      const titleEl = document.createElement('div');
-      titleEl.className = 'nd-fishbone-title';
-      titleEl.textContent = data.title;
-      wrapper.appendChild(titleEl);
+    if (validation.warnings.length > 0 || validation.suggestions.length > 0) {
+      console.warn('[鱼骨图验证]', validation);
     }
+  }
 
-    // SVG鱼骨图 - 重构版：更精确的Ishikawa结构 + 分层鱼刺
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', '0 0 1200 650');
-    svg.setAttribute('class', 'nd-fishbone-svg');
+  const wrapper = document.createElement('div');
+  wrapper.className = 'nd-block nd-fishbone-wrapper';
 
-    const blue = '#0ea5e9';
-    const gold = '#f59e0b';
-    const sub = '#9fb0ca';
-    const dim = '#64748b';
+  if (data.title) {
+    const titleEl = document.createElement('div');
+    titleEl.className = 'nd-fishbone-title';
+    titleEl.textContent = data.title;
+    wrapper.appendChild(titleEl);
+  }
 
-    // 定义渐变和阴影
-    const defs = `
-      <defs>
-        <linearGradient id="fishbone-spine" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" style="stop-color:${blue};stop-opacity:0.3" />
-          <stop offset="100%" style="stop-color:${gold};stop-opacity:0.8" />
-        </linearGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-          <feMerge>
-            <feMergeNode in="coloredBlur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-      </defs>
+  // SVG - 真正的鱼骨形状 + 清晰主骨架（居中显示，防止超出）
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 1600 800');
+  svg.setAttribute('class', 'nd-fishbone-svg');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  svg.style.width = '100%';
+  svg.style.height = 'auto';
+
+  const spineColor = '#0ea5e9';
+  const boneColor = '#3b82f6';
+  const headColor = '#f59e0b';
+  const textColor = '#cbd5e1';
+  const dimColor = '#94a3b8';
+
+  // 定义渐变、阴影和动画
+  const defs = `
+    <defs>
+      <linearGradient id="fish-spine-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:${spineColor};stop-opacity:0.4" />
+        <stop offset="100%" style="stop-color:${headColor};stop-opacity:0.9" />
+      </linearGradient>
+      <filter id="fish-glow">
+        <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+        <feMerge>
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+  `;
+
+  // 主骨架（脊柱）- 从鱼尾到鱼头，缩小整体宽度避免超出
+  const tailStartX = 100;
+  const spineStartX = 200;
+  const spineEndX = 1200;
+  const spineY = 400;
+
+  const mainSpine = `
+    <!-- 鱼尾 -->
+    <line x1="${tailStartX}" y1="${spineY - 40}" x2="${spineStartX}" y2="${spineY}"
+          stroke="${spineColor}" stroke-width="3" opacity="0.7"
+          stroke-linecap="round" filter="url(#fish-glow)">
+      <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <line x1="${tailStartX}" y1="${spineY + 40}" x2="${spineStartX}" y2="${spineY}"
+          stroke="${spineColor}" stroke-width="3" opacity="0.7"
+          stroke-linecap="round" filter="url(#fish-glow)">
+      <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <!-- 主脊柱（中间直线）-->
+    <line x1="${spineStartX}" y1="${spineY}" x2="${spineEndX}" y2="${spineY}"
+          stroke="url(#fish-spine-grad)" stroke-width="6"
+          stroke-linecap="round" filter="url(#fish-glow)"
+          class="fish-spine">
+      <animate attributeName="stroke-width" values="6;7;6" dur="3s" repeatCount="indefinite"/>
+    </line>
+  `;
+
+  // 鱼头（问题区域）- 控制在viewBox 1600内，右边界=1200+170+210=1580
+  const problemText = data.problem || '【待定义问题】';
+  const fishHead = `
+    <g class="fish-head" style="animation: fadeIn 0.8s ease-out both;">
+      <path d="M ${spineEndX} ${spineY}
+               L ${spineEndX + 70} ${spineY - 55}
+               Q ${spineEndX + 130} ${spineY} ${spineEndX + 70} ${spineY + 55}
+               Z"
+            fill="${headColor}" opacity="0.85" filter="url(#fish-glow)"/>
+      <circle cx="${spineEndX + 90}" cy="${spineY - 12}" r="5" fill="#1e293b"/>
+      <circle cx="${spineEndX + 90}" cy="${spineY - 12}" r="2" fill="#fff"/>
+      <rect x="${spineEndX + 170}" y="${spineY - 60}" width="210" height="120"
+            fill="rgba(15,23,42,0.85)" stroke="${headColor}" stroke-width="3" rx="12"/>
+      <text x="${spineEndX + 275}" y="${spineY - 35}" font-size="13" fill="${dimColor}"
+            font-weight="600" text-anchor="middle" letter-spacing="2">PROBLEM</text>
+      <foreignObject x="${spineEndX + 180}" y="${spineY - 12}" width="190" height="70">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="
+          color: #f8fafc;
+          font-size: 15px;
+          font-weight: 700;
+          text-align: center;
+          line-height: 1.3;
+          padding: 0 8px;
+        ">${problemText}</div>
+      </foreignObject>
+    </g>
+  `;
+
+  // 6M分支 - 3上3下均匀分布，调整位置避免拥挤
+  const categories = [
+    { key: 'people', label: '人员', labelEn: 'People', icon: '👥', x: 380, side: 'top' },
+    { key: 'machine', label: '设备', labelEn: 'Machine', icon: '⚙️', x: 650, side: 'top' },
+    { key: 'material', label: '材料', labelEn: 'Material', icon: '📦', x: 920, side: 'top' },
+    { key: 'method', label: '方法', labelEn: 'Method', icon: '📋', x: 380, side: 'bottom' },
+    { key: 'environment', label: '环境', labelEn: 'Environment', icon: '🌍', x: 650, side: 'bottom' },
+    { key: 'measurement', label: '测量', labelEn: 'Measurement', icon: '📊', x: 920, side: 'bottom' }
+  ];
+
+  let bonesGroup = '<g class="fish-bones">';
+  let labelsGroup = '<g class="fish-labels">';
+  let causesGroup = '<g class="fish-causes">';
+
+  categories.forEach((cat, catIndex) => {
+    const items = (data.causes && data.causes[cat.key]) || [];
+    const isTop = cat.side === 'top';
+    const boneLength = 160;
+
+    const endX = cat.x + 90;
+    const endY = isTop ? spineY - boneLength : spineY + boneLength;
+
+    // 主刺
+    bonesGroup += `
+      <line x1="${cat.x}" y1="${spineY}" x2="${endX}" y2="${endY}"
+            stroke="${boneColor}" stroke-width="4" opacity="0.7"
+            stroke-linecap="round"
+            style="animation: fadeIn 0.8s ${catIndex * 0.15}s ease-out both;">
+      </line>
     `;
 
-    // 主干线（脊柱，带渐变）
-    const mainLine = `<line x1="80" y1="325" x2="950" y2="325" stroke="url(#fishbone-spine)" stroke-width="4" filter="url(#glow)"/>`;
+    // 分类标签 - 加大间距，文本居中对齐
+    const labelX = endX - 75;
+    const labelY = isTop ? endY - 75 : endY + 15;
 
-    // 鱼头（右侧箭头，增强视觉）
-    const problemText = data.problem || '【待填入问题】';
-    const fishHead = `
-      <path d="M 950 325 L 1010 310 L 1050 325 L 1010 340 Z" fill="${gold}" opacity="0.9" filter="url(#glow)"/>
-      <text x="1070" y="315" font-size="13" fill="${dim}" font-weight="500">Problem</text>
-      <text x="1070" y="338" font-size="15" fill="#f8fafc" font-weight="700">${problemText.length > 20 ? problemText.substring(0,18) + '...' : problemText}</text>
+    labelsGroup += `
+      <g class="category-label" style="animation: fadeIn 0.6s ${catIndex * 0.15 + 0.3}s both; cursor: pointer;"
+         data-category="${cat.key}">
+        <rect x="${labelX}" y="${labelY}" width="150" height="70"
+              fill="rgba(15,23,42,0.9)" stroke="${boneColor}" stroke-width="2" rx="8"/>
+        <text x="${labelX + 25}" y="${labelY + 32}" font-size="22">${cat.icon}</text>
+        <text x="${labelX + 62}" y="${labelY + 26}" font-size="11" fill="${dimColor}"
+              font-weight="600" text-anchor="start">${cat.labelEn}</text>
+        <text x="${labelX + 62}" y="${labelY + 45}" font-size="16" fill="${headColor}"
+              font-weight="700" text-anchor="start">${cat.label}</text>
+        <text x="${labelX + 132}" y="${labelY + 38}" font-size="14" fill="${textColor}"
+              font-weight="600" text-anchor="end">(${items.length})</text>
+      </g>
     `;
 
-    // 6M分支 - 重新计算间距，确保均匀分布
-    const categories = [
-      { key: 'people', label: '人员', labelEn: 'People', x: 200, side: 'top' },
-      { key: 'machine', label: '设备', labelEn: 'Machine', x: 400, side: 'top' },
-      { key: 'material', label: '材料', labelEn: 'Material', x: 600, side: 'top' },
-      { key: 'method', label: '方法', labelEn: 'Method', x: 800, side: 'top' },
-      { key: 'environment', label: '环境', labelEn: 'Environment', x: 200, side: 'bottom' },
-      { key: 'measurement', label: '测量', labelEn: 'Measurement', x: 400, side: 'bottom' }
-    ];
+    // 原因列表（初始隐藏）
+    if (items.length > 0) {
+      const causeListX = endX + (isTop ? -220 : -220);
+      const causeListY = isTop ? endY - 200 : endY + 90;
 
-    let bones = '';
-    let labels = '';
-    let causes = '';
-
-    categories.forEach((cat, catIndex) => {
-      const items = (data.causes && data.causes[cat.key]) || [];
-      const isTop = cat.side === 'top';
-      const spineY = 325;
-      const mainBoneLength = 140;
-      const endY = isTop ? spineY - mainBoneLength : spineY + mainBoneLength;
-
-      // 主刺（从脊柱斜向上/下，45度角）
-      bones += `<line x1="${cat.x}" y1="${spineY}" x2="${cat.x + 100}" y2="${endY}"
-                     stroke="${blue}" stroke-width="3" opacity="0.6"
-                     stroke-linecap="round"
-                     style="animation: fadeIn 0.5s ${catIndex * 0.1}s both"/>`;
-
-      // 分类标签（中英文双行）
-      const labelX = cat.x + 110;
-      const labelY = isTop ? endY - 20 : endY + 30;
-      labels += `
-        <text x="${labelX}" y="${labelY}" font-size="12" fill="${dim}" font-weight="500" text-anchor="start">${cat.labelEn}</text>
-        <text x="${labelX}" y="${labelY + 16}" font-size="14" fill="${gold}" font-weight="700" text-anchor="start">${cat.label}</text>
+      causesGroup += `
+        <g class="cause-list" data-category="${cat.key}" style="opacity: 0; pointer-events: none; transition: opacity 0.3s;">
+          <rect x="${causeListX}" y="${causeListY}" width="260" height="${Math.min(items.length * 36 + 50, 220)}"
+                fill="rgba(15,23,42,0.95)" stroke="${boneColor}" stroke-width="2" rx="8"/>
+          <text x="${causeListX + 130}" y="${causeListY + 28}" font-size="14" fill="${headColor}"
+                font-weight="700" text-anchor="middle">详细原因 ↓</text>
       `;
 
-      // 子刺（具体原因，垂直于主刺）
-      items.slice(0, 4).forEach((item, idx) => {
-        const progress = (idx + 1) / 5; // 沿主刺均匀分布
-        const boneX = cat.x + progress * 100;
-        const boneY = isTop ? spineY - progress * mainBoneLength : spineY + progress * mainBoneLength;
-
-        const subBoneLength = 60 - idx * 8; // 越靠近鱼头越短
-        const subEndX = boneX + (isTop ? -subBoneLength : -subBoneLength);
-        const subEndY = boneY + (isTop ? -25 : 25);
-
-        // 子刺线
-        causes += `<line x1="${boneX}" y1="${boneY}" x2="${subEndX}" y2="${subEndY}"
-                        stroke="${sub}" stroke-width="2" opacity="0.5"
-                        stroke-linecap="round"
-                        style="animation: fadeIn 0.4s ${catIndex * 0.1 + idx * 0.05 + 0.2}s both"/>`;
-
-        // 原因文本（自动换行处理）
-        const textX = subEndX - 8;
-        const textY = subEndY + (isTop ? -8 : 12);
-        const truncated = item.length > 10 ? item.substring(0, 9) + '...' : item;
-        causes += `<text x="${textX}" y="${textY}" font-size="11" fill="${sub}"
-                        text-anchor="end" font-weight="500"
-                        style="animation: fadeIn 0.4s ${catIndex * 0.1 + idx * 0.05 + 0.3}s both">${truncated}</text>`;
+      items.slice(0, 5).forEach((item, idx) => {
+        const itemY = causeListY + 52 + idx * 36;
+        causesGroup += `
+          <text x="${causeListX + 18}" y="${itemY}" font-size="13" fill="${textColor}" font-weight="500">
+            • ${item.length > 26 ? item.substring(0, 24) + '...' : item}
+          </text>
+        `;
       });
 
-      // 如果有超过4个原因，显示省略提示
-      if (items.length > 4) {
-        const moreX = cat.x + 100;
-        const moreY = isTop ? endY - 8 : endY + 18;
-        labels += `<text x="${moreX}" y="${moreY}" font-size="10" fill="${dim}" opacity="0.6">+${items.length - 4} more</text>`;
+      if (items.length > 5) {
+        causesGroup += `
+          <text x="${causeListX + 130}" y="${causeListY + Math.min(items.length * 36 + 35, 210)}"
+                font-size="12" fill="${dimColor}" text-anchor="middle">+${items.length - 5} more...</text>
+        `;
       }
-    });
 
-    svg.innerHTML = defs + mainLine + bones + labels + causes + fishHead;
-    wrapper.appendChild(svg);
-
-    return wrapper;
-  }, {
-    description: '鱼骨图（Ishikawa）- 6M根因分析工具，适用于问题排查和质量管理',
-    category: 'business-analysis',
-    framework: 'Root Cause Analysis',
-    tags: ['fishbone', 'ishikawa', 'root-cause', 'quality', '6M'],
-    author: 'interactive-narrative-deck',
-    version: '1.0.0',
-    useCase: [
-      '质量问题根因分析',
-      '故障排查复盘',
-      '流程优化诊断',
-      '客诉问题分析'
-    ]
+      causesGroup += '</g>';
+    }
   });
+
+  bonesGroup += '</g>';
+  labelsGroup += '</g>';
+  causesGroup += '</g>';
+
+  svg.innerHTML = defs + mainSpine + bonesGroup + labelsGroup + causesGroup + fishHead;
+  wrapper.appendChild(svg);
+
+  // 交互：点击分类标签展开/收起
+  setTimeout(() => {
+    const labels = wrapper.querySelectorAll('.category-label');
+    labels.forEach(label => {
+      label.addEventListener('click', function() {
+        const category = this.getAttribute('data-category');
+        const causeList = wrapper.querySelector(`.cause-list[data-category="${category}"]`);
+
+        if (causeList) {
+          const isVisible = causeList.style.opacity === '1';
+
+          // 隐藏所有
+          wrapper.querySelectorAll('.cause-list').forEach(list => {
+            list.style.opacity = '0';
+            list.style.pointerEvents = 'none';
+          });
+
+          // 切换当前
+          if (!isVisible) {
+            causeList.style.opacity = '1';
+            causeList.style.pointerEvents = 'auto';
+          }
+        }
+      });
+    });
+  }, 100);
+
+  return wrapper;
+}, {
+  description: '鱼骨图 - 根因分析，6M分类，点击展开详情',
+  category: 'business-analysis',
+  framework: 'Root Cause Analysis',
+  tags: ['fishbone', 'ishikawa', '6m', 'root-cause'],
+  author: 'interactive-narrative-deck',
+  version: '2.0.0'
+});
 
   // ============================================================================
   // BCG矩阵（波士顿矩阵）
   // ============================================================================
 
   /**
-   * BCG矩阵Block
+   * BCG矩阵Block（增强版：支持自定义象限标签）
    *
    * 用途：业务组合分析、产品portfolio管理、投资决策
-   * 结构：2x2矩阵（明星/金牛/问题/瘦狗）
+   * 结构：2x2矩阵（默认：明星/金牛/问题/瘦狗，可自定义）
    *
    * @param {Object} data - BCG矩阵数据
    * @param {Array<Object>} data.items - 业务/产品列表
@@ -797,17 +856,39 @@
    * @param {number} data.items[].marketShare - 相对市场份额（0-100）
    * @param {number} [data.items[].size] - 气泡大小（营收规模，可选）
    * @param {string} [data.title] - 可选标题
+   * @param {Object} [data.axes] - 坐标轴自定义（可选）
+   * @param {string} [data.axes.x] - X轴标签（默认：相对市场份额）
+   * @param {string} [data.axes.y] - Y轴标签（默认：市场增长率）
+   * @param {number} [data.axes.xThreshold] - X轴分界值（默认：50，即1.0x）
+   * @param {number} [data.axes.yThreshold] - Y轴分界值（默认：10%）
+   * @param {Object} [data.quadrants] - 象限标签自定义（可选）
+   * @param {string} [data.quadrants.topLeft] - 左上象限（默认：问题）
+   * @param {string} [data.quadrants.topRight] - 右上象限（默认：明星）
+   * @param {string} [data.quadrants.bottomLeft] - 左下象限（默认：瘦狗）
+   * @param {string} [data.quadrants.bottomRight] - 右下象限（默认：金牛）
    *
    * @example
+   * // 默认BCG矩阵
    * {
    *   type: 'bcg',
    *   title: '2026业务组合分析',
    *   items: [
    *     {name: '智慧卫生间', marketGrowth: 80, marketShare: 30, size: 50},
-   *     {name: '安全管家', marketGrowth: 60, marketShare: 70, size: 120},
-   *     {name: '能源管控', marketGrowth: 20, marketShare: 60, size: 200},
-   *     {name: '传统物业', marketGrowth: 10, marketShare: 20, size: 80}
+   *     {name: '安全管家', marketGrowth: 60, marketShare: 70, size: 120}
    *   ]
+   * }
+   *
+   * @example
+   * // 自定义象限标签（如：能力-意愿矩阵）
+   * {
+   *   type: 'bcg',
+   *   title: '员工能力-意愿矩阵',
+   *   axes: {x: '能力', y: '意愿', xThreshold: 60, yThreshold: 60},
+   *   quadrants: {
+   *     topLeft: '潜力股', topRight: '核心骨干',
+   *     bottomLeft: '待培养', bottomRight: '老黄牛'
+   *   },
+   *   items: [{name: '张三', marketGrowth: 85, marketShare: 45, size: 30}]
    * }
    */
   BlockRegistry.register('bcg', function(data) {
@@ -833,6 +914,19 @@
       titleEl.textContent = data.title;
       wrapper.appendChild(titleEl);
     }
+
+    // 读取自定义配置（坐标轴和象限标签）
+    const axes = data.axes || {};
+    const xLabel = axes.x || '相对市场份额';
+    const yLabel = axes.y || '市场增长率';
+    const xThreshold = axes.xThreshold || 50;  // 默认50 = 1.0x
+    const yThreshold = axes.yThreshold || 10;  // 默认10%
+
+    const quadrants = data.quadrants || {};
+    const q_topLeft = quadrants.topLeft || '❓ 问题';
+    const q_topRight = quadrants.topRight || '⭐ 明星';
+    const q_bottomLeft = quadrants.bottomLeft || '🐕 瘦狗';
+    const q_bottomRight = quadrants.bottomRight || '🐄 金牛';
 
     // SVG散点图 - 重构版：Canvas级别的坐标系 + 交互增强
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -864,12 +958,15 @@
     `;
 
     // 4象限背景色 + 精细网格
+    const thresholdX = margin.left + (xThreshold / 100) * width;
+    const thresholdY = margin.top + height - (yThreshold / 100) * height;
+
     let chartSVG = `
       <!-- 4象限背景渐变 -->
-      <rect x="${margin.left}" y="${margin.top}" width="${width/2}" height="${height/2}" fill="rgba(245,158,11,0.06)" rx="4"/>
-      <rect x="${margin.left + width/2}" y="${margin.top}" width="${width/2}" height="${height/2}" fill="rgba(59,130,246,0.10)" rx="4"/>
-      <rect x="${margin.left}" y="${margin.top + height/2}" width="${width/2}" height="${height/2}" fill="rgba(107,114,128,0.06)" rx="4"/>
-      <rect x="${margin.left + width/2}" y="${margin.top + height/2}" width="${width/2}" height="${height/2}" fill="rgba(16,185,129,0.08)" rx="4"/>
+      <rect x="${margin.left}" y="${margin.top}" width="${thresholdX - margin.left}" height="${thresholdY - margin.top}" fill="rgba(245,158,11,0.06)" rx="4"/>
+      <rect x="${thresholdX}" y="${margin.top}" width="${margin.left + width - thresholdX}" height="${thresholdY - margin.top}" fill="rgba(59,130,246,0.10)" rx="4"/>
+      <rect x="${margin.left}" y="${thresholdY}" width="${thresholdX - margin.left}" height="${margin.top + height - thresholdY}" fill="rgba(107,114,128,0.06)" rx="4"/>
+      <rect x="${thresholdX}" y="${thresholdY}" width="${margin.left + width - thresholdX}" height="${margin.top + height - thresholdY}" fill="rgba(16,185,129,0.08)" rx="4"/>
 
       <!-- 参考网格线 -->
       ${[0.25, 0.75].map(ratio => `
@@ -894,60 +991,57 @@
             stroke="#9fb0ca" stroke-width="2.5" marker-end="url(#arrow-y)"/>
 
       <!-- 关键分界线（高亮） -->
-      <line x1="${margin.left}" y1="${margin.top + height/2}" x2="${margin.left + width}" y2="${margin.top + height/2}"
+      <line x1="${margin.left}" y1="${thresholdY}" x2="${margin.left + width}" y2="${thresholdY}"
             stroke="#0ea5e9" stroke-width="2" stroke-dasharray="10,5" opacity="0.6"/>
-      <line x1="${margin.left + width/2}" y1="${margin.top}" x2="${margin.left + width/2}" y2="${margin.top + height}"
+      <line x1="${thresholdX}" y1="${margin.top}" x2="${thresholdX}" y2="${margin.top + height}"
             stroke="#0ea5e9" stroke-width="2" stroke-dasharray="10,5" opacity="0.6"/>
 
-      <!-- Y轴刻度标签（市场增长率） -->
-      <text x="${margin.left - 15}" y="${margin.top + 15}" font-size="11" fill="#94a3b8" text-anchor="end">100%</text>
-      <text x="${margin.left - 15}" y="${margin.top + height/2 + 5}" font-size="13" fill="#f59e0b" text-anchor="end" font-weight="700">10%</text>
-      <text x="${margin.left - 15}" y="${margin.top + height}" font-size="11" fill="#94a3b8" text-anchor="end">0%</text>
+      <!-- Y轴刻度标签 -->
+      <text x="${margin.left - 15}" y="${margin.top + 15}" font-size="11" fill="#94a3b8" text-anchor="end">100</text>
+      <text x="${margin.left - 15}" y="${thresholdY + 5}" font-size="13" fill="#f59e0b" text-anchor="end" font-weight="700">${yThreshold}</text>
+      <text x="${margin.left - 15}" y="${margin.top + height}" font-size="11" fill="#94a3b8" text-anchor="end">0</text>
       <text x="${margin.left - 65}" y="${margin.top + height/2 + 5}" font-size="14" fill="#cbd5e1" text-anchor="middle" font-weight="600"
-            transform="rotate(-90 ${margin.left - 65} ${margin.top + height/2})">市场增长率 (%)</text>
+            transform="rotate(-90 ${margin.left - 65} ${margin.top + height/2})">${yLabel}</text>
 
-      <!-- X轴刻度标签（相对市场份额） -->
+      <!-- X轴刻度标签 -->
       <text x="${margin.left}" y="${margin.top + height + 30}" font-size="11" fill="#94a3b8" text-anchor="middle">0</text>
-      <text x="${margin.left + width/2}" y="${margin.top + height + 30}" font-size="13" fill="#f59e0b" text-anchor="middle" font-weight="700">1.0x</text>
-      <text x="${margin.left + width}" y="${margin.top + height + 30}" font-size="11" fill="#94a3b8" text-anchor="middle">2.0x</text>
-      <text x="${margin.left + width/2}" y="${margin.top + height + 60}" font-size="14" fill="#cbd5e1" text-anchor="middle" font-weight="600">相对市场份额 (vs 竞品)</text>
+      <text x="${thresholdX}" y="${margin.top + height + 30}" font-size="13" fill="#f59e0b" text-anchor="middle" font-weight="700">${xThreshold}</text>
+      <text x="${margin.left + width}" y="${margin.top + height + 30}" font-size="11" fill="#94a3b8" text-anchor="middle">100</text>
+      <text x="${margin.left + width/2}" y="${margin.top + height + 60}" font-size="14" fill="#cbd5e1" text-anchor="middle" font-weight="600">${xLabel}</text>
 
-      <!-- 象限标签（带emoji + 战略建议） -->
+      <!-- 象限标签（使用自定义标签） -->
       <g opacity="0.9">
-        <text x="${margin.left + width/4}" y="${margin.top + 30}" font-size="15" fill="#f59e0b" text-anchor="middle" font-weight="700">❓ 问题</text>
-        <text x="${margin.left + width/4}" y="${margin.top + 48}" font-size="10" fill="#94a3b8" text-anchor="middle">高投入·低回报</text>
-
-        <text x="${margin.left + width*3/4}" y="${margin.top + 30}" font-size="15" fill="#3b82f6" text-anchor="middle" font-weight="700">⭐ 明星</text>
-        <text x="${margin.left + width*3/4}" y="${margin.top + 48}" font-size="10" fill="#94a3b8" text-anchor="middle">高投入·高回报</text>
-
-        <text x="${margin.left + width/4}" y="${margin.top + height - 25}" font-size="15" fill="#6b7280" text-anchor="middle" font-weight="700">🐕 瘦狗</text>
-        <text x="${margin.left + width/4}" y="${margin.top + height - 8}" font-size="10" fill="#94a3b8" text-anchor="middle">低投入·低回报</text>
-
-        <text x="${margin.left + width*3/4}" y="${margin.top + height - 25}" font-size="15" fill="#10b981" text-anchor="middle" font-weight="700">🐄 金牛</text>
-        <text x="${margin.left + width*3/4}" y="${margin.top + height - 8}" font-size="10" fill="#94a3b8" text-anchor="middle">低投入·高回报</text>
+        <text x="${margin.left + (thresholdX - margin.left)/2}" y="${margin.top + 30}" font-size="15" fill="#f59e0b" text-anchor="middle" font-weight="700">${q_topLeft}</text>
+        <text x="${thresholdX + (margin.left + width - thresholdX)/2}" y="${margin.top + 30}" font-size="15" fill="#3b82f6" text-anchor="middle" font-weight="700">${q_topRight}</text>
+        <text x="${margin.left + (thresholdX - margin.left)/2}" y="${margin.top + height - 15}" font-size="15" fill="#6b7280" text-anchor="middle" font-weight="700">${q_bottomLeft}</text>
+        <text x="${thresholdX + (margin.left + width - thresholdX)/2}" y="${margin.top + height - 15}" font-size="15" fill="#10b981" text-anchor="middle" font-weight="700">${q_bottomRight}</text>
       </g>
     `;
 
-    // 气泡数据 - 增强视觉层次
+    // 气泡数据 - 增强视觉层次 + 限制在坐标轴内
     const items = data.items || [];
     items.forEach((item, i) => {
       const growth = Math.max(0, Math.min(100, item.marketGrowth || 10));
-      const share = Math.max(0, Math.min(200, item.marketShare || 50)); // 支持>100%份额
+      const share = Math.max(0, Math.min(100, item.marketShare || 50));
       const size = item.size || 50;
 
       // 映射坐标
-      const x = margin.left + (share / 100) * (width / 2);
+      const x = margin.left + (share / 100) * width;
       const y = margin.top + height - (growth / 100) * height;
       const r = Math.sqrt(size / 100) * 35 + 18;
 
-      // 颜色判断 + 渐变填充
+      // 确保气泡不超出坐标轴边界
+      const clampedX = Math.max(margin.left + r, Math.min(margin.left + width - r, x));
+      const clampedY = Math.max(margin.top + r, Math.min(margin.top + height - r, y));
+
+      // 颜色判断 + 渐变填充（基于阈值）
       let fillColor = '#6b7280';
       let fillGradient = null;
-      if (share >= 50 && growth >= 10) {
+      if (share >= xThreshold && growth >= yThreshold) {
         fillGradient = 'url(#bcg-star)';
-      } else if (share >= 50 && growth < 10) {
+      } else if (share >= xThreshold && growth < yThreshold) {
         fillGradient = 'url(#bcg-cash)';
-      } else if (share < 50 && growth >= 10) {
+      } else if (share < xThreshold && growth >= yThreshold) {
         fillColor = '#f59e0b';
       } else {
         fillColor = '#6b7280';
@@ -958,17 +1052,17 @@
       chartSVG += `
         <g class="bcg-bubble" style="cursor: pointer; animation: fadeIn 0.5s ${i*0.12}s both;">
           <!-- 气泡主体 -->
-          <circle cx="${x}" cy="${y}" r="${r}" fill="${finalFill}" opacity="0.85"
+          <circle cx="${clampedX}" cy="${clampedY}" r="${r}" fill="${finalFill}" opacity="0.85"
                   stroke="#f8fafc" stroke-width="2.5" filter="url(#bubble-shadow)">
             <animate attributeName="r" from="0" to="${r}" dur="0.7s" begin="${i*0.12}s" fill="freeze"/>
           </circle>
 
           <!-- 业务名称 -->
-          <text x="${x}" y="${y + 4}" font-size="${r > 30 ? 12 : 10}" fill="#fff" text-anchor="middle" font-weight="700"
+          <text x="${clampedX}" y="${clampedY + 4}" font-size="${r > 30 ? 12 : 10}" fill="#fff" text-anchor="middle" font-weight="700"
                 style="pointer-events: none;">${item.name}</text>
 
           <!-- 规模标注（气泡外） -->
-          <text x="${x}" y="${y + r + 16}" font-size="9" fill="#64748b" text-anchor="middle" font-weight="500"
+          <text x="${clampedX}" y="${clampedY + r + 16}" font-size="9" fill="#64748b" text-anchor="middle" font-weight="500"
                 style="pointer-events: none;">￥${size}M</text>
         </g>
       `;
@@ -977,14 +1071,22 @@
     svg.innerHTML = defs + chartSVG;
     wrapper.appendChild(svg);
 
-    // 简洁图例
+    // 图例 - 增强版：添加圈大小说明
     const legend = document.createElement('div');
     legend.className = 'nd-bcg-legend';
     legend.innerHTML = `
-      <span><b style="color:#3b82f6">⭐明星</b> 高增长+高份额</span>
-      <span><b style="color:#10b981">🐄金牛</b> 低增长+高份额</span>
-      <span><b style="color:#f59e0b">❓问题</b> 高增长+低份额</span>
-      <span><b style="color:#6b7280">🐕瘦狗</b> 低增长+低份额</span>
+      <div style="display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; align-items: center;">
+        <span><b style="color:#3b82f6">⭐明星</b> 高增长+高份额</span>
+        <span><b style="color:#10b981">🐄金牛</b> 低增长+高份额</span>
+        <span><b style="color:#f59e0b">❓问题</b> 高增长+低份额</span>
+        <span><b style="color:#6b7280">🐕瘦狗</b> 低增长+低份额</span>
+        <span style="opacity: 0.7; margin-left: 1rem;">
+          <svg width="16" height="16" style="vertical-align: middle; margin-right: 4px;">
+            <circle cx="8" cy="8" r="7" fill="#9fb0ca" opacity="0.3"/>
+          </svg>
+          <b style="color:#cbd5e1">圈大小</b> = 营收规模
+        </span>
+      </div>
     `;
     wrapper.appendChild(legend);
 
@@ -1134,6 +1236,12 @@
           const cardEl = document.createElement('div');
           cardEl.className = 'nd-kanban-card';
           cardEl.style.animationDelay = `${(colIndex * 0.1) + (cardIndex * 0.08)}s`;
+          cardEl.style.cursor = 'pointer';
+          cardEl.style.transition = 'all 0.3s ease';
+
+          // 添加展开/收起状态
+          cardEl.dataset.expanded = 'false';
+          cardEl.dataset.cardIndex = `${colIndex}-${cardIndex}`;
 
           // 卡片头部：标题 + 标签
           const cardHeader = document.createElement('div');
@@ -1168,15 +1276,44 @@
 
           cardEl.appendChild(cardHeader);
 
-          // 卡片描述（可选）
+          // 卡片描述（可选，初始隐藏）
           if (card.description) {
             const desc = document.createElement('div');
-            desc.style.cssText = 'font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.75rem; line-height: 1.4;';
-            desc.textContent = card.description.length > 60 ? card.description.substring(0, 57) + '...' : card.description;
+            desc.className = 'nd-kanban-card-description';
+            desc.style.cssText = 'font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.75rem; line-height: 1.4; display: none; opacity: 0; transition: opacity 0.3s ease;';
+            desc.textContent = card.description;
             cardEl.appendChild(desc);
           }
 
-          // 卡片底部：负责人 + 截止日期 + 进度
+          // 详细信息容器（初始隐藏）
+          const detailsContainer = document.createElement('div');
+          detailsContainer.className = 'nd-kanban-card-details';
+          detailsContainer.style.cssText = 'display: none; opacity: 0; transition: opacity 0.3s ease; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(148,163,184,0.2);';
+
+          // 详细计划（如果有）
+          if (card.plan) {
+            const planDiv = document.createElement('div');
+            planDiv.style.cssText = 'margin-bottom: 0.5rem;';
+            planDiv.innerHTML = `<div style="font-size: 0.8rem; font-weight: 600; color: #cbd5e1; margin-bottom: 0.4rem;">📋 详细计划：</div>
+              <ul style="margin: 0; padding-left: 1.2rem; font-size: 0.8rem; color: #94a3b8; line-height: 1.6;">
+                ${card.plan.map(item => `<li>${item}</li>`).join('')}
+              </ul>`;
+            detailsContainer.appendChild(planDiv);
+          }
+
+          // 备注（如果有）
+          if (card.notes) {
+            const notesDiv = document.createElement('div');
+            notesDiv.style.cssText = 'font-size: 0.8rem; color: #94a3b8; line-height: 1.5; margin-top: 0.5rem;';
+            notesDiv.innerHTML = `<span style="font-weight: 600; color: #cbd5e1;">💡 备注：</span>${card.notes}`;
+            detailsContainer.appendChild(notesDiv);
+          }
+
+          if (card.plan || card.notes) {
+            cardEl.appendChild(detailsContainer);
+          }
+
+          // 卡片底部：负责人 + 截止日期 + 进度 + 展开按钮
           const cardFooter = document.createElement('div');
           cardFooter.className = 'nd-kanban-card-footer';
           cardFooter.style.cssText = 'display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;';
@@ -1227,8 +1364,95 @@
           }
 
           if (card.assignee || card.dueDate || card.subtasks) {
+            // 添加展开按钮
+            const expandBtn = document.createElement('button');
+            expandBtn.className = 'nd-kanban-expand-btn';
+            expandBtn.style.cssText = `
+              background: none; border: none; color: #0ea5e9; font-size: 0.75rem;
+              cursor: pointer; padding: 0.25rem 0.5rem; border-radius: 4px;
+              transition: all 0.2s; margin-top: 0.5rem; width: 100%;
+              text-align: center; font-weight: 600;
+            `;
+            expandBtn.textContent = '展开详情 ↓';
+            expandBtn.onmouseover = () => expandBtn.style.background = 'rgba(14,165,233,0.1)';
+            expandBtn.onmouseout = () => expandBtn.style.background = 'none';
+
+            cardFooter.appendChild(expandBtn);
             cardEl.appendChild(cardFooter);
           }
+
+          // 点击展开/收起逻辑
+          cardEl.addEventListener('click', function(e) {
+            e.stopPropagation();
+
+            const isExpanded = this.dataset.expanded === 'true';
+            const descEl = this.querySelector('.nd-kanban-card-description');
+            const detailsEl = this.querySelector('.nd-kanban-card-details');
+            const expandBtn = this.querySelector('.nd-kanban-expand-btn');
+
+            // 先收起所有其他卡片
+            wrapper.querySelectorAll('.nd-kanban-card').forEach(otherCard => {
+              if (otherCard !== this && otherCard.dataset.expanded === 'true') {
+                otherCard.dataset.expanded = 'false';
+                otherCard.style.transform = 'none';
+                otherCard.style.zIndex = '1';
+                otherCard.style.boxShadow = '';
+
+                const otherDesc = otherCard.querySelector('.nd-kanban-card-description');
+                const otherDetails = otherCard.querySelector('.nd-kanban-card-details');
+                const otherBtn = otherCard.querySelector('.nd-kanban-expand-btn');
+
+                if (otherDesc) {
+                  otherDesc.style.display = 'none';
+                  otherDesc.style.opacity = '0';
+                }
+                if (otherDetails) {
+                  otherDetails.style.display = 'none';
+                  otherDetails.style.opacity = '0';
+                }
+                if (otherBtn) {
+                  otherBtn.textContent = '展开详情 ↓';
+                }
+              }
+            });
+
+            // 切换当前卡片状态
+            if (!isExpanded) {
+              this.dataset.expanded = 'true';
+              this.style.transform = 'scale(1.05)';
+              this.style.zIndex = '100';
+              this.style.boxShadow = '0 8px 24px rgba(0,0,0,0.4)';
+
+              if (descEl) {
+                descEl.style.display = 'block';
+                setTimeout(() => descEl.style.opacity = '1', 10);
+              }
+              if (detailsEl) {
+                detailsEl.style.display = 'block';
+                setTimeout(() => detailsEl.style.opacity = '1', 10);
+              }
+              if (expandBtn) {
+                expandBtn.textContent = '收起 ↑';
+              }
+            } else {
+              this.dataset.expanded = 'false';
+              this.style.transform = 'none';
+              this.style.zIndex = '1';
+              this.style.boxShadow = '';
+
+              if (descEl) {
+                descEl.style.opacity = '0';
+                setTimeout(() => descEl.style.display = 'none', 300);
+              }
+              if (detailsEl) {
+                detailsEl.style.opacity = '0';
+                setTimeout(() => detailsEl.style.display = 'none', 300);
+              }
+              if (expandBtn) {
+                expandBtn.textContent = '展开详情 ↓';
+              }
+            }
+          });
 
           cardsList.appendChild(cardEl);
         });
@@ -1440,3 +1664,4 @@
   });
 
 })();
+

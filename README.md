@@ -1,285 +1,371 @@
-# Interactive Narrative Deck v3.0
+# 📊 Interactive Narrative Deck
 
-## 一句话介绍
+> **一句话**：用AI生成专业商业演示文稿 — 不是PPT模板，是把10年汇报经验AI化的叙事引擎
 
-把汇报经验AI化——10年汇报者的判断力（向高管要结论先行、数据对比要用图、问题拆解要渐进揭示）沉淀成知识文件，由AI代为执行。
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-3.1.0-green.svg)]()
+[![Claude Skill](https://img.shields.io/badge/Claude-Skill-orange.svg)]()
 
 ---
 
-## 核心价值
+## 🎬 演示效果
 
-**不是PPT生成器，是汇报经验的萃取系统。**
+### 在线Demo
+👉 [查看完整演示](https://yourname.github.io/interactive-narrative-deck/examples/all-professional-blocks/)  
+（部署后替换链接）
+
+### 预览截图
+
+<table>
+<tr>
+<td width="50%">
+<img src="docs/images/demo-okr.png" alt="OKR目标管理" />
+<p align="center"><b>OKR目标管理</b><br/>季度目标+关键结果+进度可视化</p>
+</td>
+<td width="50%">
+<img src="docs/images/demo-gantt.png" alt="甘特图" />
+<p align="center"><b>甘特图项目时间线</b><br/>任务+里程碑+进度+负责人</p>
+</td>
+</tr>
+<tr>
+<td width="50%">
+<img src="docs/images/demo-fishbone.png" alt="鱼骨图" />
+<p align="center"><b>鱼骨图根因分析</b><br/>6M方法论+点击展开详情</p>
+</td>
+<td width="50%">
+<img src="docs/images/demo-bcg.png" alt="BCG矩阵" />
+<p align="center"><b>BCG矩阵业务组合</b><br/>明星/金牛/问题/瘦狗四象限</p>
+</td>
+</tr>
+</table>
+
+> 💡 **提示**：截图占位符，部署前请替换为实际截图  
+> 推荐截图尺寸：1200×800px，PNG格式，存放在 `docs/images/` 目录
+
+---
+
+## ✨ 为什么选择它？
+
+### 🎯 不是PPT生成器，是经验萃取系统
 
 | 传统做法 | AI化后 |
 |---------|--------|
-| 人工判断"给高管汇报要先结论" | AI读`narrative-patterns.md`自动匹配"结论先行框架" |
-| 人工记忆"趋势数据用折线图" | AI读`block-reference.md`自动选chart:line |
-| 人工检查"有没有编造数据" | AI读`anti-patterns.md`自动扫描11种反模式 |
-| 每次做汇报重新设计配色 | AI读`visual-design-rules.md`统一深蓝医疗风格 |
+| 手动判断"给高管汇报要先讲结论" | AI读`narrative-patterns.md`自动匹配"结论先行框架" |
+| 手动选择"趋势用折线图还是柱状图" | AI读`block-reference.md`自动推荐chart:line |
+| 手动检查"有没有编造数据" | AI读`anti-patterns.md`自动扫描11种反模式 |
+| 每次重新设计配色、字体、间距 | AI读`visual-design-rules.md`统一视觉规范 |
+
+### 🚀 核心优势
+
+- ✅ **18种专业Block** - OKR、甘特图、鱼骨图、BCG矩阵、看板、SWOT...覆盖战略/项目/分析场景
+- ✅ **6大叙事框架** - 根据受众（高管/客户/团队）自动选择汇报结构
+- ✅ **11种反模式检测** - 幻觉数据、配色混乱、内容过载...自动质量检查
+- ✅ **单文件交付** - 生成独立HTML，双击即可演示，无需安装任何软件
+- ✅ **交互式动效** - 数字滚动、渐进揭示、hover特效，专业演示级体验
 
 ---
 
-## 架构（四层）
+## 📦 包含的Block类型
+
+### 基础展示Block（9种）
+- **hero** - 封面/标题页
+- **metric** - 关键指标数字卡（支持同比/环比）
+- **bullets** - 要点列表（支持动画渐进）
+- **compare** - 对比卡片（方案A vs B）
+- **timeline** - 时间轴（里程碑/路线图）
+- **quote** - 引用/格言
+- **chart** - 图表（折线/柱状/饼图，基于Chart.js）
+- **media** - 图片/视频
+- **tabs** - 标签页切换
+
+### 商业分析Block（7种）
+- **swot** - SWOT分析矩阵（优势/劣势/机会/威胁）
+- **okr** - OKR目标管理树状图（Objective + Key Results）
+- **gantt** - 甘特图项目时间线（任务+进度+负责人）
+- **fishbone** - 鱼骨图根因分析（6M方法论）
+- **bcg** - BCG矩阵业务组合（明星/金牛/问题/瘦狗）
+- **kanban** - 看板任务流程（多列泳道+卡片展开）
+- **pyramid** - 金字塔MECE思维（结论→论据→事实）
+
+### 自定义Block（3种）
+- **code** - 代码展示（语法高亮）
+- **split** - 左图右文分栏布局
+- **grid** - 网格卡片
+
+---
+
+## 🎨 适用场景
+
+### ✅ 推荐场景
+- 📈 **战略汇报** - 季度复盘、年度总结、董事会汇报
+- 🚀 **产品发布** - 路演、Demo Day、产品发布会
+- 📊 **数据分析** - BI报表、增长分析、运营汇报
+- 🛠️ **项目管理** - 项目进度、里程碑规划、OKR汇报
+- 💡 **技术分享** - 架构设计、API文档、技术方案评审
+
+### ❌ 不适合场景
+- 📄 需要打印的纸质文档（推荐用`a4-manual-maker` skill）
+- 📚 超过50页的培训课件（性能考虑）
+- 👥 需要非技术人员协作编辑（用PowerPoint更合适）
+
+---
+
+## 🚀 快速开始
+
+### 方式1：使用Claude Skill（推荐）
+
+1. 在Claude对话中输入：
+   ```
+   帮我做一个战略汇报演示
+   ```
+
+2. Claude会收集信息：
+   - 受众：给谁看？（高管/管理层/客户/团队）
+   - 主题：核心是什么？（一句话）
+   - 内容：有哪些数据、要点、素材？
+   - 时长：讲多久？（5/15/30分钟）
+   - 风格：视觉偏好？（默认深蓝商务风）
+
+3. AI自动判断并生成：
+   - 匹配叙事框架（结论先行/价值主张/OKR进展...）
+   - 选择合适的Block组合
+   - 生成`deck.js`配置文件
+   - 执行质量检查
+
+4. 双击`index.html`预览，F11全屏演示
+
+---
+
+### 方式2：手动编写配置
+
+1. **克隆仓库**
+   ```bash
+   git clone https://github.com/yourname/interactive-narrative-deck.git
+   cd interactive-narrative-deck
+   ```
+
+2. **启动本地服务器**
+   ```bash
+   python -m http.server 8080
+   # 访问 http://localhost:8080/examples/
+   ```
+
+3. **编写配置文件** `deck.js`
+   ```javascript
+   window.NARRATIVE_DECK = {
+     theme: {
+       blue: "#0ea5e9",
+       gold: "#f59e0b",
+       bg: "#0f172a"
+     },
+     slides: [
+       {
+         title: "封面",
+         layout: "center",
+         blocks: [
+           {
+             type: "hero",
+             kick: "2026 Q3季度汇报",
+             title: "营收增长30%达成",
+             sub: "三大业务线全面突破"
+           }
+         ]
+       },
+       {
+         title: "核心数据",
+         layout: "center",
+         blocks: [
+           {
+             type: "metric",
+             items: [
+               { value: "1200", unit: "万", label: "营收", delta: "+30%" },
+               { value: "85", unit: "%", label: "客户满意度", delta: "+5%" }
+             ]
+           }
+         ]
+       },
+       {
+         title: "OKR达成",
+         layout: "center",
+         blocks: [
+           {
+             type: "okr",
+             objective: "营收增长30%，实现可持续增长",
+             keyResults: [
+               { kr: "KR1: 新客户转化率15%", progress: 90, status: "achieved" },
+               { kr: "KR2: 客单价提升20%", progress: 75, status: "on-track" }
+             ]
+           }
+         ]
+       }
+     ]
+   };
+   ```
+
+4. **创建HTML入口** `index.html`
+   ```html
+   <!DOCTYPE html>
+   <html lang="zh-CN">
+   <head>
+     <meta charset="UTF-8">
+     <title>季度汇报</title>
+     <link rel="stylesheet" href="../../engine/style.css">
+   </head>
+   <body>
+     <div id="nd-stage"></div>
+     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+     <script src="deck.js"></script>
+     <script src="../../engine/block-registry.js"></script>
+     <script src="../../engine/core-blocks.js"></script>
+     <script src="../../engine/business-blocks.js"></script>
+     <script src="../../engine/custom-blocks.js"></script>
+     <script src="../../engine/engine.js"></script>
+   </body>
+   </html>
+   ```
+
+5. **预览演示**
+   - 打开 `http://localhost:8080/index.html`
+   - 使用方向键翻页，F11全屏
+
+---
+
+## 📖 完整示例
+
+查看 `examples/` 目录获取完整案例：
+
+- **[all-professional-blocks](examples/all-professional-blocks/)** - 18种Block综合演示
+- **[swot-demo](examples/swot-demo/)** - SWOT战略分析
+- **[strategy-report](examples/strategy-report/)** - 战略汇报完整案例
+- **[tech-talk](examples/tech-talk/)** - 技术分享演示
+
+---
+
+## 🎮 演示操作
+
+| 快捷键 | 功能 |
+|--------|------|
+| `→` / `↓` | 下一页 |
+| `←` / `↑` | 上一页 |
+| `Home` | 回到首页 |
+| `End` | 最后一页 |
+| `O` | 总览模式 |
+| `空格` | 渐进揭示 |
+| `F11` | 全屏 |
+| `ESC` | 退出全屏 |
+
+---
+
+## 🏗️ 架构设计
 
 ```
-skill.md (主控层)
-  ↓ 调用
-knowledge/ (知识层)
-  ├── narrative-patterns.md      - 6大叙事框架决策树
-  ├── block-reference.md          - 15种Block完整API
-  ├── visual-design-rules.md      - 配色/字体/间距规范
-  ├── anti-patterns.md            - 11种反模式检测
-  └── layout-patterns.md          - center/left/right布局规则
-  ↓ 指导
-templates/ (规范层)
-  ├── strategy-report/            - 战略汇报模板
-  └── product-launch/             - 产品发布模板
-  ↓ 调用
-engine/ (执行层)
-  ├── narrative-deck.js           - 渲染引擎（不改动）
-  ├── business-blocks.js          - swot/okr/gantt
-  └── custom-blocks.js            - code/split/grid
+interactive-narrative-deck/
+├── engine/                      # 核心引擎（无需修改）
+│   ├── engine.js               # 演示控制器
+│   ├── block-registry.js       # Block注册机制
+│   ├── core-blocks.js          # 基础Block（hero/metric/bullets...）
+│   ├── business-blocks.js      # 商业Block（swot/okr/gantt/fishbone...）
+│   ├── custom-blocks.js        # 自定义Block（code/split/grid）
+│   └── style.css               # 统一样式
+│
+├── knowledge/                   # 知识库（AI调用）
+│   ├── narrative-patterns.md   # 6大叙事框架决策树
+│   ├── block-reference.md      # 18种Block完整API文档
+│   ├── visual-design-rules.md  # 视觉规范（配色/字体/间距）
+│   ├── anti-patterns.md        # 11种反模式检测清单
+│   └── layout-patterns.md      # 布局规则
+│
+├── examples/                    # 演示案例
+│   ├── all-professional-blocks/  # 18种Block综合演示
+│   ├── swot-demo/               # SWOT分析案例
+│   ├── strategy-report/         # 战略汇报案例
+│   └── tech-talk/               # 技术分享案例
+│
+├── templates/                   # 可复用模板
+│   ├── strategy-report/         # 战略汇报模板
+│   └── product-launch/          # 产品发布模板
+│
+├── config_ui/                   # 可视化配置工具
+│   └── config_ui.html          # 微调工具（主题/字体/间距）
+│
+├── skill.md                     # Claude Skill主控文件
+└── README.md                    # 本文档
 ```
 
 ---
 
-## 知识层清单
+## 🔧 技术规格
 
-### 1. narrative-patterns.md（320行）
-**作用**：根据受众+场景自动匹配叙事框架
-
-**6大框架**：
-- 结论先行（高管/董事会）
-- 价值主张优先（客户/投资人）
-- OKR进展汇报（团队/季度复盘）
-- 产品发布叙事（发布会/路演）
-- 问题-方案架构（管理层/项目汇报）
-- 通用三段式（教学/培训）
-
-**决策树示例**：
-```
-受众=高管 + 场景=季度汇报 → 结论先行框架
-  ├── P1: 封面
-  ├── P2: 核心结论（metric数字卡）
-  ├── P3: 数据支撑（chart图表）
-  └── P4: 行动计划（timeline时间线）
-```
+- **浏览器兼容**：Chrome/Edge/Safari/Firefox 90+（不支持IE11）
+- **依赖库**：
+  - GSAP 3.12.5（动画引擎）
+  - Chart.js 4.4.1（图表渲染，可选）
+- **单文件交付**：生成的HTML包含所有配置，可独立运行
+- **响应式设计**：支持桌面和移动端（演示推荐桌面）
+- **离线支持**：CDN降级，离线时禁用动效和图表
 
 ---
 
-### 2. block-reference.md（357行）
-**作用**：15种Block完整API文档
-
-**基础Block**（9种）：
-- hero, metric, bullets, compare, timeline, quote, chart, media, tabs
-
-**专业Block**（6种）：
-- swot（战略分析矩阵）
-- okr（目标管理树状图）
-- gantt（项目时间线）
-- fishbone（鱼骨图/根因分析）
-- bcg（BCG矩阵/业务组合）
-- kanban（看板/任务流程）
-
-**自定义Block**（3种）：
-- code（代码展示）
-- split（左图右文）
-- grid（网格卡片）
-
-**API示例**：
-```javascript
-// SWOT矩阵
-{
-  type: "swot",
-  strengths: ["团队经验丰富", "市场先发优势"],
-  weaknesses: ["技术债务较高"],
-  opportunities: ["市场增长迅速"],
-  threats: ["竞争加剧"]
-}
-
-// 鱼骨图（新增）
-{
-  type: "fishbone",
-  problem: "客户投诉率达8%",
-  causes: {
-    people: ["客服培训不足", "响应速度慢"],
-    machine: ["系统频繁宕机"],
-    method: ["流程不规范", "无SOP"]
-  }
-}
-
-// BCG矩阵（新增）
-{
-  type: "bcg",
-  items: [
-    {name: "产品A", marketGrowth: 80, marketShare: 30, size: 50},
-    {name: "产品B", marketGrowth: 60, marketShare: 70, size: 120}
-  ]
-}
-
-// 看板（新增）
-{
-  type: "kanban",
-  columns: [
-    {
-      title: "待开发",
-      color: "#6b7280",
-      cards: [{title: "工单看板", tag: "P1", assignee: "张三"}]
-    }
-  ]
-}
-```
-
----
-
-### 3. visual-design-rules.md（243行）
-**作用**：统一视觉规范，避免每次生成风格不一致
-
-**核心规范**：
-- **配色系统**：主色1（蓝#0ea5e9）+ 主色2（橙#f59e0b）+ 背景（深蓝#0f172a）
-- **字体层级**：标题72-96px > 数字68px > 区块标题36-48px > 正文24-28px
-- **间距系统**：Block间距48px，段落间距16-24px，卡片内边距32-40px
-- **动效规则**：渐进揭示0.6s stagger，数字滚动2s，hover lift 2px
-
-**对比度检查**：
-- 所有文字≥4.5:1（WCAG AA标准）
-- Delta标签用绿#10b981或红#ef4444
-
----
-
-### 4. anti-patterns.md（533行）
-**作用**：防止11种常见错误，质量检查自动化
-
-**11种反模式**：
-1. 编造数据（幻觉最高危）
-2. 捏造案例/客户证言
-3. 内容过载（单页>3个Block）
-4. 图表结构错误（datasets不是数组）
-5. 配色混乱（主题色>2种）
-6. 字号失控（正文<20px或>32px）
-7. 动效过度（stagger用于静态数据）
-8. 时长不匹配（5分钟讲15页）
-9. 受众错配（给高管讲技术细节）
-10. 渐进揭示滥用（数据总览也拆分）
-11. Block类型错误（趋势用bar不用line）
-
-**质量检查清单**（生成后自动执行）：
-```javascript
-✅ 数据完整性：共X处【待填入】需手动补充
-✅ Block数量：所有页面≤3个Block
-✅ 图表结构：datasets均为数组
-✅ 配色检查：主题色2种（蓝+橙）
-✅ 页数匹配：10分钟汇报=8页
-```
-
----
-
-### 5. layout-patterns.md（已存在）
-**作用**：根据Block数量和类型选择布局
-
-**三种布局**：
-- center：单Block居中（封面/结论页）
-- left：多Block左对齐（要点列表页）
-- right：图文混排右对齐（产品介绍页）
-
----
-
-## v3.0 vs v2.3 对比
-
-| 维度 | v2.3 | v3.0 | 提升 |
-|------|------|------|------|
-| **叙事判断** | skill.md内嵌经验 | narrative-patterns.md（6框架） | 结构化、可复用 |
-| **Block覆盖** | 9种基础Block | 15种（+swot/okr/gantt/code/split/grid） | 专业场景覆盖 |
-| **视觉规范** | 口头描述 | visual-design-rules.md（243行） | 统一、可检查 |
-| **质量保障** | 人工检查 | anti-patterns.md（11种自动检测） | 幻觉零容忍 |
-| **知识沉淀** | 0个知识文件 | 4个新增+1个增强 | 经验可积累 |
-
----
-
-## 使用场景
-
-### ✅ 适合
-- 战略汇报（季度/年度复盘）
-- 产品发布（路演/demo day）
-- 数据分析（BI报表/增长汇报）
-- 技术分享（架构/API文档）
-- OKR汇报（目标管理/进度同步）
-
-### ❌ 不适合
-- 需要打印的纸质文档（用a4-manual-maker skill）
-- 超过50页的培训课件（性能考虑）
-- 需要非技术同事编辑的场景（PPT更合适）
-
----
-
-## 快速上手
-
-### 1. 用户触发
-说"做汇报/演示/deck"或调用 `/interactive-narrative-deck`
-
-### 2. AI收集信息
-```
-1. 【受众】给谁看？（高管/管理层/客户/团队）
-2. 【主题】核心是什么？（一句话）
-3. 【内容】有哪些数据、要点、素材？（粘贴最好）
-4. 【时长】讲多久？（5分钟/15分钟/30分钟）
-5. 【风格】视觉偏好？（不说用默认深蓝）
-```
-
-### 3. AI判断并告知
-```
-我的判断：
-- 叙事框架：结论先行（受众=高管）
-- 页数结构：P1封面 → P2结论 → P3数据 → P4行动
-- 关键Block：metric数字卡 + chart折线图 + timeline时间线
-- 视觉风格：医疗深蓝（#0f172a背景 + #0ea5e9主色）
-```
-
-### 4. 生成 + 质量检查
-- 生成 `deck.js`（所有页面）
-- 自动扫描11种反模式
-- 输出质量报告
-
-### 5. 交付
-- 双击 `index.html` 预览
-- F11全屏演示
-- 翻页笔/方向键控制
-
----
-
-## 技术规格
-
-- **单文件HTML** - 所有内容打包，分享便捷
-- **CDN依赖** - GSAP动画 + Chart.js图表（离线自动降级）
-- **浏览器兼容** - Chrome/Edge/Safari/Firefox 90+（不支持IE11）
-- **键盘快捷键** - 左右键翻页、空格渐进、O总览、F11全屏
-- **可视化调试** - `config_ui/config_ui.html` 微调工具
-
----
-
-## 贡献指南
+## 🤝 贡献指南
 
 ### 添加新Block
-1. 在 `engine/custom-blocks.js` 定义渲染逻辑
-2. 在 `knowledge/block-reference.md` 补充API文档
-3. 在 `skill.md` Block清单添加索引
+1. 在 `engine/custom-blocks.js` 定义渲染函数
+2. 在 `knowledge/block-reference.md` 添加API文档
+3. 在 `examples/` 创建演示案例
 
 ### 添加新叙事框架
-1. 在 `knowledge/narrative-patterns.md` 添加决策树
-2. 定义触发条件（受众+场景）
-3. 给出页数结构模板
+1. 在 `knowledge/narrative-patterns.md` 定义决策树
+2. 指定触发条件（受众+场景）
+3. 给出页面结构模板
 
-### 添加新反模式
-1. 在 `knowledge/anti-patterns.md` 描述错误特征
-2. 提供检测方法（正则/逻辑判断）
-3. 给出修复方案
-
----
-
-## License
-
-MIT
+### 报告问题
+- 使用 GitHub Issues
+- 提供复现步骤和截图
+- 附上浏览器版本信息
 
 ---
 
-**一句话总结**：把10年汇报经验沉淀成AI可调用的知识文件，用户只需说清楚"给谁汇报什么"，AI自动匹配框架+选Block+检查质量。
+## 📊 版本历史
+
+### v3.1.0 (2026-08-21)
+- ✨ 新增：鱼骨图、BCG矩阵、看板3种专业Block
+- 🎨 优化：甘特图无滚动铺满画布，看板单行水平布局
+- 🐛 修复：CSS重复定义导致的布局冲突
+- 📝 文档：重写README，优化examples索引
+
+### v3.0.0 (2026-01-20)
+- 🎉 重构：知识层分离，AI可调用的经验萃取系统
+- ✨ 新增：SWOT、OKR、甘特图3种商业Block
+- 📚 新增：4个知识文件（narrative-patterns/block-reference/visual-design-rules/anti-patterns）
+- 🔍 新增：11种反模式自动检测
+
+### v2.3.0
+- 基础版本，9种核心Block
+
+---
+
+## 📄 License
+
+MIT License - 详见 [LICENSE](LICENSE) 文件
+
+---
+
+## 🙏 致谢
+
+- 动画引擎：[GSAP](https://greensock.com/gsap/)
+- 图表库：[Chart.js](https://www.chartjs.org/)
+- 设计灵感：Apple Keynote, McKinsey Presentations
+
+---
+
+## 📮 联系方式
+
+- **Issues**: [GitHub Issues](https://github.com/yourname/interactive-narrative-deck/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourname/interactive-narrative-deck/discussions)
+
+---
+
+**一句话总结**：把10年汇报经验沉淀成AI可调用的知识文件，用户只需说清楚"给谁汇报什么"，AI自动匹配框架+选Block+检查质量+生成演示。
+
+**立即尝试** 👉 在Claude中说："帮我做一个战略汇报演示"

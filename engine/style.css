@@ -24,7 +24,7 @@ h2{font-size:40px;font-weight:700;margin-bottom:8px;}
 .nd-mnum{font-size:64px;font-weight:800;color:var(--nd-gold);line-height:1;}
 .nd-munit{display:inline;font-size:22px;color:var(--nd-sub);margin-left:4px;}
 .nd-mlabel{font-size:20px;color:var(--nd-sub);margin-top:12px;}
-.nd-mdelta{position:absolute;top:20px;right:22px;font-size:18px;font-weight:700;padding:2px 10px;border-radius:12px;}
+.nd-mdelta{position:absolute;top:8px;right:12px;font-size:14px;font-weight:700;padding:4px 8px;border-radius:8px;}
 .nd-mdelta.up{color:#34d399;background:rgba(52,211,153,.15);}
 .nd-mdelta.down{color:#f87171;background:rgba(248,113,113,.15);}
 .nd-bullets{list-style:none;text-align:left;max-width:900px;}
@@ -171,18 +171,18 @@ h2{font-size:40px;font-weight:700;margin-bottom:8px;}
 /* ============================================================================
    Gantt Chart - 甘特图项目时间线
    ============================================================================ */
-.nd-gantt-wrapper{width:100%;max-width:1100px;overflow-x:auto;}
+.nd-gantt-wrapper{width:100%;max-width:100%;overflow:visible;}
 .nd-gantt-title{font-size:32px;font-weight:700;text-align:center;margin-bottom:24px;color:var(--nd-ink);}
-.nd-gantt-timeline{min-width:800px;}
-.nd-gantt-months{display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:0;border-bottom:2px solid var(--nd-gold);margin-bottom:20px;padding-bottom:10px;}
-.nd-gantt-month{font-size:14px;color:var(--nd-sub);text-align:center;padding:4px;transition:color .3s,transform .3s;cursor:pointer;}
+.nd-gantt-timeline{width:100%;}
+.nd-gantt-months{display:flex;justify-content:space-between;gap:0;border-bottom:2px solid var(--nd-gold);margin-bottom:20px;padding-bottom:10px;}
+.nd-gantt-month{font-size:14px;color:var(--nd-sub);text-align:center;padding:4px;flex:1;transition:color .3s,transform .3s;cursor:pointer;}
 .nd-gantt-month:hover{color:var(--nd-gold);transform:scale(1.1);}
 .nd-gantt-tasks{display:flex;flex-direction:column;gap:16px;}
 .nd-gantt-task-row{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center;opacity:0;animation:ganttTaskIn .4s ease calc(var(--task-index) * .12s) forwards;}
 .nd-gantt-task-name{font-size:18px;color:var(--nd-ink);font-weight:600;padding:10px 0;transition:color .3s;}
 .nd-gantt-task-row:hover .nd-gantt-task-name{color:var(--nd-gold);}
-.nd-gantt-task-timeline{position:relative;height:40px;background:rgba(255,255,255,.04);border-radius:8px;}
-.nd-gantt-task-bar{position:absolute;top:6px;height:28px;background:linear-gradient(135deg,var(--nd-blue),#3b82f6);border-radius:6px;overflow:hidden;transition:transform .3s,box-shadow .3s;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.nd-gantt-task-timeline{position:relative;height:40px;background:rgba(255,255,255,.04);border-radius:8px;width:100%;}
+.nd-gantt-task-bar{position:absolute;top:6px;height:28px;background:linear-gradient(135deg,var(--nd-blue),#3b82f6);border-radius:6px;overflow:hidden;transition:transform .3s,box-shadow .3s;cursor:pointer;display:flex;align-items:center;justify-content:center;box-sizing:border-box;}
 .nd-gantt-task-bar:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(37,99,235,.5);z-index:2;}
 .nd-gantt-task-progress{position:absolute;top:0;left:0;height:100%;background:linear-gradient(135deg,var(--nd-gold),#f59e0b);transition:width 1.2s cubic-bezier(.4,0,.2,1);border-radius:6px;}
 .nd-gantt-task-progress-label{position:relative;z-index:1;font-size:13px;color:#fff;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.3);}
@@ -289,28 +289,31 @@ h2{font-size:40px;font-weight:700;margin-bottom:8px;}
 /* ========== 看板（Kanban Board）- 标准多列泳道布局 + 增强卡片 ========== */
 .nd-kanban-wrapper {
   width: 100%;
-  padding: 2rem 1.5rem;
+  padding: 1.5rem;
+  max-width: 100%;
 }
 
 .nd-kanban-title {
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--nd-gold, #f59e0b);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   text-align: center;
   text-shadow: 0 2px 8px rgba(245,158,11,0.3);
 }
 
 .nd-kanban-board {
   display: flex;
-  gap: 1.5rem;
-  overflow-x: auto;
-  padding-bottom: 1.5rem;
+  gap: 1.2rem;
+  overflow-x: visible;
+  padding-bottom: 0;
+  justify-content: center;
+  align-items: stretch;
 }
 
 .nd-kanban-column {
-  flex: 1;
-  min-width: 280px;
+  flex: 0 0 auto;
+  width: 260px;
   background: linear-gradient(180deg, rgba(15, 23, 42, 0.7), rgba(30, 41, 59, 0.5));
   border-radius: 12px;
   border-top: 4px solid var(--col-color, #6b7280);
@@ -319,6 +322,7 @@ h2{font-size:40px;font-weight:700;margin-bottom:8px;}
   box-shadow: 0 4px 16px rgba(0,0,0,0.15);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   animation: fadeIn 0.5s calc(var(--col-index, 0) * 0.12s) both;
+  max-height: 600px;
 }
 
 .nd-kanban-column:hover {
@@ -355,9 +359,24 @@ h2{font-size:40px;font-weight:700;margin-bottom:8px;}
 }
 
 .nd-kanban-cards {
-  padding: 1rem;
+  padding: 0.8rem;
   display: flex;
   flex-direction: column;
+  gap: 0.8rem;
+  overflow-y: auto;
+  flex: 1;
+  max-height: 500px;
+}
+
+.nd-kanban-card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 10px;
+  padding: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
   gap: 0.85rem;
   flex: 1;
   overflow-y: auto;
@@ -376,17 +395,18 @@ h2{font-size:40px;font-weight:700;margin-bottom:8px;}
 }
 
 .nd-kanban-card {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.9));
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-left: 3px solid var(--col-color, #6b7280);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-left: 4px solid var(--col-color, #6b7280);
   border-radius: 10px;
   padding: 1rem 1.1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1);
+  cursor: grab;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   animation: kanbanCardSlide 0.4s ease-out backwards;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(8px);
 }
 
 .nd-kanban-card::before {
@@ -395,16 +415,18 @@ h2{font-size:40px;font-weight:700;margin-bottom:8px;}
   top: 0;
   left: 0;
   right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%, rgba(0,0,0,0.05) 100%);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  border-radius: 10px;
 }
 
 @keyframes kanbanCardSlide {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.98);
+    transform: translateY(12px) scale(0.96);
   }
   to {
     opacity: 1;
@@ -413,13 +435,20 @@ h2{font-size:40px;font-weight:700;margin-bottom:8px;}
 }
 
 .nd-kanban-card:hover {
-  transform: translateY(-3px) scale(1.01);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-  border-color: rgba(14, 165, 233, 0.5);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--col-color, #6b7280);
+  border-color: var(--col-color, #6b7280);
+  cursor: grab;
 }
 
 .nd-kanban-card:hover::before {
   opacity: 1;
+}
+
+.nd-kanban-card:active {
+  cursor: grabbing;
+  transform: translateY(-2px) scale(1.05) rotate(1.5deg);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
 }
 
 .nd-kanban-card-title {
@@ -461,13 +490,22 @@ h2{font-size:40px;font-weight:700;margin-bottom:8px;}
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+  background: linear-gradient(135deg, var(--col-color, #0ea5e9), #3b82f6);
   color: #fff;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
+  border: 2px solid rgba(255,255,255,0.2);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.nd-kanban-card:hover .nd-kanban-avatar {
+  transform: scale(1.15);
+  border-color: var(--col-color, #0ea5e9);
+  box-shadow: 0 0 12px rgba(14, 165, 233, 0.4);
 }
 
 /* ========== 金字塔思维模型（Pyramid Principle）- MECE结构 + 贝塞尔曲线 ========== */
@@ -969,32 +1007,7 @@ h2{font-size:40px;font-weight:700;margin-bottom:8px;}
   text-align: center;
 }
 
-.nd-kanban-board {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-.nd-kanban-column {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(14, 165, 233, 0.2);
-  border-radius: 12px;
-  padding: 1rem;
-  opacity: 0;
-  animation: kanbanSlideIn 0.5s ease-out forwards;
-  animation-delay: calc(var(--col-index, 0) * 0.1s);
-}
-
-@keyframes kanbanSlideIn {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
+/* 看板样式已在前面定义（line 305-400），此处删除重复定义 */
 
 .nd-kanban-column-header {
   display: flex;
