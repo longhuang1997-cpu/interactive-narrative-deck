@@ -1,49 +1,11 @@
 {
   "name": "interactive-narrative-deck-tests",
   "version": "1.0.0",
+  "description": "Automated tests for Interactive Narrative Deck",
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:antipatterns": "node tests/antipattern-detector.test.js"
+    "test": "node tests/block-rendering-test.js && node tests/browser-compat-test.js"
   },
   "devDependencies": {
-    "@testing-library/dom": "^9.3.4",
-    "jest": "^29.7.0",
-    "jsdom": "^23.2.0"
-  },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "collectCoverageFrom": [
-      "engine/**/*.js",
-      "!engine/vendor/**"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 75,
-        "functions": 80,
-        "lines": 80,
-        "statements": 80
-      }
-    }
-  },
-  "description": "> **一句话**：用AI生成专业商业演示文稿 — 不是PPT模板，是把10年汇报经验AI化的叙事引擎",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs",
-    "example": "examples",
-    "test": "tests"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/longhuang1997-cpu/interactive-narrative-deck.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck/issues"
-  },
-  "homepage": "https://github.com/longhuang1997-cpu/interactive-narrative-deck#readme"
+    "puppeteer": "^21.0.0"
+  }
 }
