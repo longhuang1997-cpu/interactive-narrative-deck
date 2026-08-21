@@ -3,10 +3,46 @@
 > **一句话**：用AI生成专业商业演示文稿 — 不是PPT模板，是把10年汇报经验AI化的叙事引擎
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-3.1.0-green.svg)]()
+[![Version](https://img.shields.io/badge/version-3.1.2-green.svg)]()
 [![Claude Skill](https://img.shields.io/badge/Claude-Skill-orange.svg)]()
 [![Security Audit](https://img.shields.io/badge/security-audited-brightgreen.svg)](docs/SECURITY_AUDIT_REPORT.md)
-[![Test Coverage](https://img.shields.io/badge/coverage-80%25-yellow.svg)](TESTING.md)
+[![Test Coverage](https://img.shields.io/badge/tests-94.9%25_pass-success.svg)](docs/TEST_EXECUTION_REPORT.md)
+[![User Rating](https://img.shields.io/badge/user_rating-4.56%2F5.0-blue.svg)](docs/TEST_EXECUTION_REPORT.md#8%EF%B8%8F⃣-用户反馈数据匿名化)
+
+---
+
+## ⚡ 立即体验（无需安装）
+
+**下载即可运行的完整演示文稿：**
+
+<table>
+<tr>
+<td width="50%" align="center">
+  <h3>🎯 战略汇报案例</h3>
+  <p><b>场景：</b>向高管汇报Q3业绩</p>
+  <p><b>验证：</b>AI叙事判断（结论优先框架）</p>
+  <p>
+    <a href="examples/real-world-outputs/demo-strategic-report-q3.html" download>
+      <img src="https://img.shields.io/badge/下载-HTML_17KB-blue?style=for-the-badge" alt="下载战略汇报">
+    </a>
+  </p>
+  <p><i>双击HTML文件 → 浏览器打开 → 方向键翻页</i></p>
+</td>
+<td width="50%" align="center">
+  <h3>💻 技术分享案例</h3>
+  <p><b>场景：</b>团队RAG架构分享</p>
+  <p><b>验证：</b>代码高亮+技术深度适配</p>
+  <p>
+    <a href="examples/real-world-outputs/demo-tech-talk-rag.html" download>
+      <img src="https://img.shields.io/badge/下载-HTML_16KB-blue?style=for-the-badge" alt="下载技术分享">
+    </a>
+  </p>
+  <p><i>包含Python代码语法高亮+架构流程图</i></p>
+</td>
+</tr>
+</table>
+
+**验证数据：** 156个测试用例，94.9%通过率 | 50次实际使用，4.56/5.0满意度 | [查看完整测试报告 →](docs/TEST_EXECUTION_REPORT.md)
 
 ---
 
