@@ -10,11 +10,19 @@
 
 ## 🎬 演示效果
 
-### 在线Demo
-👉 [查看完整演示](assets/demo-v2.3.0.gif)  
-（部署后替换链接）
+### 完整演示动画
 
-### 预览截图
+<p align="center">
+  <img src="docs/images/demo.gif" alt="Interactive Narrative Deck Demo" width="800">
+</p>
+
+<p align="center">
+  <i>18种专业Block · 基础/商业/自定义 · 一键生成演示文稿</i>
+</p>
+
+---
+
+### 核心Block预览
 
 <table>
 <tr>
@@ -38,9 +46,6 @@
 </td>
 </tr>
 </table>
-
-> 💡 **提示**：截图占位符，部署前请替换为实际截图  
-> 推荐截图尺寸：1200×800px，PNG格式，存放在 `docs/images/` 目录
 
 ---
 
