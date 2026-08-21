@@ -7,7 +7,7 @@
     "author_handle": "longhuang1997-cpu"
   },
   "metadata": {
-    "description": "把汇报做成Block积木式交互演示 + AI知识层驱动 — 18种Block(9核心+6商业+3自定义) + 6大叙事框架 + 11种反模式检测 + 1800行知识文件,从工具到经验萃取系统",
+    "description": "结构化交互叙事引擎：将10年汇报经验AI化，自动判断叙事框架、选择Block组合、生成专业演示。覆盖发布会、战略汇报、数据复盘、路演、技术分享等场景。18种Block + 6大框架 + 反模式检测 + 完整知识体系。",
     "version": "3.1.0",
     "author": "Long Huang",
     "demo_url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck#-完整案例",

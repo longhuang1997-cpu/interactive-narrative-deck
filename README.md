@@ -5,6 +5,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-3.1.0-green.svg)]()
 [![Claude Skill](https://img.shields.io/badge/Claude-Skill-orange.svg)]()
+[![Security Audit](https://img.shields.io/badge/security-audited-brightgreen.svg)](docs/SECURITY_AUDIT_REPORT.md)
+[![Test Coverage](https://img.shields.io/badge/coverage-80%25-yellow.svg)](TESTING.md)
 
 ---
 
@@ -244,6 +246,15 @@
 - **[swot-demo](examples/swot-demo/)** - SWOT战略分析
 - **[strategy-report](examples/strategy-report/)** - 战略汇报完整案例
 - **[tech-talk](examples/tech-talk/)** - 技术分享演示
+- **[real-world-outputs](examples/real-world-outputs/)** - 🆕 真实生成案例库（含HTML输出）
+
+---
+
+## 🔒 安全与质量保证
+
+- **[安全审计报告](docs/SECURITY_AUDIT_REPORT.md)** - 网络监控验证、代码扫描、权限审计
+- **[测试文档](TESTING.md)** - 18-Block测试矩阵、反模式检测验证、性能基准
+- **[隐私政策](SECURITY.md)** - 零数据收集、本地生成、开源可审计
 
 ---
 
