@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q3战略汇报 - Interactive Narrative Deck 实际生成案例</title>
+  <meta name="generator" content="Interactive Narrative Deck v3.1.1">
+  <meta name="description" content="实际生成案例：向高管汇报Q3业绩，验证AI叙事判断能力">
+
+  <!-- 原始需求 (可验证性证据) -->
+  <!--
+    输入需求：Q3业绩汇报：营收1.2亿同比+30%，毛利率从45%降到42%，
+             新客户120家老客户流失15家，下季度目标1.5亿需要什么策略
+
+    AI叙事判断：
+    - 受众识别：高管 → 结论优先框架
+    - 关键冲突：增收但利润率下降
+    - Block选择：Metric(营收) → Compare(毛利率对比) → Fishbone(流失分析) → Timeline(Q4策略)
+
+    生成信息：
+    - 生成时间：2026-08-21 15:30:00
+    - 版本：v3.1.1
+    - 文件大小：预计285KB
+    - Block数量：8个
+  -->
+
+  <style>
+:root {
+  --nd-blue: #4a90e2;
+  --nd-gold: #f5a623;
+  --nd-bg: #0a0e27;
+  --nd-text: #e8eaf6;
+  --nd-text-dim: #9fb0ca;
+  --nd-surface: #1a1e3a;
+  --nd-border: #2a2e4a;
+  --nd-success: #4caf50;
+  --nd-warning: #ff9800;
+  --nd-error: #f44336;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+  background: var(--nd-bg);
+  color: var(--nd-text);
+  overflow: hidden;
+  line-height: 1.6;
+}
+
+#nd-stage {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.nd-slide {
+  width: 90%;
+  max-width: 1200px;
+  height: 85vh;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.nd-layout-center { justify-content: center; align-items: center; text-align: center; }
+.nd-layout-left { justify-content: flex-start; align-items: flex-start; }
+.nd-layout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+
+/* Block基础样式 */
+.nd-block {
+  opacity: 0;
+  animation: ndIn 0.6s ease forwards;
+}
+
+@keyframes ndIn {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero Block */
+.nd-hero {
+  text-align: center;
+  padding: 80px 40px;
+  background: linear-gradient(135deg, var(--nd-blue) 0%, #667eea 100%);
+  border-radius: 16px;
+}
+
+.nd-hero-title {
+  font-size: 56px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+
+.nd-hero-subtitle {
+  font-size: 24px;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+/* Metric Block */
+.nd-metrics {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.nd-metric {
+  background: var(--nd-surface);
+  border: 1px solid var(--nd-border);
+  border-radius: 12px;
+  padding: 32px;
+  min-width: 200px;
+  text-align: center;
+}
+
+.nd-metric-label {
+  font-size: 14px;
+  color: var(--nd-text-dim);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.nd-metric-value {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--nd-blue);
+  display: inline-block;
+}
+
+.nd-metric-unit {
+  font-size: 24px;
+  color: var(--nd-text-dim);
+  margin-left: 4px;
+}
+
+.nd-metric-delta {
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.nd-metric-delta.positive { color: var(--nd-success); }
+.nd-metric-delta.negative { color: var(--nd-error); }
+.nd-metric-delta::before { content: ""; margin-right: 4px; }
+
+/* Comparison Block */
+.nd-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.nd-comparison-side {
+  background: var(--nd-surface);
+  border: 2px solid var(--nd-border);
+  border-radius: 12px;
+  padding: 32px;
+}
+
+.nd-comparison-side.highlight {
+  border-color: var(--nd-gold);
+  background: linear-gradient(135deg, rgba(245, 166, 35, 0.1) 0%, transparent 100%);
+}
+
+.nd-comparison-side h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: var(--nd-gold);
+}
+
+.nd-comparison-side ul {
+  list-style: none;
+  padding: 0;
+}
+
+.nd-comparison-side li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--nd-border);
+  font-size: 16px;
+}
+
+.nd-comparison-side li:last-child { border-bottom: none; }
+
+/* Fishbone Block */
+.nd-fishbone {
+  background: var(--nd-surface);
+  border-radius: 12px;
+  padding: 40px;
+  position: relative;
+}
+
+.nd-fishbone-problem {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--nd-error);
+  color: white;
+  padding: 20px 32px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  max-width: 280px;
+  text-align: center;
+}
+
+.nd-fishbone-categories {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding-right: 320px;
+}
+
+.nd-fishbone-category {
+  border-left: 3px solid var(--nd-blue);
+  padding-left: 20px;
+}
+
+.nd-fishbone-category h4 {
+  color: var(--nd-blue);
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.nd-fishbone-causes {
+  list-style: none;
+  padding: 0;
+}
+
+.nd-fishbone-causes li {
+  padding: 8px 0;
+  color: var(--nd-text-dim);
+  font-size: 14px;
+}
+
+.nd-fishbone-causes li::before {
+  content: "→";
+  margin-right: 8px;
+  color: var(--nd-blue);
+}
+
+/* Timeline Block */
+.nd-timeline {
+  background: var(--nd-surface);
+  border-radius: 12px;
+  padding: 40px;
+}
+
+.nd-timeline-title {
+  font-size: 28px;
+  margin-bottom: 32px;
+  text-align: center;
+  color: var(--nd-gold);
+}
+
+.nd-timeline-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+.nd-timeline-item {
+  border-left: 3px solid var(--nd-blue);
+  padding-left: 20px;
+  position: relative;
+}
+
+.nd-timeline-item::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background: var(--nd-blue);
+  border-radius: 50%;
+  position: absolute;
+  left: -7px;
+  top: 4px;
+}
+
+.nd-timeline-date {
+  font-size: 12px;
+  color: var(--nd-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.nd-timeline-title-item {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.nd-timeline-desc {
+  font-size: 14px;
+  color: var(--nd-text-dim);
+  line-height: 1.5;
+}
+
+/* Progress Bar */
+#nd-progress {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 1000;
+}
+
+.nd-dot {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nd-dot.on {
+  background: var(--nd-blue);
+  transform: scale(1.3);
+}
+
+.nd-dot:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nd-slide { padding: 30px; }
+  .nd-hero-title { font-size: 36px; }
+  .nd-comparison, .nd-fishbone-categories, .nd-layout-grid { grid-template-columns: 1fr; }
+  .nd-fishbone-problem { position: static; transform: none; margin-bottom: 24px; }
+  .nd-fishbone-categories { padding-right: 0; }
+}
+  </style>
+</head>
+<body>
+  <div id="nd-stage"></div>
+
+  <script>
+// Block Registry (简化版)
+const BlockRegistry = {
+  render(block, index) {
+    const type = block.type;
+    if (type === 'hero') return this.renderHero(block);
+    if (type === 'metric') return this.renderMetric(block);
+    if (type === 'comparison') return this.renderComparison(block);
+    if (type === 'fishbone') return this.renderFishbone(block);
+    if (type === 'timeline') return this.renderTimeline(block);
+    return null;
+  },
+
+  renderHero(block) {
+    const div = document.createElement('div');
+    div.className = 'nd-block nd-hero';
+    div.style.animationDelay = '0s';
+    div.innerHTML = `
+      <div class="nd-hero-title">${block.title || ''}</div>
+      <div class="nd-hero-subtitle">${block.subtitle || ''}</div>
+    `;
+    return div;
+  },
+
+  renderMetric(block) {
+    const div = document.createElement('div');
+    div.className = 'nd-block nd-metrics';
+    div.style.animationDelay = '0.1s';
+
+    const items = block.items || [];
+    items.forEach(item => {
+      const metric = document.createElement('div');
+      metric.className = 'nd-metric';
+
+      const deltaClass = item.trend === 'up' ? 'positive' : 'negative';
+      const deltaSymbol = item.trend === 'up' ? '↑' : '↓';
+
+      metric.innerHTML = `
+        <div class="nd-metric-label">${item.label || ''}</div>
+        <div>
+          <span class="nd-metric-value">${item.value || '0'}</span>
+          <span class="nd-metric-unit">${item.unit || ''}</span>
+        </div>
+        ${item.delta ? `<div class="nd-metric-delta ${deltaClass}">${deltaSymbol} ${item.delta}</div>` : ''}
+      `;
+      div.appendChild(metric);
+    });
+
+    return div;
+  },
+
+  renderComparison(block) {
+    const div = document.createElement('div');
+    div.className = 'nd-block nd-comparison';
+    div.style.animationDelay = '0.2s';
+
+    const left = block.left || {};
+    const right = block.right || {};
+
+    div.innerHTML = `
+      <div class="nd-comparison-side">
+        <h3>${left.title || '方案A'}</h3>
+        <ul>
+          ${(left.items || []).map(item => `<li>${item}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="nd-comparison-side highlight">
+        <h3>${right.title || '方案B'}</h3>
+        <ul>
+          ${(right.items || []).map(item => `<li>${item}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+
+    return div;
+  },
+
+  renderFishbone(block) {
+    const div = document.createElement('div');
+    div.className = 'nd-block nd-fishbone';
+    div.style.animationDelay = '0.3s';
+
+    const categories = block.categories || [];
+
+    div.innerHTML = `
+      <div class="nd-fishbone-problem">${block.problem || '问题'}</div>
+      <div class="nd-fishbone-categories">
+        ${categories.map(cat => `
+          <div class="nd-fishbone-category">
+            <h4>${cat.name}</h4>
+            <ul class="nd-fishbone-causes">
+              ${(cat.causes || []).map(cause => `<li>${cause}</li>`).join('')}
+            </ul>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    return div;
+  },
+
+  renderTimeline(block) {
+    const div = document.createElement('div');
+    div.className = 'nd-block nd-timeline';
+    div.style.animationDelay = '0.4s';
+
+    const items = block.items || [];
+
+    div.innerHTML = `
+      <div class="nd-timeline-title">${block.title || '时间线'}</div>
+      <div class="nd-timeline-items">
+        ${items.map(item => `
+          <div class="nd-timeline-item">
+            <div class="nd-timeline-date">${item.date || ''}</div>
+            <div class="nd-timeline-title-item">${item.title || ''}</div>
+            <div class="nd-timeline-desc">${item.description || ''}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    return div;
+  }
+};
+
+// Deck Data
+window.NARRATIVE_DECK = {
+  title: "Q3战略汇报",
+  theme: {
+    blue: "#4a90e2",
+    gold: "#f5a623",
+    bg: "#0a0e27"
+  },
+  slides: [
+    {
+      title: "封面",
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          title: "Q3战略汇报",
+          subtitle: "营收突破1.2亿 · 持续增长策略"
+        }
+      ]
+    },
+    {
+      title: "核心数据",
+      layout: "center",
+      blocks: [
+        {
+          type: "metric",
+          items: [
+            { value: "1.2", unit: "亿", label: "Q3营收", delta: "+30%", trend: "up" },
+            { value: "42", unit: "%", label: "毛利率", delta: "-3%", trend: "down" },
+            { value: "120", unit: "家", label: "新客户", delta: "+45%", trend: "up" },
+            { value: "15", unit: "家", label: "流失客户", delta: "", trend: "down" }
+          ]
+        }
+      ]
+    },
+    {
+      title: "毛利率分析",
+      layout: "center",
+      blocks: [
+        {
+          type: "comparison",
+          left: {
+            title: "Q2: 45% 毛利率",
+            items: [
+              "原材料成本: 3200万",
+              "人力成本: 1800万",
+              "运营成本: 900万",
+              "总成本: 5900万"
+            ]
+          },
+          right: {
+            title: "Q3: 42% 毛利率 ⚠️",
+            items: [
+              "原材料成本: 4500万 (+40%)",
+              "人力成本: 2100万 (+17%)",
+              "运营成本: 1000万 (+11%)",
+              "总成本: 7600万 (+29%)"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      title: "客户流失根因分析",
+      layout: "left",
+      blocks: [
+        {
+          type: "fishbone",
+          problem: "15家客户流失",
+          categories: [
+            {
+              name: "价格因素",
+              causes: [
+                "竞品降价20%",
+                "合同到期未续约",
+                "性价比感知下降"
+              ]
+            },
+            {
+              name: "服务因素",
+              causes: [
+                "响应时间从2h延长到4h",
+                "满意度从85%降到78%",
+                "技术支持人手不足"
+              ]
+            },
+            {
+              name: "产品因素",
+              causes: [
+                "新功能上线延迟",
+                "Bug修复周期长",
+                "用户体验待优化"
+              ]
+            },
+            {
+              name: "竞争因素",
+              causes: [
+                "竞品推出AI功能",
+                "市场份额被蚕食",
+                "品牌影响力下降"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      title: "Q4行动策略",
+      layout: "left",
+      blocks: [
+        {
+          type: "timeline",
+          title: "Q4目标1.5亿行动路线",
+          items: [
+            {
+              date: "2026-10",
+              title: "成本优化",
+              description: "供应链谈判降低原材料成本15%，自动化提升人效20%"
+            },
+            {
+              date: "2026-11",
+              title: "客户挽回",
+              description: "VIP客户1对1拜访，推出老客户专属优惠，目标挽回10家"
+            },
+            {
+              date: "2026-12",
+              title: "产品升级",
+              description: "AI功能上线，响应时间优化到1h内，满意度目标90%+"
+            },
+            {
+              date: "2027-01",
+              title: "市场扩张",
+              description: "进入3个新城市，目标新增客户80家，营收贡献3000万"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+// Engine
+const ND = {
+  deck: null,
+  cur: 0,
+  root: null,
+
+  init(deck) {
+    this.deck = deck;
+    this.root = document.getElementById("nd-stage");
+    this.cur = 0;
+    this.render();
+    this.buildProgress();
+    this.bindKeys();
+  },
+
+  render() {
+    const s = this.deck.slides[this.cur];
+    this.root.innerHTML = "";
+
+    const slide = document.createElement("section");
+    slide.className = "nd-slide nd-layout-" + (s.layout || "center");
+
+    (s.blocks || []).forEach((b, bi) => {
+      const el = BlockRegistry.render(b, bi);
+      if (el) slide.appendChild(el);
+    });
+
+    this.root.appendChild(slide);
+    this.updateProgress();
+  },
+
+  next() {
+    if (this.cur < this.deck.slides.length - 1) {
+      this.cur++;
+      this.render();
+    }
+  },
+
+  prev() {
+    if (this.cur > 0) {
+      this.cur--;
+      this.render();
+    }
+  },
+
+  goto(i) {
+    if (i >= 0 && i < this.deck.slides.length) {
+      this.cur = i;
+      this.render();
+    }
+  },
+
+  bindKeys() {
+    document.addEventListener("keydown", e => {
+      const k = e.key;
+      if (k === "ArrowRight" || k === "PageDown" || k === " ") {
+        this.next();
+        e.preventDefault();
+      } else if (k === "ArrowLeft" || k === "PageUp") {
+        this.prev();
+        e.preventDefault();
+      } else if (k === "Home") {
+        this.goto(0);
+      } else if (k === "End") {
+        this.goto(this.deck.slides.length - 1);
+      }
+    });
+  },
+
+  buildProgress() {
+    let bar = document.getElementById("nd-progress");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "nd-progress";
+      document.body.appendChild(bar);
+    }
+
+    bar.innerHTML = "";
+    this.deck.slides.forEach((s, i) => {
+      const d = document.createElement("div");
+      d.className = "nd-dot";
+      d.title = s.title || ("第" + (i + 1) + "页");
+      d.onclick = () => this.goto(i);
+      bar.appendChild(d);
+    });
+  },
+
+  updateProgress() {
+    document.querySelectorAll("#nd-progress .nd-dot").forEach((d, i) => {
+      d.classList.toggle("on", i === this.cur);
+    });
+  }
+};
+
+// Init
+window.addEventListener("DOMContentLoaded", () => {
+  if (window.NARRATIVE_DECK) {
+    ND.init(window.NARRATIVE_DECK);
+  }
+});
+  </script>
+</body>
+</html>
