@@ -1,7 +1,10 @@
 ---
 name: interactive-narrative-deck
-version: 3.0.0
-description: 把演讲/汇报材料做成"结构化交互叙事"演示——不是翻页PPT,而是 Block 积木组件 + 渐进揭示 + 数据可视化 + 克制动效。核心价值是AI化的汇报经验萃取:自动判断叙事框架、选择合适Block组合、把用户自然语言转成专业演示。当用户要做发布会/战略汇报/数据复盘/路演/技术分享时使用。v3.0新增：完整知识层体系（6大叙事框架+15种Block+11种反模式检测）。
+version: 3.1.0
+description: 结构化交互叙事引擎——AI化的10年汇报经验萃取。自动判断叙事框架、选择Block组合、将自然语言转成专业演示。18种Block（基础/商业/自定义）+ 6大叙事框架 + 11种反模式检测。适用场景：发布会、战略汇报、数据复盘、路演、技术分享。
+author: Long Huang
+repository: https://github.com/longhuang1997-cpu/interactive-narrative-deck
+license: MIT
 ---
 
 # Interactive Narrative Deck
