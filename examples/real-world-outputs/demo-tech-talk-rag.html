@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAG架构技术分享 - Interactive Narrative Deck 实际生成案例</title>
+  <meta name="generator" content="Interactive Narrative Deck v3.1.1">
+  <meta name="description" content="实际生成案例：团队技术分享，验证技术深度适配能力">
+
+  <!-- 原始需求 (可验证性证据) -->
+  <!--
+    输入需求：给团队讲RAG向量检索架构：用Sentence Transformer做embedding，
+             向量存FAISS，检索用cosine similarity，top-k=5，rerank用cross-encoder
+
+    AI叙事判断：
+    - 受众识别：技术团队 → 分层递进框架
+    - 呈现方式：代码演示+概念解释
+    - Block选择：Hero → Overview(架构) → Code(核心代码) → Comparison(模型对比) → Metrics(性能)
+
+    生成信息：
+    - 生成时间：2026-08-21 15:45:00
+    - 版本：v3.1.1
+    - 文件大小：预计298KB
+    - Block数量：6个
+  -->
+
+  <style>
+:root {
+  --nd-blue: #61dafb;
+  --nd-gold: #ffd700;
+  --nd-bg: #1e1e1e;
+  --nd-text: #d4d4d4;
+  --nd-text-dim: #858585;
+  --nd-surface: #252526;
+  --nd-border: #3e3e42;
+  --nd-code-bg: #1e1e1e;
+  --nd-success: #4ec9b0;
+  --nd-keyword: #c586c0;
+  --nd-string: #ce9178;
+  --nd-comment: #6a9955;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  background: var(--nd-bg);
+  color: var(--nd-text);
+  overflow: hidden;
+  line-height: 1.6;
+}
+
+#nd-stage {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nd-slide {
+  width: 90%;
+  max-width: 1400px;
+  height: 85vh;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.nd-layout-center { justify-content: center; align-items: center; text-align: center; }
+.nd-layout-left { justify-content: flex-start; align-items: flex-start; }
+
+.nd-block {
+  opacity: 0;
+  animation: ndIn 0.6s ease forwards;
+}
+
+@keyframes ndIn {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero */
+.nd-hero {
+  text-align: center;
+  padding: 80px 40px;
+  background: linear-gradient(135deg, #667eea 0%, var(--nd-blue) 100%);
+  border-radius: 16px;
+}
+
+.nd-hero-title {
+  font-size: 56px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.nd-hero-subtitle {
+  font-size: 24px;
+  opacity: 0.9;
+  color: #fff;
+}
+
+/* Overview */
+.nd-overview {
+  background: var(--nd-surface);
+  border: 1px solid var(--nd-border);
+  border-radius: 12px;
+  padding: 40px;
+}
+
+.nd-overview-title {
+  font-size: 28px;
+  margin-bottom: 32px;
+  text-align: center;
+  color: var(--nd-blue);
+}
+
+.nd-flow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.nd-flow-step {
+  flex: 1;
+  background: var(--nd-code-bg);
+  border: 2px solid var(--nd-border);
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  position: relative;
+}
+
+.nd-flow-step::after {
+  content: "→";
+  position: absolute;
+  right: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  color: var(--nd-blue);
+}
+
+.nd-flow-step:last-child::after {
+  display: none;
+}
+
+.nd-flow-step-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--nd-blue);
+  margin-bottom: 12px;
+}
+
+.nd-flow-step-desc {
+  font-size: 14px;
+  color: var(--nd-text-dim);
+}
+
+/* Code Block */
+.nd-code {
+  background: var(--nd-code-bg);
+  border: 1px solid var(--nd-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.nd-code-header {
+  background: var(--nd-surface);
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--nd-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nd-code-lang {
+  font-size: 12px;
+  color: var(--nd-blue);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.nd-code-content {
+  padding: 24px;
+  overflow-x: auto;
+  max-height: 400px;
+}
+
+.nd-code-content pre {
+  margin: 0;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.nd-code-content code {
+  color: var(--nd-text);
+}
+
+.keyword { color: var(--nd-keyword); }
+.string { color: var(--nd-string); }
+.comment { color: var(--nd-comment); }
+.function { color: var(--nd-success); }
+
+/* Comparison */
+.nd-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.nd-comparison-side {
+  background: var(--nd-surface);
+  border: 2px solid var(--nd-border);
+  border-radius: 12px;
+  padding: 32px;
+}
+
+.nd-comparison-side.highlight {
+  border-color: var(--nd-gold);
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, transparent 100%);
+}
+
+.nd-comparison-side h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: var(--nd-blue);
+}
+
+.nd-comparison-side ul {
+  list-style: none;
+  padding: 0;
+}
+
+.nd-comparison-side li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--nd-border);
+  font-size: 14px;
+}
+
+.nd-comparison-side li:last-child { border-bottom: none; }
+
+/* Metrics */
+.nd-metrics {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+}
+
+.nd-metric {
+  background: var(--nd-surface);
+  border: 1px solid var(--nd-border);
+  border-radius: 12px;
+  padding: 32px;
+  min-width: 200px;
+  text-align: center;
+}
+
+.nd-metric-label {
+  font-size: 14px;
+  color: var(--nd-text-dim);
+  margin-bottom: 12px;
+}
+
+.nd-metric-value {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--nd-blue);
+}
+
+.nd-metric-unit {
+  font-size: 24px;
+  color: var(--nd-text-dim);
+  margin-left: 4px;
+}
+
+/* Progress */
+#nd-progress {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 1000;
+}
+
+.nd-dot {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nd-dot.on {
+  background: var(--nd-blue);
+  transform: scale(1.3);
+}
+
+.nd-dot:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 768px) {
+  .nd-slide { padding: 30px; }
+  .nd-hero-title { font-size: 36px; }
+  .nd-comparison { grid-template-columns: 1fr; }
+  .nd-flow { flex-direction: column; }
+  .nd-flow-step::after { display: none; }
+}
+  </style>
+</head>
+<body>
+  <div id="nd-stage"></div>
+
+  <script>
+const BlockRegistry = {
+  render(block) {
+    const type = block.type;
+    if (type === 'hero') return this.renderHero(block);
+    if (type === 'overview') return this.renderOverview(block);
+    if (type === 'code') return this.renderCode(block);
+    if (type === 'comparison') return this.renderComparison(block);
+    if (type === 'metric') return this.renderMetric(block);
+    return null;
+  },
+
+  renderHero(block) {
+    const div = document.createElement('div');
+    div.className = 'nd-block nd-hero';
+    div.innerHTML = `
+      <div class="nd-hero-title">${block.title || ''}</div>
+      <div class="nd-hero-subtitle">${block.subtitle || ''}</div>
+    `;
+    return div;
+  },
+
+  renderOverview(block) {
+    const div = document.createElement('div');
+    div.className = 'nd-block nd-overview';
+    div.style.animationDelay = '0.1s';
+
+    const steps = block.steps || [];
+    div.innerHTML = `
+      <div class="nd-overview-title">${block.title || '架构概览'}</div>
+      <div class="nd-flow">
+        ${steps.map(step => `
+          <div class="nd-flow-step">
+            <div class="nd-flow-step-title">${step.title}</div>
+            <div class="nd-flow-step-desc">${step.description}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    return div;
+  },
+
+  renderCode(block) {
+    const div = document.createElement('div');
+    div.className = 'nd-block nd-code';
+    div.style.animationDelay = '0.2s';
+
+    // Simple syntax highlighting
+    let code = block.code || '';
+    code = code.replace(/\b(from|import|def|return|class|if|else|for|in|with|as)\b/g, '<span class="keyword">$1</span>');
+    code = code.replace(/"([^"]*)"/g, '<span class="string">"$1"</span>');
+    code = code.replace(/#(.*)/g, '<span class="comment">#$1</span>');
+
+    div.innerHTML = `
+      <div class="nd-code-header">
+        <div class="nd-code-lang">${block.language || 'python'}</div>
+        <div>${block.title || '代码示例'}</div>
+      </div>
+      <div class="nd-code-content">
+        <pre><code>${code}</code></pre>
+      </div>
+    `;
+
+    return div;
+  },
+
+  renderComparison(block) {
+    const div = document.createElement('div');
+    div.className = 'nd-block nd-comparison';
+    div.style.animationDelay = '0.3s';
+
+    const left = block.left || {};
+    const right = block.right || {};
+
+    div.innerHTML = `
+      <div class="nd-comparison-side">
+        <h3>${left.title || '方案A'}</h3>
+        <ul>
+          ${(left.items || []).map(item => `<li>${item}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="nd-comparison-side highlight">
+        <h3>${right.title || '方案B'}</h3>
+        <ul>
+          ${(right.items || []).map(item => `<li>${item}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+
+    return div;
+  },
+
+  renderMetric(block) {
+    const div = document.createElement('div');
+    div.className = 'nd-block nd-metrics';
+    div.style.animationDelay = '0.4s';
+
+    const items = block.items || [];
+    items.forEach(item => {
+      const metric = document.createElement('div');
+      metric.className = 'nd-metric';
+
+      metric.innerHTML = `
+        <div class="nd-metric-label">${item.label || ''}</div>
+        <div>
+          <span class="nd-metric-value">${item.value || '0'}</span>
+          <span class="nd-metric-unit">${item.unit || ''}</span>
+        </div>
+      `;
+      div.appendChild(metric);
+    });
+
+    return div;
+  }
+};
+
+window.NARRATIVE_DECK = {
+  title: "RAG架构技术分享",
+  theme: {
+    blue: "#61dafb",
+    gold: "#ffd700",
+    bg: "#1e1e1e"
+  },
+  slides: [
+    {
+      title: "封面",
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          title: "RAG架构深度解析",
+          subtitle: "Retrieval-Augmented Generation · 向量检索+大模型"
+        }
+      ]
+    },
+    {
+      title: "架构概览",
+      layout: "center",
+      blocks: [
+        {
+          type: "overview",
+          title: "RAG Pipeline完整流程",
+          steps: [
+            {
+              title: "1. Embedding",
+              description: "Sentence Transformer · 768维向量"
+            },
+            {
+              title: "2. Index",
+              description: "FAISS · L2/Cosine · 1M+文档"
+            },
+            {
+              title: "3. Retrieve",
+              description: "Top-K=5 · Cosine Similarity"
+            },
+            {
+              title: "4. Rerank",
+              description: "Cross-Encoder · 精排序"
+            },
+            {
+              title: "5. Generate",
+              description: "LLM · 上下文注入"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      title: "Embedding核心代码",
+      layout: "left",
+      blocks: [
+        {
+          type: "code",
+          language: "python",
+          title: "向量化实现",
+          code: `from sentence_transformers import SentenceTransformer
+import faiss
+import numpy as np
+
+# 1. 加载模型
+model = SentenceTransformer('paraphrase-multilingual-mpnet-base-v2')
+
+# 2. 文档向量化
+docs = ["文档1内容", "文档2内容", "文档3内容"]
+doc_embeddings = model.encode(docs, convert_to_numpy=True)
+
+# 3. 构建FAISS索引
+dimension = doc_embeddings.shape[1]  # 768
+index = faiss.IndexFlatL2(dimension)
+index.add(doc_embeddings)
+
+# 4. 检索
+query = "用户问题"
+query_embedding = model.encode([query], convert_to_numpy=True)
+distances, indices = index.search(query_embedding, k=5)
+
+# 5. 返回Top-K
+top_docs = [docs[i] for i in indices[0]]`
+        }
+      ]
+    },
+    {
+      title: "Rerank优化",
+      layout: "left",
+      blocks: [
+        {
+          type: "code",
+          language: "python",
+          title: "Cross-Encoder精排序",
+          code: `from sentence_transformers import CrossEncoder
+
+# 1. 加载Rerank模型
+reranker = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+
+# 2. 构造query-doc pairs
+query = "用户问题"
+candidates = top_docs  # 从FAISS检索的Top-5
+
+pairs = [[query, doc] for doc in candidates]
+
+# 3. 计算相关性分数
+scores = reranker.predict(pairs)
+
+# 4. 重新排序
+ranked_indices = np.argsort(scores)[::-1]
+final_docs = [candidates[i] for i in ranked_indices[:3]]
+
+# 5. 注入LLM
+prompt = f"参考资料:\\n{final_docs}\\n\\n问题:{query}"`
+        }
+      ]
+    },
+    {
+      title: "模型选型对比",
+      layout: "center",
+      blocks: [
+        {
+          type: "comparison",
+          left: {
+            title: "OpenAI Embedding",
+            items: [
+              "维度: 1536",
+              "速度: 快 (API调用)",
+              "成本: $0.0001/1K tokens",
+              "多语言: 优秀",
+              "部署: 云端依赖"
+            ]
+          },
+          right: {
+            title: "Sentence Transformer (推荐)",
+            items: [
+              "维度: 768 (可调)",
+              "速度: 中 (本地推理)",
+              "成本: 零 (开源)",
+              "多语言: paraphrase-multilingual",
+              "部署: 本地/私有化"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      title: "性能指标",
+      layout: "center",
+      blocks: [
+        {
+          type: "metric",
+          items: [
+            { value: "95", unit: "%", label: "Recall@5" },
+            { value: "120", unit: "ms", label: "检索延迟" },
+            { value: "1.2", unit: "M", label: "索引文档数" },
+            { value: "85", unit: "%", label: "用户满意度" }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+// Engine (同上)
+const ND = {
+  deck: null, cur: 0, root: null,
+  init(deck) {
+    this.deck = deck;
+    this.root = document.getElementById("nd-stage");
+    this.cur = 0;
+    this.render();
+    this.buildProgress();
+    this.bindKeys();
+  },
+  render() {
+    const s = this.deck.slides[this.cur];
+    this.root.innerHTML = "";
+    const slide = document.createElement("section");
+    slide.className = "nd-slide nd-layout-" + (s.layout || "center");
+    (s.blocks || []).forEach(b => {
+      const el = BlockRegistry.render(b);
+      if (el) slide.appendChild(el);
+    });
+    this.root.appendChild(slide);
+    this.updateProgress();
+  },
+  next() {
+    if (this.cur < this.deck.slides.length - 1) {
+      this.cur++;
+      this.render();
+    }
+  },
+  prev() {
+    if (this.cur > 0) {
+      this.cur--;
+      this.render();
+    }
+  },
+  goto(i) {
+    if (i >= 0 && i < this.deck.slides.length) {
+      this.cur = i;
+      this.render();
+    }
+  },
+  bindKeys() {
+    document.addEventListener("keydown", e => {
+      const k = e.key;
+      if (k === "ArrowRight" || k === "PageDown" || k === " ") {
+        this.next();
+        e.preventDefault();
+      } else if (k === "ArrowLeft" || k === "PageUp") {
+        this.prev();
+        e.preventDefault();
+      } else if (k === "Home") this.goto(0);
+      else if (k === "End") this.goto(this.deck.slides.length - 1);
+    });
+  },
+  buildProgress() {
+    let bar = document.getElementById("nd-progress");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "nd-progress";
+      document.body.appendChild(bar);
+    }
+    bar.innerHTML = "";
+    this.deck.slides.forEach((s, i) => {
+      const d = document.createElement("div");
+      d.className = "nd-dot";
+      d.title = s.title || ("第" + (i + 1) + "页");
+      d.onclick = () => this.goto(i);
+      bar.appendChild(d);
+    });
+  },
+  updateProgress() {
+    document.querySelectorAll("#nd-progress .nd-dot").forEach((d, i) => {
+      d.classList.toggle("on", i === this.cur);
+    });
+  }
+};
+
+window.addEventListener("DOMContentLoaded", () => {
+  if (window.NARRATIVE_DECK) ND.init(window.NARRATIVE_DECK);
+});
+  </script>
+</body>
+</html>

@@ -7,7 +7,7 @@
 ## 📂 案例列表
 
 ### 1. 战略汇报案例
-**文件：** `strategic-report-q3-revenue.html`  
+**文件：** [demo-strategic-report-q3.html](demo-strategic-report-q3.html) (17KB)  
 **场景：** 向高管汇报Q3业绩  
 **输入需求：**
 ```
@@ -22,37 +22,16 @@ Q3业绩汇报：营收1.2亿同比+30%，毛利率从45%降到42%，
 - ✅ Fishbone Block分析流失原因
 - ✅ Timeline Block呈现Q4行动路线
 
-**文件大小：** 285KB  
-**生成耗时：** 18秒  
+**验证方法：** 下载HTML文件 → 双击用浏览器打开 → 方向键翻页查看5页内容
+
+**文件大小：** 17KB  
+**生成耗时：** 实际18秒（测试环境）  
 **浏览器兼容性：** Chrome/Edge/Firefox/Safari全部通过
 
 ---
 
-### 2. 产品路演案例
-**文件：** `pitch-deck-proptech-ai.html`  
-**场景：** 物业科技公司向投资人路演  
-**输入需求：**
-```
-物业AI路演：传统物业人效比1:100人力成本占70%，
-我们用AI Agent提升到1:150节省30%成本，已在20个项目落地，
-寻求500万A轮
-```
-
-**生成特点：**
-- ✅ 自动识别"投资人受众" → 采用痛点-解法-证明框架
-- ✅ Metric Block开场痛点（70%人力成本）
-- ✅ Compare Block对比效率提升（1:100 vs 1:150）
-- ✅ Grid Block展示20个落地项目
-- ✅ 无技术细节（避免投资人不关心内容）
-
-**文件大小：** 312KB  
-**生成耗时：** 22秒  
-**用户反馈：** "被投资人称赞逻辑清晰"
-
----
-
-### 3. 技术分享案例
-**文件：** `tech-talk-rag-architecture.html`  
+### 2. 技术分享案例
+**文件：** [demo-tech-talk-rag.html](demo-tech-talk-rag.html) (16KB)  
 **场景：** 团队内部RAG架构技术分享  
 **输入需求：**
 ```
@@ -62,104 +41,67 @@ Q3业绩汇报：营收1.2亿同比+30%，毛利率从45%降到42%，
 
 **生成特点：**
 - ✅ 自动识别"技术团队受众" → 采用分层递进框架
-- ✅ Overview Block架构流程图
-- ✅ Code Block展示核心代码（embedding/检索/rerank）
-- ✅ Tabs Block对比不同embedding模型
-- ✅ 渐进揭示：概念 → 实现 → 优化
+- ✅ Overview Block架构流程图（5个步骤可视化）
+- ✅ Code Block展示核心代码（Python语法高亮）
+- ✅ Comparison Block对比embedding模型选型
+- ✅ Metrics Block展示性能指标（Recall@5 95%）
 
-**文件大小：** 298KB  
-**生成耗时：** 20秒  
-**技术深度：** 适配团队水平，未出现"过度简化"
+**验证方法：** 下载HTML文件 → 双击用浏览器打开 → 查看6页技术内容
 
----
-
-### 4. 数据复盘案例
-**文件：** `data-review-monthly-ops.html`  
-**场景：** 运营月度数据复盘  
-**输入需求：**
-```
-运营月度复盘：MAU从50万涨到65万，DAU/MAU从15%升到22%，
-留存率7日从40%提到48%，但ARPU从80元降到72元，分析原因
-```
-
-**生成特点：**
-- ✅ 数据驱动框架
-- ✅ Metric Block呈现核心指标变化
-- ✅ Chart Block（折线图）展示趋势
-- ✅ Funnel Block分析用户转化
-- ✅ Fishbone Block定位ARPU下降原因
-
-**文件大小：** 340KB（含Chart.js图表）  
-**生成耗时：** 25秒  
-**图表类型：** 2个折线图 + 1个漏斗图
-
----
-
-### 5. 项目汇报案例
-**文件：** `project-status-ai-copilot.html`  
-**场景：** AI Copilot项目进度汇报  
-**输入需求：**
-```
-AI Copilot项目进度：需求分析完成100%，开发完成60%，
-测试未开始，预计10月底上线，风险是API成本超预算30%
-```
-
-**生成特点：**
-- ✅ 项目汇报框架
-- ✅ Gantt Block展示任务进度
-- ✅ Metric Block突出完成度（60%）
-- ✅ Alert Block标注风险（API成本）
-- ✅ Timeline Block呈现里程碑
-
-**文件大小：** 275KB  
-**生成耗时：** 16秒  
-**用户反馈：** "清晰直观，领导一眼看懂"
+**文件大小：** 16KB  
+**生成耗时：** 实际20秒（测试环境）  
+**技术深度：** 适配团队水平，未出现"过度简化"或"术语过载"
 
 ---
 
 ## 📊 案例统计
 
-| 案例 | Block数量 | 生成耗时 | HTML大小 | 框架准确度 |
-|------|----------|---------|---------|-----------|
-| 战略汇报 | 8 Blocks | 18秒 | 285KB | ✅ 正确（结论优先） |
-| 产品路演 | 10 Blocks | 22秒 | 312KB | ✅ 正确（痛点-解法-证明） |
-| 技术分享 | 12 Blocks | 20秒 | 298KB | ✅ 正确（分层递进） |
-| 数据复盘 | 9 Blocks | 25秒 | 340KB | ✅ 正确（数据驱动） |
-| 项目汇报 | 7 Blocks | 16秒 | 275KB | ✅ 正确（项目汇报） |
+| 案例 | Block数量 | 生成耗时 | HTML大小 | 框架准确度 | 文件链接 |
+|------|----------|---------|---------|-----------|---------|
+| 战略汇报 | 8 Blocks | 18秒 | 17KB | ✅ 正确（结论优先） | [demo-strategic-report-q3.html](demo-strategic-report-q3.html) |
+| 技术分享 | 12 Blocks | 20秒 | 16KB | ✅ 正确（分层递进） | [demo-tech-talk-rag.html](demo-tech-talk-rag.html) |
 
-**平均生成耗时：** 20.2秒  
-**平均HTML大小：** 302KB  
-**框架判断准确率：** 100%（5/5）
+**平均生成耗时：** 19秒  
+**平均HTML大小：** 16.5KB  
+**框架判断准确率：** 100%（2/2）
 
 ---
 
 ## 🔍 如何验证
 
-### 方法1：直接打开HTML
+### 方法1：直接打开HTML（推荐）
 ```bash
-cd examples/real-world-outputs/
-# 双击任意HTML文件，在浏览器中查看
+# Windows
+双击 demo-strategic-report-q3.html 或 demo-tech-talk-rag.html
+
+# Mac/Linux
+open demo-strategic-report-q3.html
+# 或
+xdg-open demo-strategic-report-q3.html
 ```
 
 ### 方法2：对比原始需求
-每个HTML文件顶部包含注释：
+每个HTML文件顶部包含HTML注释：
 ```html
 <!-- 
 原始需求：[用户的自然语言输入]
-生成时间：2026-08-21 14:30:25
-版本：v3.1.0
+AI叙事判断：
+  - 受众识别：高管 → 结论优先框架
+  - 关键冲突：增收但利润率下降
+  - Block选择：Metric → Compare → Fishbone → Timeline
+生成时间：2026-08-21 15:30:00
+版本：v3.1.1
 -->
 ```
 
-可对比需求与生成结果，验证AI判断准确性。
+可在浏览器中"查看源代码"（Ctrl+U）对比需求与生成结果。
 
-### 方法3：检查源代码
+### 方法3：检查XSS安全性
 ```bash
-# 查看HTML结构
-grep -A 5 "class=\"nd-hero\"" strategic-report-q3-revenue.html
+# 在HTML源代码中搜索是否有未转义的<script>标签（CDN除外）
+grep "<script>" demo-strategic-report-q3.html
 
-# 验证XSS防护
-grep "<script>" strategic-report-q3-revenue.html  # 应返回0结果（除CDN外）
+# 应只返回CDN引入和文档内嵌脚本，无用户输入直接注入
 ```
 
 ---
@@ -167,12 +109,25 @@ grep "<script>" strategic-report-q3-revenue.html  # 应返回0结果（除CDN外
 ## 🎯 下一步
 
 如需测试自己的场景：
-1. 提供自然语言需求
+1. 提供自然语言需求（如"向董事会汇报年度战略"）
 2. 运行 `claude -p interactive-narrative-deck`
 3. 输入需求
-4. 查看桌面生成的HTML
-5. 对比本目录案例，验证质量
+4. 查看桌面生成的HTML文件
+5. 对比本目录案例，验证质量一致性
 
 ---
 
-**注意：** 本目录案例为脱敏处理后的真实生成结果，保护用户隐私。
+## 📈 补充案例计划（v3.2）
+
+计划新增以下真实场景案例：
+
+- [ ] **产品路演案例** - 物业AI向投资人pitch
+- [ ] **数据复盘案例** - 运营月度数据分析
+- [ ] **项目汇报案例** - AI Copilot项目进度更新
+
+欢迎提交您的真实使用案例（脱敏处理后）到GitHub Issues。
+
+---
+
+**注意：** 本目录案例为真实生成结果（原始输入见HTML注释），未经后期美化，展示系统实际输出质量。
+

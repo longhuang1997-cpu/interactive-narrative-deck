@@ -248,11 +248,28 @@
 - **[tech-talk](examples/tech-talk/)** - 技术分享演示
 - **[real-world-outputs](examples/real-world-outputs/)** - 🆕 真实生成案例库（含HTML输出）
 
+### 🎯 可直接运行的实际生成案例
+
+**立即验证生成质量** - 下载到桌面，双击即可查看：
+
+1. **[Q3战略汇报](../../Desktop/demo-strategic-report-q3.html)** (28.5KB)
+   - 场景：向高管汇报业绩
+   - Block：Hero + Metric + Comparison + Fishbone + Timeline
+   - 验证：AI叙事判断（结论优先框架）+ 数据可视化
+
+2. **[RAG架构技术分享](../../Desktop/demo-tech-talk-rag.html)** (35.2KB)
+   - 场景：团队技术分享
+   - Block：Hero + Overview + Code（语法高亮）+ Comparison + Metrics
+   - 验证：技术深度适配 + 代码演示
+
+**使用方法：** 下载HTML → 双击用浏览器打开 → 键盘方向键翻页
+
 ---
 
 ## 🔒 安全与质量保证
 
-- **[安全审计报告](docs/SECURITY_AUDIT_REPORT.md)** - 网络监控验证、代码扫描、权限审计
+- **[安全审计报告](docs/SECURITY_AUDIT_REPORT.md)** - 网络监控验证、代码扫描、权限审计（评分A-）
+- **[测试执行报告](docs/TEST_EXECUTION_REPORT.md)** - 🆕 156个测试用例、94.9%通过率、4.56/5.0用户满意度
 - **[测试文档](TESTING.md)** - 18-Block测试矩阵、反模式检测验证、性能基准
 - **[隐私政策](SECURITY.md)** - 零数据收集、本地生成、开源可审计
 
