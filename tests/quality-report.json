@@ -1,0 +1,144 @@
+{
+  "timestamp": "2026-08-23T08:11:55.111Z",
+  "summary": {
+    "totalTests": 5,
+    "successRate": 100,
+    "avgBlockCoverage": 40,
+    "antiPatternAvoidanceRate": 75,
+    "browserCompatibility": {
+      "Desktop": "100.0",
+      "Tablet": "100.0",
+      "Mobile": "100.0"
+    },
+    "scenarioCoverage": 5,
+    "narrativeFrameworks": 4,
+    "audienceTypes": 5
+  },
+  "details": [
+    {
+      "scenario": "战略汇报",
+      "narrative": "Problem-Solution",
+      "audience": "CEO/GM",
+      "fileExists": true,
+      "rendersSuccessfully": true,
+      "blockCoverage": "100.0",
+      "antiPatternsPassed": 3,
+      "antiPatternsTotal": 4,
+      "viewportCompatibility": [
+        {
+          "viewport": "Desktop",
+          "compatible": true
+        },
+        {
+          "viewport": "Tablet",
+          "compatible": true
+        },
+        {
+          "viewport": "Mobile",
+          "compatible": true
+        }
+      ],
+      "errors": []
+    },
+    {
+      "scenario": "技术分享",
+      "narrative": "What-Why-How",
+      "audience": "工程师团队",
+      "fileExists": true,
+      "rendersSuccessfully": true,
+      "blockCoverage": "100.0",
+      "antiPatternsPassed": 3,
+      "antiPatternsTotal": 4,
+      "viewportCompatibility": [
+        {
+          "viewport": "Desktop",
+          "compatible": true
+        },
+        {
+          "viewport": "Tablet",
+          "compatible": true
+        },
+        {
+          "viewport": "Mobile",
+          "compatible": true
+        }
+      ],
+      "errors": []
+    },
+    {
+      "scenario": "战略规划",
+      "narrative": "Vision-Strategy-Execution",
+      "audience": "管理层",
+      "fileExists": true,
+      "rendersSuccessfully": true,
+      "blockCoverage": "0.0",
+      "antiPatternsPassed": 3,
+      "antiPatternsTotal": 4,
+      "viewportCompatibility": [
+        {
+          "viewport": "Desktop",
+          "compatible": true
+        },
+        {
+          "viewport": "Tablet",
+          "compatible": true
+        },
+        {
+          "viewport": "Mobile",
+          "compatible": true
+        }
+      ],
+      "errors": []
+    },
+    {
+      "scenario": "技术路演",
+      "narrative": "Problem-Solution",
+      "audience": "技术决策者",
+      "fileExists": true,
+      "rendersSuccessfully": true,
+      "blockCoverage": "0.0",
+      "antiPatternsPassed": 3,
+      "antiPatternsTotal": 4,
+      "viewportCompatibility": [
+        {
+          "viewport": "Desktop",
+          "compatible": true
+        },
+        {
+          "viewport": "Tablet",
+          "compatible": true
+        },
+        {
+          "viewport": "Mobile",
+          "compatible": true
+        }
+      ],
+      "errors": []
+    },
+    {
+      "scenario": "分析汇报",
+      "narrative": "Current-Analysis-Future",
+      "audience": "业务团队",
+      "fileExists": true,
+      "rendersSuccessfully": true,
+      "blockCoverage": "0.0",
+      "antiPatternsPassed": 3,
+      "antiPatternsTotal": 4,
+      "viewportCompatibility": [
+        {
+          "viewport": "Desktop",
+          "compatible": true
+        },
+        {
+          "viewport": "Tablet",
+          "compatible": true
+        },
+        {
+          "viewport": "Mobile",
+          "compatible": true
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

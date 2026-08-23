@@ -12,6 +12,7 @@
     "author": "Long Huang",
     "demo_url": "https://longhuang1997-cpu.github.io/interactive-narrative-deck/",
     "screenshot_url": "https://raw.githubusercontent.com/longhuang1997-cpu/interactive-narrative-deck/main/docs/images/demo.gif",
+    "reliability_evidence_url": "https://github.com/longhuang1997-cpu/interactive-narrative-deck/blob/main/RELIABILITY-EVIDENCE.md",
     "tags": ["汇报演示", "交互叙事", "数据可视化", "职场效率", "AI辅助"],
     "use_cases": [
       "战略汇报：向高管汇报业绩，数据驱动+结论优先",

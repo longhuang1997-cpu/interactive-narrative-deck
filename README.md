@@ -3,12 +3,13 @@
 > **一句话**：用AI生成专业商业演示文稿 — [在线Demo](https://longhuang1997-cpu.github.io/interactive-narrative-deck/) 可直接点击查看运行效果
 
 [![CI Status](https://github.com/longhuang1997-cpu/interactive-narrative-deck/actions/workflows/ci.yml/badge.svg)](https://github.com/longhuang1997-cpu/interactive-narrative-deck/actions)
+[![Reliability Evidence](https://img.shields.io/badge/Reliability-100%25_Success-brightgreen.svg)](RELIABILITY-EVIDENCE.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-3.1.5-green.svg)]()
 [![Live Demo](https://img.shields.io/badge/Demo-Live-success.svg)](https://longhuang1997-cpu.github.io/interactive-narrative-deck/)
 [![Claude Skill](https://img.shields.io/badge/Claude-Skill-orange.svg)]()
 
----
+📈 **[查看可靠性证据报告](RELIABILITY-EVIDENCE.md)** - 自动化测试 + 质量度量 + 真实案例验证
 
 ## ⚡ 立即体验
 
