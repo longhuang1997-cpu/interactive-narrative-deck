@@ -12,6 +12,7 @@ const ND = {
       if(t.bg)rs.setProperty("--nd-bg",t.bg);}
     const saved=+(localStorage.getItem("nd_cur")||0);
     this.cur=(saved>=0&&saved<deck.slides.length)?saved:0;
+    this.calculateGlobalScales(); // 自适应缩放
     this.render(); this.buildProgress(); this.bindKeys();
   },
   save(){localStorage.setItem("nd_cur",this.cur);},
@@ -19,7 +20,12 @@ const ND = {
     const s=this.deck.slides[this.cur]; this.frag=0; this.root.innerHTML="";
     const slide=document.createElement("section");
     slide.className="nd-slide nd-layout-"+(s.layout||"center");
-    (s.blocks||[]).forEach((b,bi)=>{const el=BlockRegistry.render(b,bi); if(el)slide.appendChild(el);});
+    const blocks=s.blocks||[];
+    // 自动网格布局：≥3块触发2列
+    if(blocks.length>=3&&!s.layout){slide.classList.add("nd-layout-grid");slide.dataset.gridMode="auto";}
+    blocks.forEach((b,bi)=>{const el=BlockRegistry.render(b,bi); if(el)slide.appendChild(el);});
+    // 应用页面缩放
+    if(s._scale){slide.style.setProperty("--page-scale",s._scale.toFixed(3));}
     this.root.appendChild(slide);
     this._enter(slide); this.updateProgress(); this.save();
     if(s.layout==="scroll"&&window.Scrolly)Scrolly.init(slide,s);
@@ -50,6 +56,28 @@ const ND = {
     bar.innerHTML="";this.deck.slides.forEach((s,i)=>{const d=document.createElement("div");d.className="nd-dot";d.title=s.title||("第"+(i+1)+"节");d.onclick=()=>this.goto(i);bar.appendChild(d);});},
   updateProgress(){document.querySelectorAll("#nd-progress .nd-dot").forEach((d,i)=>d.classList.toggle("on",i===this.cur));},
   toggleOverview(){document.body.classList.toggle("nd-overview");}
+};
+/* ===== 自适应缩放系统 ===== */
+ND.calculateGlobalScales = function(){
+  this.deck.slides.forEach(s=>{
+    const density = this.getContentDensity(s);
+    let scale = 1.0;
+    if(density>=80)scale=0.75;
+    else if(density>=50)scale=0.85;
+    s._scale = scale;
+  });
+};
+ND.getContentDensity = function(slide){
+  const blocks = slide.blocks||[];
+  let score = blocks.length * 10;
+  const complexity = {hero:5,metric:8,bullets:12,compare:20,timeline:15,quote:5,
+    media:10,chart:18,tabs:22,swot:25,okr:20,gantt:30,fishbone:28,bcg:15,
+    kanban:25,pyramid:18,orgchart:25,process:20};
+  blocks.forEach(b=>{score += (complexity[b.type]||10);
+    if(b.type==='bullets'&&b.items)score+=b.items.length*2;
+    if(b.type==='compare'&&b.left)score+=15;
+    if(b.type==='chart'&&b.data)score+=b.data.length*3;});
+  return Math.min(score,100);
 };
 /* ===== Blocks已迁移至block-registry.js + core-blocks.js ===== */
 /* 用户可通过custom-blocks.js扩展Block，无需修改此文件 */
