@@ -263,19 +263,19 @@
 
 ### 🎯 可直接运行的实际生成案例
 
-**立即验证生成质量** - 下载到桌面，双击即可查看：
+**立即验证生成质量** - 点击下载，双击用浏览器打开：
 
-1. **[Q3战略汇报](../../Desktop/demo-strategic-report-q3.html)** (28.5KB)
+1. **[Q3战略汇报](examples/real-world-outputs/demo-strategic-report-q3.html)** (16.6KB)
    - 场景：向高管汇报业绩
    - Block：Hero + Metric + Comparison + Fishbone + Timeline
    - 验证：AI叙事判断（结论优先框架）+ 数据可视化
 
-2. **[RAG架构技术分享](../../Desktop/demo-tech-talk-rag.html)** (35.2KB)
+2. **[RAG架构技术分享](examples/real-world-outputs/demo-tech-talk-rag.html)** (15.9KB)
    - 场景：团队技术分享
    - Block：Hero + Overview + Code（语法高亮）+ Comparison + Metrics
    - 验证：技术深度适配 + 代码演示
 
-**使用方法：** 下载HTML → 双击用浏览器打开 → 键盘方向键翻页
+**使用方法：** 点击链接 → 查看源码或Raw → 保存为.html → 双击用浏览器打开 → 键盘方向键翻页
 
 ---
 
