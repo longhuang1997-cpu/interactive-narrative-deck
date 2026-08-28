@@ -15,6 +15,11 @@ avg_generation_time: 8.3min
 
 # Interactive Narrative Deck
 
+> **🚀 在线Demo（可直接验证）**：[https://longhuang1997-cpu.github.io/interactive-narrative-deck/](https://longhuang1997-cpu.github.io/interactive-narrative-deck/)  
+> 无需下载，浏览器直接打开 → 方向键翻页 → 查看18种Block的实际渲染效果
+
+---
+
 ## 📊 核心指标
 
 | 指标 | 数值 | 说明 |

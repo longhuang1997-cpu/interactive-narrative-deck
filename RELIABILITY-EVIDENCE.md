@@ -4,6 +4,19 @@
 > **更新时间**: 2026-08-23  
 > **评估周期**: 2026-01-20 至 2026-08-23
 
+## 🚀 快速验证（2分钟）
+
+**在线Demo**：[https://longhuang1997-cpu.github.io/interactive-narrative-deck/](https://longhuang1997-cpu.github.io/interactive-narrative-deck/)  
+- 方向键←→翻页
+- 查看metric Block数字滚动、SWOT矩阵、OKR树、甘特图等实际渲染效果
+- 所有18种Block的真实运行展示
+
+**真实生成案例**：
+- [战略汇报案例HTML](https://github.com/longhuang1997-cpu/interactive-narrative-deck/blob/main/examples/real-world-outputs/demo-strategic-report-q3.html) - 点击"Raw"下载后双击打开
+- [技术分享案例HTML](https://github.com/longhuang1997-cpu/interactive-narrative-deck/blob/main/examples/real-world-outputs/demo-tech-talk-rag.html) - 同上
+
+---
+
 ## 📊 核心指标
 
 | 指标 | 数值 | 说明 |
