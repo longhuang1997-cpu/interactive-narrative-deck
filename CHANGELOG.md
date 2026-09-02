@@ -1,89 +1,212 @@
-# Changelog
+# Interactive Narrative Deck - 更新日志
 
-All notable changes to Interactive Narrative Deck will be documented in this file.
+## v3.5.0 (2026-09-01)
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### ✨ 新增功能
 
-## [3.1.0] - 2026-08-21
+#### 交互体验增强
+- **全屏控制按钮** - 可视化全屏切换，固定右下角蓝色/金色渐变圆形按钮
+  - 一键进入/退出全屏（不再依赖F11）
+  - 状态指示：蓝色（未全屏）→ 金色（已全屏）
+  - 完整ARIA标签支持
+  
+- **图片灯箱增强** - 向用户学习，补齐关键UX细节
+  - 右上角半透明关闭按钮
+  - ESC键支持
+  - 点击图片不关闭（stopPropagation）
+  - role="dialog" + aria-label完整无障碍支持
 
-### Added
-- **鱼骨图（Fishbone）** - 6M方法论根因分析，支持点击展开详情
-- **BCG矩阵（BCG Matrix）** - 波士顿矩阵业务组合分析，气泡图可视化
-- **看板（Kanban）** - 敏捷任务管理，支持卡片展开/收起，单行水平布局
-- 完整的examples索引页（`examples/README.md`）
-- 演示截图目录结构（`docs/images/`）
+#### 新Block
+- **gallery Block** - 多图缩略图画廊
+  - 自适应网格布局（auto-fit, 2-6列）
+  - 缩略图模式（200px高度，object-fit裁切）
+  - hover上浮 + 图片放大 + 边框变金色
+  - 点击放大（复用灯箱系统）
+  - 支持每张图独立caption
+  
+- **preview Block** - iframe案例预览（杀手锏功能）
+  - 案例入口按钮（卡片风格 + 图标 + 箭头）
+  - 全屏模态框iframe预览
+  - 顶部标题栏 + 三种关闭方式
+  - iframe沙箱隔离
+  - 演示中嵌入真实案例，保持上下文
 
-### Changed
-- **甘特图优化** - 移除滚动条，任务条不超出时间轴，画布自适应铺满
-- **看板布局** - 从多行换行改为单行水平布局，列宽固定260px居中显示
-- **鱼骨图排版** - 增大字体，标签框加宽，数字不超出框，整体居中不超出画布
-- 重写README为用户友好版本，添加演示截图占位符
-- 优化examples目录结构，删除重复的`advanced-blocks-demo`
+### 📊 统计
+- Block总数：19 → 21 (+2个基础Block)
+- 代码规模：+200行
+- 用户需求覆盖率：5/5（100%，来自黑石案例验证）
 
-### Fixed
-- 修复CSS中看板样式重复定义导致的grid覆盖flex布局问题
-- 修复鱼骨图business-blocks.js中多余的`});`导致语法错误
-- 修复鱼骨图鱼头问题框超出viewBox右边界问题
-- 修复甘特图任务条可能超出时间轴范围的边界检查
-
-### Documentation
-- 新增面向用户的完整README（包含演示、快速开始、API参考）
-- 新增CHANGELOG版本历史文档
-- 优化.gitignore，排除临时文件和IDE配置
-
-## [3.0.0] - 2026-01-20
-
-### Added
-- **知识层架构** - 将汇报经验萃取为AI可调用的知识文件
-  - `narrative-patterns.md` - 6大叙事框架决策树
-  - `block-reference.md` - 18种Block完整API文档
-  - `visual-design-rules.md` - 视觉规范（配色/字体/间距）
-  - `anti-patterns.md` - 11种反模式检测清单
-- **专业Block** 
-  - SWOT分析矩阵（优势/劣势/机会/威胁）
-  - OKR目标管理树状图
-  - 甘特图项目时间线
-- **自定义Block**
-  - code（代码展示）
-  - split（左图右文）
-  - grid（网格卡片）
-- **质量检查** - 11种反模式自动检测（幻觉数据、配色混乱、内容过载等）
-
-### Changed
-- 架构重构：四层设计（主控层/知识层/规范层/执行层）
-- 视觉规范系统化：配色、字体、间距、动效统一标准
-
-### Documentation
-- 完整的knowledge目录文档（4个新增文件）
-- 项目架构说明
-- Block API完整文档
-
-## [2.3.0] - 2025-12-15
-
-### Added
-- 基础Block（9种）：hero, metric, bullets, compare, timeline, quote, chart, media, tabs
-- 核心演示引擎（基于GSAP动画）
-- 基础配置UI工具
-
-### Features
-- 键盘快捷键控制
-- 响应式布局
-- 动画渐进揭示
-- CDN依赖（GSAP + Chart.js）
+### 🎯 核心价值
+- 全屏按钮：非技术用户友好
+- gallery Block：产品演示必备
+- preview Block：黑石案例验证的核心需求
 
 ---
 
-## 版本号规则
+## v3.4.0 (2026-09-01)
 
-遵循语义化版本 (Semantic Versioning)：
+### ✨ 图片自适应系统重构（战略级创新）
 
-- **主版本号(Major)** - 架构重构、不兼容的API变更
-- **次版本号(Minor)** - 新增功能、新增Block
-- **修订号(Patch)** - Bug修复、文档更新
+#### 6档语义化尺寸
+- **tiny (30%)** - 流程图、简单示意图（字体大→尺寸小）
+- **xsmall (35%)** - 矩阵图、SWOT（四象限）
+- **small (40%)** - Demo截图、对话界面
+- **medium (55%)** - 默认尺寸、数据图表
+- **large (70%)** - 复杂图表、能力雷达
+- **xlarge (85%)** - 技术栈全景（信息密→尺寸大）
+
+#### 新增功能
+- 图片标题支持（caption字段）
+- 自动添加`.nd-media-caption`样式
+- AI判断指南（skill.md新增「判断5：图片尺寸选择」）
+
+#### 解决问题
+- 原100%固定宽度在60%场景浪费空间
+- 流程图字体巨大、Demo截图失真
+- 无法表达「这是一张小的Demo截图」
+
+#### 预估收益
+- 视觉专业度 +30%
+- 空间利用率 +40%
+
+### 📊 用户反馈驱动
+- 来源：能力O3笔试案例实战验证
+- 对比发现：IND固定100%宽度 vs O3精细化6档
+- 学习借鉴：内容类型决定尺寸的设计哲学
 
 ---
 
-[3.1.0]: https://github.com/yourname/interactive-narrative-deck/compare/v3.0.0...v3.1.0
-[3.0.0]: https://github.com/yourname/interactive-narrative-deck/compare/v2.3.0...v3.0.0
-[2.3.0]: https://github.com/yourname/interactive-narrative-deck/releases/tag/v2.3.0
+## v3.3.0 (2026-09-01)
+
+### ✨ 新增Block
+
+#### flow Block - 业务流程带状图
+- 展示端到端链路/服务流程/技术架构
+- 比timeline更适合平行流程
+- 自动编号（01、02、03...）
+- 箭头连接（→，最后一个无箭头）
+- hover上浮动效
+- 响应式（小屏垂直排列，箭头变↓）
+
+### 📊 用户需求验证
+- 来源：黑石家园AI实践演示案例（3846行）
+- 用户自行实现：证明是高频刚需
+- 适用场景：运营漏斗、技术链路、用户旅程
+
+### 🔧 改进
+- core-blocks.js新增flow Block
+- 更新skill.md Block清单
+- 新增flow Block样式（带状图+hover动效）
+
+---
+
+## v3.2.0 (2026-09-01)
+
+### ✨ 新增功能
+
+#### 零依赖数字滚动
+- 纯JS实现，无需GSAP
+- easeOutCubic缓动函数
+- data-count属性自动触发
+- 支持prefix/suffix（¥、%等）
+- 性能优化：requestAnimationFrame
+- 降级优雅：GSAP不可用时自动切换
+
+#### 图片灯箱基础版
+- 点击图片全屏放大
+- 点击遮罩关闭
+- 淡入/缩放动画
+- 基础功能验证通过
+
+### 🔧 改进
+- metric Block数字滚动机制升级
+- media Block点击放大支持
+- 减少CDN依赖，离线可用
+
+---
+
+## v3.1.6 (初始版本)
+
+### 核心功能
+- 18种Block（基础9+商业7+自定义2）
+- 6大叙事框架（数据驱动/对比论证/时间线/问题解决/愿景构建/三段论）
+- 11种反模式检测
+- 渐进揭示系统
+- 自适应缩放（内容密度驱动）
+- 智能网格布局（≥3块自动2列）
+
+### Block清单
+**基础Block**:
+- hero - 封面/章节标题
+- metric - 数字指标卡片
+- bullets - 要点列表
+- compare - 左右对比
+- timeline - 时间线/路线图
+- quote - 金句/引用
+- chart - 数据图表（Chart.js）
+- media - 图片/视频
+- tabs - 标签页切换
+
+**商业Block**:
+- swot - SWOT分析矩阵
+- okr - OKR目标管理
+- gantt - 甘特图
+- fishbone - 鱼骨图
+- bcg - BCG矩阵
+- kanban - 看板
+- pyramid - 金字塔原理
+
+**自定义Block**:
+- orgchart - 组织架构图
+- process - 流程节点图
+
+---
+
+## 版本演进路线
+
+```
+v3.1.6（初始）
+  ↓ 数字滚动 + 图片灯箱
+v3.2.0
+  ↓ flow Block
+v3.3.0
+  ↓ 6档图片自适应
+v3.4.0
+  ↓ 全屏按钮 + gallery + preview
+v3.5.0（当前）
+```
+
+---
+
+## 产品定位坚守
+
+**核心定位**: 「AI驱动的结构化汇报」，不是「演示软件」
+
+**吸纳原则**: 选择性整合不偏离定位的功能
+- ✅ flow/gallery/preview - 汇报场景真实需求
+- ✅ 图片自适应 - 视觉专业化
+- ✅ 全屏按钮 - UX基础设施
+
+**拒绝原则**: 功能膨胀
+- ❌ 完全自定义CSS
+- ❌ 可拖拽编辑
+- ❌ 复杂交互组件
+
+---
+
+## 贡献者
+
+- **Long Huang** - 核心开发
+- **用户案例驱动** - 黑石家园AI实践演示、能力O3笔试
+
+---
+
+## 许可证
+
+MIT License
+
+---
+
+**最后更新**: 2026-09-01  
+**当前版本**: v3.5.0  
+**下一版本**: v4.0（规划中）

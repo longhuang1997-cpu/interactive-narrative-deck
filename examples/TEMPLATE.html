@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IND 通用模板 - 自动路径解析</title>
+
+<!-- 动态路径解析脚本 - 无需硬编码，自动适配不同用户环境 -->
+<script>
+(function() {
+  // 方案1：检测当前页面路径，自动推断skill引擎路径
+  const currentUrl = window.location.href;
+
+  // 提取用户主目录（兼容Windows/Unix）
+  const homeMatch = currentUrl.match(/file:\/\/\/([A-Z]:\/Users\/[^\/]+|home\/[^\/]+)/);
+  const homeDir = homeMatch ? homeMatch[1].replace('file:///', '') : '';
+
+  let skillPath = '';
+
+  if (homeDir) {
+    // Windows: C:/Users/xxx/.claude/skills/...
+    // Unix: /home/xxx/.claude/skills/...
+    if (homeDir.includes(':')) {
+      skillPath = homeDir + '/.claude/skills/interactive-narrative-deck/engine/';
+    } else {
+      skillPath = '/' + homeDir + '/.claude/skills/interactive-narrative-deck/engine/';
+    }
+  } else {
+    // 回退方案：假设HTML在examples下，相对路径
+    skillPath = '../engine/';
+  }
+
+  // 加载CSS
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = skillPath + 'style.css';
+  document.head.appendChild(link);
+
+  // 保存路径供JS使用
+  window.IND_SKILL_PATH = skillPath;
+
+  console.log('[IND] 自动解析skill路径:', skillPath);
+})();
+</script>
+</head>
+<body>
+<div id="nd-stage"></div>
+
+<!-- CDN依赖 -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+<!-- 动态加载skill引擎 -->
+<script>
+(function() {
+  const basePath = window.IND_SKILL_PATH;
+  const scripts = [
+    'block-registry.js',
+    'business-blocks.js',
+    'core-blocks.js',
+    'engine.js'
+  ];
+
+  let loaded = 0;
+  scripts.forEach(src => {
+    const script = document.createElement('script');
+    script.src = basePath + src;
+    script.onload = () => {
+      loaded++;
+      if (loaded === scripts.length) {
+        console.log('[IND] 引擎加载完成，初始化Deck...');
+        initDeck();
+      }
+    };
+    script.onerror = () => {
+      console.error('[IND] 加载失败:', basePath + src);
+    };
+    document.head.appendChild(script);
+  });
+})();
+
+function initDeck() {
+  // 在这里编写你的叙事内容
+  window.NARRATIVE_DECK = {
+    title: "你的演示标题",
+    theme: {
+      blue: "#3b82f6",  // 品牌主色
+      gold: "#f59e0b",  // 强调色
+      bg: "#0a0e1a"     // 背景色（可选，默认深色）
+    },
+    slides: [
+      // ===== 第1页 - 封面 =====
+      {
+        layout: "center",
+        blocks: [
+          {
+            type: "hero",
+            kick: "副标题或场景标签",
+            title: "主标题",
+            sub: "补充说明或关键数据"
+          }
+        ]
+      },
+
+      // ===== 第2页 - 核心指标（强制一行显示）=====
+      {
+        layout: "center",
+        blocks: [
+          {
+            type: "hero",
+            kick: "数据概览",
+            title: "核心成果"
+          },
+          {
+            type: "metric",
+            items: [
+              { value: 42, unit: "%", label: "指标1", delta: "+18%" },
+              { value: 98.5, unit: "%", label: "指标2", delta: "+3.2%" },
+              { value: 1847, unit: "万", label: "指标3", delta: "+65%" },
+              { value: 2.7, unit: "倍", label: "指标4", delta: "+1.2x" }
+            ]
+          }
+        ]
+      },
+
+      // ===== 第3页 - 流程图 =====
+      {
+        layout: "center",
+        blocks: [
+          {
+            type: "hero",
+            kick: "执行路径",
+            title: "六步走战略"
+          },
+          {
+            type: "flow",
+            items: ["步骤1", "步骤2", "步骤3", "步骤4", "步骤5", "步骤6"]
+          }
+        ]
+      },
+
+      // ===== 第4页 - 对比 =====
+      {
+        layout: "center",
+        blocks: [
+          {
+            type: "hero",
+            kick: "前后对比",
+            title: "效率提升显著"
+          },
+          {
+            type: "compare",
+            left: {
+              title: "改进前",
+              items: [
+                "问题1 - 描述",
+                "问题2 - 描述",
+                "问题3 - 描述"
+              ]
+            },
+            right: {
+              title: "改进后",
+              items: [
+                "解决方案1 - 效果",
+                "解决方案2 - 效果",
+                "解决方案3 - 效果"
+              ]
+            }
+          }
+        ]
+      },
+
+      // ===== 第5页 - 折线图 =====
+      {
+        layout: "center",
+        blocks: [
+          {
+            type: "hero",
+            kick: "趋势分析",
+            title: "增长持续稳健"
+          },
+          {
+            type: "chart",
+            chart: "line",
+            title: "月度趋势",
+            data: {
+              labels: ["1月", "2月", "3月", "4月", "5月", "6月"],
+              datasets: [{
+                label: "2026年",
+                data: [65, 72, 78, 85, 92, 100],
+                borderColor: "#3b82f6",
+                backgroundColor: "rgba(59,130,246,0.1)",
+                tension: 0.4,
+                fill: true
+              }]
+            }
+          }
+        ]
+      },
+
+      // ===== 第6页 - 饼图（自动显示百分比标注）=====
+      {
+        layout: "center",
+        blocks: [
+          {
+            type: "hero",
+            kick: "占比分析",
+            title: "构成清晰"
+          },
+          {
+            type: "chart",
+            chart: "doughnut",
+            title: "占比分布",
+            data: {
+              labels: ["类别A", "类别B", "类别C", "类别D"],
+              datasets: [{
+                data: [55, 25, 15, 5],
+                backgroundColor: [
+                  "rgba(59,130,246,0.8)",
+                  "rgba(139,92,246,0.8)",
+                  "rgba(16,185,129,0.8)",
+                  "rgba(245,158,11,0.8)"
+                ],
+                borderWidth: 2,
+                borderColor: "#0a0e1a"
+              }]
+            }
+          }
+        ]
+      },
+
+      // ===== 第7页 - SWOT分析 =====
+      {
+        layout: "center",
+        blocks: [
+          {
+            type: "hero",
+            kick: "战略分析",
+            title: "SWOT - 清晰定位"
+          },
+          {
+            type: "swot",
+            strengths: [
+              "优势1",
+              "优势2",
+              "优势3"
+            ],
+            weaknesses: [
+              "劣势1",
+              "劣势2"
+            ],
+            opportunities: [
+              "机会1",
+              "机会2",
+              "机会3"
+            ],
+            threats: [
+              "威胁1",
+              "威胁2"
+            ]
+          }
+        ]
+      },
+
+      // ===== 第8页 - OKR =====
+      {
+        layout: "center",
+        blocks: [
+          {
+            type: "hero",
+            kick: "目标管理",
+            title: "OKR - Q4目标"
+          },
+          {
+            type: "okr",
+            objective: "Q4核心目标描述",
+            keyResults: [
+              { text: "关键结果1 - 具体指标", progress: 60, color: "#3b82f6" },
+              { text: "关键结果2 - 具体指标", progress: 75, color: "#10b981" },
+              { text: "关键结果3 - 具体指标", progress: 45, color: "#f59e0b" }
+            ]
+          }
+        ]
+      },
+
+      // ===== 第9页 - 甘特图 =====
+      {
+        layout: "center",
+        blocks: [
+          {
+            type: "hero",
+            kick: "项目计划",
+            title: "Q4实施进度"
+          },
+          {
+            type: "gantt",
+            title: "Q4项目甘特图",
+            start: "2026-10",
+            end: "2026-12",
+            tasks: [
+              { name: "任务1", start: "2026-10", duration: 2, progress: 35, color: "#3b82f6" },
+              { name: "任务2", start: "2026-10", duration: 3, progress: 20, color: "#10b981" },
+              { name: "任务3", start: "2026-11", duration: 2, progress: 60, color: "#f59e0b" }
+            ]
+          }
+        ]
+      },
+
+      // ===== 第10页 - BCG矩阵 =====
+      {
+        layout: "center",
+        blocks: [
+          {
+            type: "hero",
+            kick: "投资组合",
+            title: "BCG矩阵 - 资源配置"
+          },
+          {
+            type: "bcg",
+            title: "业务组合分析",
+            items: [
+              { name: "明星业务", x: 82, y: 78, size: 420, quadrant: "star" },
+              { name: "问题业务", x: 75, y: 22, size: 280, quadrant: "question" },
+              { name: "现金牛", x: 22, y: 75, size: 380, quadrant: "cash" },
+              { name: "瘦狗业务", x: 18, y: 18, size: 150, quadrant: "dog" }
+            ]
+          }
+        ]
+      },
+
+      // ===== 第11页 - Kanban看板（流程状态） =====
+      {
+        layout: "center",
+        blocks: [
+          {
+            type: "hero",
+            kick: "任务看板",
+            title: "Kanban - 进度可视化"
+          },
+          {
+            type: "kanban",
+            title: "任务看板",
+            columns: [
+              {
+                name: "待开始 To Do",  // 包含"待"或"todo"自动显示灰色
+                items: [
+                  { title: "任务1", priority: "high" },
+                  { title: "任务2", priority: "medium" }
+                ]
+              },
+              {
+                name: "进行中 In Progress",  // 包含"进行"或"progress"自动显示蓝色
+                items: [
+                  { title: "任务3", priority: "high", assignee: "张三" },
+                  { title: "任务4", priority: "low", assignee: "李四" }
+                ]
+              },
+              {
+                name: "已完成 Done",  // 包含"完成"或"done"自动显示绿色
+                items: [
+                  { title: "任务5", priority: "high" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      // ===== 第12页 - 金字塔论证 =====
+      {
+        layout: "center",
+        blocks: [
+          {
+            type: "hero",
+            kick: "战略论证",
+            title: "金字塔原理 - 结构化论证"
+          },
+          {
+            type: "pyramid",
+            conclusion: "核心结论 - 应该采取XX行动",
+            pillars: [
+              {
+                title: "论据1",
+                facts: [
+                  "事实1 - 数据支撑",
+                  "事实2 - 案例支撑",
+                  "事实3 - 逻辑支撑"
+                ]
+              },
+              {
+                title: "论据2",
+                facts: [
+                  "事实4",
+                  "事实5"
+                ]
+              },
+              {
+                title: "论据3",
+                facts: [
+                  "事实6",
+                  "事实7"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      // ===== 第13页 - 收尾（4指标一行）=====
+      {
+        layout: "center",
+        blocks: [
+          {
+            type: "hero",
+            kick: "汇报完毕",
+            title: "目标明确，执行到位",
+            sub: "感谢聆听"
+          },
+          {
+            type: "metric",
+            items: [
+              { value: 42, unit: "%", label: "指标1", delta: "+18%" },
+              { value: 98.5, unit: "%", label: "指标2", delta: "+3.2%" },
+              { value: 1847, unit: "万", label: "指标3", delta: "+65%" },
+              { value: 2.7, unit: "倍", label: "指标4", delta: "+1.2x" }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+
+  // 初始化引擎
+  if (window.ND) {
+    ND.init(window.NARRATIVE_DECK);
+  } else {
+    console.error('[IND] 引擎未加载，请检查路径配置');
+  }
+}
+</script>
+</body>
+</html>

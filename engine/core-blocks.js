@@ -54,9 +54,11 @@ BlockRegistry.register('hero', function(b) {
 // Metric - 数字指标卡片（带滚动动效）
 BlockRegistry.register('metric', function(b) {
   const items = (b.items || []).map(function(m) {
+    // 支持两种方式：1) data-count（推荐，零依赖） 2) 兼容旧的nd-mnum
+    const prefix = m.prefix || '';
+    const suffix = m.unit || '';
     return '<div class="nd-metric">' +
-      '<div class="nd-mnum" data-count="' + m.value + '">' + m.value + '</div>' +
-      '<div class="nd-munit">' + (m.unit || '') + '</div>' +
+      '<div class="nd-mnum" data-count="' + m.value + '" data-prefix="' + prefix + '" data-suffix="' + suffix + '">0</div>' +
       '<div class="nd-mlabel">' + (m.label || '') + '</div>' +
       (m.delta ? '<div class="nd-mdelta ' + (m.delta[0] === '-' ? 'down' : 'up') + '">' + m.delta + '</div>' : '') +
     '</div>';
@@ -64,14 +66,11 @@ BlockRegistry.register('metric', function(b) {
 
   const el = _wrap('<div class="nd-metrics">' + items + '</div>', '');
 
-  // 延迟启动滚动动画
-  setTimeout(function() {
-    _countUp(el);
-  }, 50);
+  // 数字滚动由ND._enter()统一触发，无需在此处重复调用
 
   return el;
 }, {
-  description: '数字指标卡片，支持单位、增长标识、GSAP滚动动效',
+  description: '数字指标卡片，支持单位、增长标识、零依赖数字滚动动效（data-count）',
   author: 'core'
 });
 
@@ -154,7 +153,7 @@ BlockRegistry.register('quote', function(b) {
   author: 'core'
 });
 
-// Media - 图片/视频
+// Media - 图片/视频（支持6档尺寸+标题+点击放大）
 BlockRegistry.register('media', function(b) {
   if (b.video) {
     return _wrap(
@@ -165,13 +164,31 @@ BlockRegistry.register('media', function(b) {
     );
   }
 
-  return _wrap(
-    '<img src="' + b.img + '" alt="' + (b.alt || '') + '" class="nd-media">',
+  // 尺寸映射：tiny(30%) / xsmall(35%) / small(40%) / medium(55%,默认) / large(70%) / xlarge(85%)
+  const sizeClass = b.size ? 'nd-media-' + b.size : 'nd-media-medium';
+
+  const el = _wrap(
+    '<div class="nd-media-container ' + sizeClass + '">' +
+      '<img src="' + b.img + '" alt="' + (b.alt || '') + '" class="nd-media" style="cursor:pointer">' +
+      (b.caption ? '<div class="nd-media-caption">' + b.caption + '</div>' : '') +
+    '</div>',
     ''
   );
+
+  // 绑定点击放大
+  const img = el.querySelector('img');
+  if (img && window.ND && window.ND.openLightbox) {
+    img.onclick = function() {
+      window.ND.openLightbox(b.img);
+    };
+  }
+
+  return el;
 }, {
-  description: '图片或视频，支持自动播放',
-  author: 'core'
+  description: '图片或视频，支持6档语义化尺寸（tiny/xsmall/small/medium/large/xlarge）+标题+点击放大',
+  author: 'core',
+  category: 'media',
+  tags: ['image', 'video', 'responsive-sizing']
 });
 
 // Chart - 图表（基于Chart.js）
@@ -191,7 +208,8 @@ BlockRegistry.register('chart', function(b) {
 
     if (window.Chart) {
       const isPie = (b.chart === 'pie' || b.chart === 'doughnut');
-      new Chart(canvas, {
+
+      const chartConfig = {
         type: b.chart || 'bar',
         data: b.data,
         options: Object.assign({
@@ -199,14 +217,33 @@ BlockRegistry.register('chart', function(b) {
           plugins: {
             legend: {
               labels: {color: '#c3cee0'}
-            }
+            },
+            datalabels: isPie && window.ChartDataLabels ? {
+              color: '#ffffff',
+              font: {
+                size: 20,
+                weight: 'bold'
+              },
+              formatter: function(value, context) {
+                const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                const percentage = ((value / total) * 100).toFixed(1);
+                return percentage + '%';
+              }
+            } : false
           },
           scales: isPie ? {} : {
             x: {ticks: {color: '#9fb0ca'}},
             y: {ticks: {color: '#9fb0ca'}}
           }
         }, b.options || {})
-      });
+      };
+
+      // 饼图/环形图需要显式传递datalabels插件
+      if (isPie && window.ChartDataLabels) {
+        chartConfig.plugins = [window.ChartDataLabels];
+      }
+
+      new Chart(canvas, chartConfig);
     } else {
       canvas.parentNode.innerHTML += '<div style="color:#9fb0ca;padding:20px">(图表需 Chart.js，当前离线)</div>';
     }
@@ -255,4 +292,92 @@ BlockRegistry.register('tabs', function(b) {
   author: 'core'
 });
 
-console.log('[CoreBlocks] ✓ 已注册9个核心Block:', BlockRegistry.list().join(', '));
+// Flow - 业务流程带状图（新增v3.3）
+BlockRegistry.register('flow', function(b) {
+  const steps = (b.items || []).map(function(item, i) {
+    return '<div class="nd-flow-step" style="animation-delay:' + (i * 0.1) + 's">' +
+      '<div class="nd-flow-num">' + String(i + 1).padStart(2, '0') + '</div>' +
+      '<div class="nd-flow-label">' + item + '</div>' +
+    '</div>';
+  }).join('');
+
+  return _wrap(
+    (b.title ? '<h2>' + b.title + '</h2>' : '') +
+    '<div class="nd-flow">' + steps + '</div>',
+    ''
+  );
+}, {
+  description: '业务流程带状图，展示端到端链路/服务流程/技术架构，比timeline适合平行流程',
+  author: 'core',
+  category: 'business-visualization',
+  tags: ['flow', 'process', 'pipeline', 'funnel']
+});
+
+// Gallery - 多图缩略图画廊（新增v3.4）
+BlockRegistry.register('gallery', function(b) {
+  const items = (b.items || []).map(function(item, i) {
+    return '<figure class="nd-gallery-item" style="animation-delay:' + (i * 0.08) + 's">' +
+      '<img src="' + item.img + '" alt="' + (item.alt || '') + '" class="nd-gallery-img" data-gallery-src="' + item.img + '">' +
+      (item.caption ? '<figcaption class="nd-gallery-caption">' + item.caption + '</figcaption>' : '') +
+    '</figure>';
+  }).join('');
+
+  const el = _wrap(
+    (b.title ? '<h2>' + b.title + '</h2>' : '') +
+    '<div class="nd-gallery">' + items + '</div>',
+    ''
+  );
+
+  // 绑定点击放大（复用灯箱）
+  el.querySelectorAll('.nd-gallery-img').forEach(function(img) {
+    img.style.cursor = 'pointer';
+    img.onclick = function() {
+      if (window.ND && window.ND.openLightbox) {
+        window.ND.openLightbox(img.dataset.gallerySrc);
+      }
+    };
+  });
+
+  return el;
+}, {
+  description: '多图缩略图画廊，支持2-6列网格，点击查看大图，适合展示产品截图/设计稿/案例图集',
+  author: 'core',
+  category: 'media',
+  tags: ['gallery', 'images', 'showcase', 'portfolio']
+});
+
+// Preview - iframe案例预览（新增v3.4）
+BlockRegistry.register('preview', function(b) {
+  const items = (b.items || []).map(function(item, i) {
+    return '<a class="nd-preview-link" data-preview-src="' + item.href + '" data-preview-title="' + (item.label || '') + '" style="animation-delay:' + (i * 0.08) + 's">' +
+      '<span class="nd-preview-icon">' + (item.icon || '📄') + '</span>' +
+      '<span class="nd-preview-label">' + item.label + '</span>' +
+      '<span class="nd-preview-arrow" aria-hidden="true">↗</span>' +
+    '</a>';
+  }).join('');
+
+  const el = _wrap(
+    (b.title ? '<h2>' + b.title + '</h2>' : '') +
+    '<nav class="nd-preview-links" aria-label="案例预览入口">' + items + '</nav>',
+    ''
+  );
+
+  // 绑定点击事件
+  el.querySelectorAll('.nd-preview-link').forEach(function(link) {
+    link.onclick = function(e) {
+      e.preventDefault();
+      if (window.ND && window.ND.openPreview) {
+        window.ND.openPreview(link.dataset.previewSrc, link.dataset.previewTitle);
+      }
+    };
+  });
+
+  return el;
+}, {
+  description: 'iframe案例预览，在模态框中打开真实案例（HTML/Dashboard/原型），适合产品演示/项目展示',
+  author: 'core',
+  category: 'interactive',
+  tags: ['preview', 'iframe', 'demo', 'case-study']
+});
+
+console.log('[CoreBlocks] ✓ 已注册12个核心Block:', BlockRegistry.list().join(', '));

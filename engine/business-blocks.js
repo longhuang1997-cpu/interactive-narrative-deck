@@ -1021,8 +1021,9 @@ BlockRegistry.register('fishbone', function(data) {
     // 气泡数据 - 增强视觉层次 + 限制在坐标轴内
     const items = data.items || [];
     items.forEach((item, i) => {
-      const growth = Math.max(0, Math.min(100, item.marketGrowth || 10));
-      const share = Math.max(0, Math.min(100, item.marketShare || 50));
+      // 支持两种输入格式：x/y 或 marketGrowth/marketShare
+      const growth = Math.max(0, Math.min(100, item.marketGrowth || item.y || 10));
+      const share = Math.max(0, Math.min(100, item.marketShare || item.x || 50));
       const size = item.size || 50;
 
       // 映射坐标
@@ -1188,11 +1189,27 @@ BlockRegistry.register('fishbone', function(data) {
     columns.forEach((col, colIndex) => {
       const column = document.createElement('div');
       column.className = 'nd-kanban-column';
-      column.style.setProperty('--col-color', col.color || '#6b7280');
+
+      // 根据列名自动判断状态颜色
+      const colName = (col.name || col.title || '').toLowerCase();
+      let colColor = col.color || '#6b7280';
+
+      if (colName.includes('todo') || colName.includes('待') || colName.includes('计划')) {
+        colColor = '#94a3b8'; // 灰色 - 待开始
+      } else if (colName.includes('progress') || colName.includes('进行') || colName.includes('doing')) {
+        colColor = '#0ea5e9'; // 蓝色 - 进行中
+      } else if (colName.includes('done') || colName.includes('完成') || colName.includes('已解决')) {
+        colColor = '#10b981'; // 绿色 - 已完成
+      }
+
+      column.style.setProperty('--col-color', colColor);
       column.style.setProperty('--col-index', colIndex);
 
+      // 支持两种格式：cards 或 items
+      const cards = col.cards || col.items || [];
+
       // 列头 - 增强版：带任务数、WIP限制、进度百分比
-      const cardCount = (col.cards || []).length;
+      const cardCount = cards.length;
       const wipLimit = col.wipLimit || null;
       const isOverWIP = wipLimit && cardCount > wipLimit;
 
@@ -1201,7 +1218,7 @@ BlockRegistry.register('fishbone', function(data) {
 
       const titleDiv = document.createElement('div');
       titleDiv.className = 'nd-kanban-column-title';
-      titleDiv.textContent = col.title;
+      titleDiv.textContent = col.title || col.name;
 
       const countDiv = document.createElement('div');
       countDiv.className = 'nd-kanban-column-count';
@@ -1222,7 +1239,6 @@ BlockRegistry.register('fishbone', function(data) {
       const cardsList = document.createElement('div');
       cardsList.className = 'nd-kanban-cards';
 
-      const cards = col.cards || [];
       if (cards.length === 0) {
         const emptyHint = document.createElement('div');
         emptyHint.className = 'nd-kanban-empty';
@@ -1254,23 +1270,28 @@ BlockRegistry.register('fishbone', function(data) {
 
           cardHeader.appendChild(cardTitle);
 
-          // 优先级标签
-          if (card.tag) {
+          // 优先级标签 - 支持tag和priority两种字段
+          const priorityValue = card.tag || card.priority;
+          if (priorityValue) {
             const tag = document.createElement('span');
             tag.className = 'nd-kanban-card-tag';
             tag.style.cssText = 'padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;';
 
-            if (card.tag.includes('P0') || card.tag.includes('高') || card.tag.includes('High')) {
+            // 优先级颜色判断
+            const priority = priorityValue.toLowerCase();
+            if (priority.includes('p0') || priority.includes('high') || priority.includes('高')) {
               tag.style.background = '#ef4444';
               tag.style.color = '#fff';
-            } else if (card.tag.includes('P1') || card.tag.includes('中') || card.tag.includes('Medium')) {
+              tag.textContent = '高优先级';
+            } else if (priority.includes('p1') || priority.includes('medium') || priority.includes('中')) {
               tag.style.background = '#f59e0b';
               tag.style.color = '#fff';
+              tag.textContent = '中优先级';
             } else {
               tag.style.background = '#6b7280';
               tag.style.color = '#fff';
+              tag.textContent = '低优先级';
             }
-            tag.textContent = card.tag;
             cardHeader.appendChild(tag);
           }
 

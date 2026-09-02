@@ -49,6 +49,126 @@ const ValidationEngine = {
     // 全局检查
     this._checkGlobalPatterns(deckData, result);
 
+    // 跨结构引用完整性检查（防"点了没反应"类静默失效）
+    this._checkReferentialIntegrity(deckData, result);
+
+    return result;
+  },
+
+  /**
+   * 引用完整性检查
+   *
+   * 背景：slides 数组是 progress 圆点、O 键总览、frag 序列三者的同一份数据源。
+   * 单 Block 字段校验发现不了"导航目标不存在"这类跨结构错位——
+   * 表现是点击无反应/跳空，而不是报错，所以必须单独查。
+   */
+  _checkReferentialIntegrity(deckData, result) {
+    const slides = deckData.slides;
+
+    // 1. 每一页都要能在 progress 条上被指到：需要可用的标题
+    slides.forEach((slide, i) => {
+      const pageNum = i + 1;
+
+      if (!slide.blocks || !Array.isArray(slide.blocks) || slide.blocks.length === 0) {
+        result.valid = false;
+        result.errors.push(`P${pageNum}: blocks为空——progress圆点会指向空白页`);
+      }
+
+      if (!slide.title) {
+        result.warnings.push(`P${pageNum}: 缺少title——progress圆点悬停无提示，O键总览难定位`);
+      }
+
+      // 2. layout 必须是引擎认得的值，否则 CSS 类名落空、布局静默失效
+      const LAYOUTS = ['center', 'left', 'grid', 'scroll'];
+      if (slide.layout && !LAYOUTS.indexOf) {
+        // 保护性分支，正常不会走到
+      }
+      if (slide.layout && LAYOUTS.indexOf(slide.layout) === -1) {
+        result.valid = false;
+        result.errors.push(
+          `P${pageNum}: layout="${slide.layout}" 不是合法值（${LAYOUTS.join('/')}）——` +
+          `会生成不存在的CSS类 .nd-layout-${slide.layout}，布局静默失效`
+        );
+      }
+
+      // 3. block.type 必须有对应渲染器，否则 BlockRegistry.render 返回 null，该块无声消失
+      (slide.blocks || []).forEach((block, bi) => {
+        if (!block || !block.type) return; // 已由 _validateBlock 报过
+        if (typeof BlockRegistry !== 'undefined' && BlockRegistry.blocks &&
+            !BlockRegistry.blocks.has(block.type)) {
+          result.valid = false;
+          result.errors.push(
+            `P${pageNum}-Block${bi + 1}: type="${block.type}" 无已注册渲染器——` +
+            `该块会被静默跳过（不报错、页面上直接没有）`
+          );
+        }
+      });
+
+      // 4. tabs：每个标签都要有对应内容，否则点了切不出东西
+      (slide.blocks || []).forEach((block, bi) => {
+        if (!block || block.type !== 'tabs') return;
+        const label = `P${pageNum}-Block${bi + 1}(tabs)`;
+        if (!block.tabs || !Array.isArray(block.tabs) || block.tabs.length === 0) {
+          result.valid = false;
+          result.errors.push(`${label}: 缺少tabs数组——标签页渲染为空壳`);
+          return;
+        }
+        block.tabs.forEach((t, ti) => {
+          if (!t || !t.label) {
+            result.errors.push(`${label}: 第${ti + 1}个标签缺少label——按钮上无文字，用户不知道点什么`);
+            result.valid = false;
+          }
+          if (!t || (t.html === undefined || t.html === null || t.html === '')) {
+            result.valid = false;
+            result.errors.push(
+              `${label}: 标签"${(t && t.label) || ti + 1}"缺少html——点击后面板空白（典型"点了没反应"）`
+            );
+          }
+        });
+      });
+
+      // 5. scroll 布局依赖 nd-step 结构，缺了 Scrolly 直接 return，滚动叙事无声失效
+      if (slide.layout === 'scroll') {
+        const hasSteps = (slide.blocks || []).some(
+          b => b && (b.steps || b.type === 'scrolly')
+        );
+        if (!hasSteps) {
+          result.warnings.push(
+            `P${pageNum}: layout="scroll" 但没有 steps 内容——Scrolly.init 会直接返回，滚动联动不生效`
+          );
+        }
+      }
+    });
+
+    // 6. 渐进揭示：整份 deck 若声明了 frag/stagger，必须真有可揭示元素
+    let fragDeclared = 0;
+    slides.forEach(slide => {
+      (slide.blocks || []).forEach(b => {
+        if (!b) return;
+        if (b.frag === true) fragDeclared++;
+        if (b.stagger === true) {
+          const n = Array.isArray(b.items) ? b.items.length : 0;
+          if (n === 0) {
+            result.warnings.push(
+              `${b.type}: 声明了 stagger 但 items 为空——按空格没有任何揭示动作`
+            );
+          } else {
+            fragDeclared += n;
+          }
+        }
+      });
+    });
+
+    // 7. 主题 mode 必须是引擎认得的值（否则用户以为切了浅色，实际还是深色）
+    if (deckData.theme && deckData.theme.mode &&
+        ['light', 'dark'].indexOf(deckData.theme.mode) === -1) {
+      result.valid = false;
+      result.errors.push(
+        `theme.mode="${deckData.theme.mode}" 非法（只支持 light/dark）——` +
+        `引擎会回落到深色，与预期不符`
+      );
+    }
+
     return result;
   },
 

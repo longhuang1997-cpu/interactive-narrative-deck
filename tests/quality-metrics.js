@@ -129,7 +129,9 @@ async function testQualityCase(browser, testCase) {
     errors: []
   };
 
-  const filePath = path.join('C:/Users/huangl265/.claude/skills/interactive-narrative-deck', testCase.file);
+  // 动态获取skill根目录
+  const skillRoot = path.resolve(__dirname, '..');
+  const filePath = path.join(skillRoot, testCase.file);
 
   if (!fs.existsSync(filePath)) {
     results.errors.push('File not found');

@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IND Showcase - AI驱动的结构化交互叙事引擎</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+</style>
+</head>
+<body>
+<div id="nd-stage"></div>
+
+<!-- 引擎加载 -->
+<link rel="stylesheet" href="../engine/style.css">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script src="../engine/block-registry.js"></script>
+<script src="../engine/core-blocks.js"></script>
+<script src="../engine/engine.js"></script>
+
+<script>
+// IND v3.5 炫酷展示Demo
+// 目标：充分体现产品能力，作为官方展示案例
+
+window.NARRATIVE_DECK = {
+  title: "IND Showcase",
+  theme: {
+    blue: "#3b82f6",
+    gold: "#f59e0b",
+    bg: "#0a0e1a"
+  },
+  slides: [
+    // ===== 封面：震撼开场 =====
+    {
+      layout: "center",
+      className: "hero-slide",
+      blocks: [
+        {
+          type: "hero",
+          kick: "Interactive Narrative Deck",
+          title: "AI驱动的结构化交互叙事引擎",
+          sub: "将10年汇报经验萃取成21种Block · 让AI秒懂你的叙事意图"
+        },
+        {
+          type: "metric",
+          items: [
+            { value: 21, unit: "种", label: "Block组件", delta: "+3" },
+            { value: 6, unit: "大", label: "叙事框架", delta: "经典" },
+            { value: 97, unit: "%", label: "完成率", delta: "+5%" }
+          ]
+        }
+      ]
+    },
+
+    // ===== 核心价值主张 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "为什么选择IND",
+          title: "从自然语言到专业演示，0代码"
+        },
+        {
+          type: "compare",
+          left: {
+            title: "传统方式",
+            items: [
+              "打开PPT/Keynote，选模板",
+              "手工调整每页布局",
+              "复制粘贴数据，手动对齐",
+              "反复调整字号、颜色、间距",
+              "图片不知道放多大合适",
+              "最终效果：差强人意"
+            ]
+          },
+          right: {
+            title: "IND方式",
+            items: [
+              "描述汇报内容，AI理解意图",
+              "自动选择叙事框架",
+              "数据自动生成卡片+图表",
+              "主题色统一，无需调整",
+              "6档图片自适应，内容驱动",
+              "最终效果：专业炫酷"
+            ]
+          }
+        }
+      ]
+    },
+
+    // ===== 数据驱动叙事：展示metric Block威力 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "Block 01",
+          title: "数据驱动叙事 - 零依赖数字滚动"
+        },
+        {
+          type: "metric",
+          items: [
+            { value: 1847, unit: "万", label: "月活用户", delta: "+23.4%" },
+            { value: 3652, unit: "次", label: "日均调用", delta: "+18.7%" },
+            { value: 92.8, unit: "%", label: "服务可用性", delta: "+1.2%" },
+            { value: 156, unit: "ms", label: "平均响应", delta: "-12%" }
+          ]
+        },
+        {
+          type: "quote",
+          text: "数字从0滚动到目标值，easeOutCubic缓动函数，纯JS实现无需GSAP。4个指标卡片自动2×2网格，响应式自适应。",
+          by: "核心特性"
+        }
+      ]
+    },
+
+    // ===== 业务流程可视化：flow Block =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "Block 02",
+          title: "业务流程可视化 - 端到端链路"
+        },
+        {
+          type: "flow",
+          items: [
+            "用户访问官网",
+            "注册账号",
+            "选择套餐",
+            "在线支付",
+            "开通服务",
+            "7天试用",
+            "正式使用"
+          ]
+        },
+        {
+          type: "bullets",
+          title: "flow Block 核心优势",
+          items: [
+            "自动编号（01-07）+ 箭头连接",
+            "hover上浮动效，视觉反馈清晰",
+            "响应式：大屏横向，小屏垂直",
+            "比timeline更适合平行流程，比bullets更直观"
+          ]
+        }
+      ]
+    },
+
+    // ===== 图片自适应系统：6档展示 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "Block 03",
+          title: "6档图片自适应系统",
+          sub: "内容类型决定尺寸 · 告别100%固定宽度"
+        },
+        {
+          type: "bullets",
+          title: "智能尺寸规则",
+          items: [
+            "tiny (30%) - 流程图、简单示意图（字体大→尺寸小）",
+            "small (40%) - Demo截图、对话界面",
+            "medium (55%) - 默认尺寸、数据图表（80%场景）",
+            "xlarge (85%) - 技术栈全景（信息密→尺寸大）"
+          ],
+          stagger: true
+        }
+      ]
+    },
+
+    // ===== 图片尺寸对比：tiny vs xlarge =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "尺寸对比",
+          title: "tiny (30%) - 简洁紧凑"
+        },
+        {
+          type: "media",
+          img: "https://placehold.co/800x400/3b82f6/white?text=Simple+Flow+Diagram+(Tiny+30%)",
+          size: "tiny",
+          caption: "流程图示例 - 字体大、元素少，30%宽度节省空间"
+        }
+      ]
+    },
+
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "尺寸对比",
+          title: "xlarge (85%) - 信息密集"
+        },
+        {
+          type: "media",
+          img: "https://placehold.co/1400x900/8b5cf6/white?text=Tech+Stack+Landscape+(XLarge+85%)",
+          size: "xlarge",
+          caption: "技术栈全景 - 信息密集，需要大尺寸展示细节"
+        }
+      ]
+    },
+
+    // ===== gallery Block：多图展示 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "Block 04",
+          title: "多图缩略图画廊",
+          sub: "自适应网格 · 点击放大 · 产品展示利器"
+        },
+        {
+          type: "gallery",
+          title: "产品界面展示",
+          items: [
+            { img: "https://placehold.co/600x400/3b82f6/white?text=Dashboard", caption: "数据看板" },
+            { img: "https://placehold.co/600x400/8b5cf6/white?text=Analytics", caption: "数据分析" },
+            { img: "https://placehold.co/600x400/10b981/white?text=Reports", caption: "报表中心" },
+            { img: "https://placehold.co/600x400/f59e0b/white?text=Settings", caption: "系统设置" },
+            { img: "https://placehold.co/600x400/ef4444/white?text=User+Profile", caption: "用户中心" },
+            { img: "https://placehold.co/600x400/06b6d4/white?text=Notifications", caption: "消息通知" }
+          ]
+        }
+      ]
+    },
+
+    // ===== 对比论证：SWOT矩阵 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "Block 05",
+          title: "SWOT战略分析矩阵",
+          sub: "四象限可视化 · 商业分析必备"
+        },
+        {
+          type: "swot",
+          strengths: [
+            "技术团队经验丰富，10年+行业积累",
+            "产品差异化明显，AI驱动自动化",
+            "用户口碑好，NPS 72分",
+            "成本控制优秀，毛利率65%"
+          ],
+          weaknesses: [
+            "品牌知名度不足，市场占有率仅3%",
+            "销售团队规模小，覆盖能力有限",
+            "大客户依赖度高，前3客户占营收40%"
+          ],
+          opportunities: [
+            "企业数字化转型加速，市场规模CAGR 28%",
+            "政策支持AI应用，补贴力度大",
+            "竞品同质化严重，有差异化机会",
+            "国际市场尚未饱和，东南亚有潜力"
+          ],
+          threats: [
+            "巨头入场，价格战风险",
+            "技术迭代快，需持续投入研发",
+            "数据安全合规要求越来越严",
+            "经济下行，企业预算缩减"
+          ]
+        }
+      ]
+    },
+
+    // ===== 时间线：产品路线图 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "Block 06",
+          title: "产品演进时间线",
+          sub: "从MVP到v3.5的飞跃"
+        },
+        {
+          type: "timeline",
+          items: [
+            { time: "2024 Q1", text: "v1.0 MVP发布 · 9个基础Block" },
+            { time: "2024 Q3", text: "v2.0 商业Block库 · SWOT/OKR/甘特图" },
+            { time: "2025 Q2", text: "v3.0 自适应缩放 · 智能网格布局" },
+            { time: "2026 Q3", text: "v3.5 完整交互 · gallery/preview/全屏" },
+            { time: "2027 Q1", text: "v4.0（规划中）· AI自动生成演示"  }
+          ]
+        }
+      ]
+    },
+
+    // ===== 数据图表：Chart.js集成 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "Block 07",
+          title: "数据图表可视化",
+          sub: "Chart.js深度集成 · 4种图表类型"
+        },
+        {
+          type: "chart",
+          chart: "line",
+          title: "月度营收趋势（万元）",
+          data: {
+            labels: ["1月", "2月", "3月", "4月", "5月", "6月"],
+            datasets: [{
+              label: "2026年",
+              data: [320, 450, 580, 620, 750, 890],
+              borderColor: "#3b82f6",
+              backgroundColor: "rgba(59,130,246,0.1)",
+              tension: 0.4
+            }, {
+              label: "2025年",
+              data: [280, 380, 420, 480, 550, 620],
+              borderColor: "#94a3b8",
+              backgroundColor: "rgba(148,163,184,0.1)",
+              tension: 0.4
+            }]
+          }
+        }
+      ]
+    },
+
+    // ===== tabs Block：多视角展示 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "Block 08",
+          title: "标签页多视角切换",
+          sub: "一页展示多方案 · 深度内容折叠"
+        },
+        {
+          type: "tabs",
+          tabs: [
+            {
+              label: "方案A：增量优化",
+              html: "<h3>低风险渐进式改进</h3><ul><li>优化现有流程，提升20%效率</li><li>预算：50万，周期3个月</li><li>风险：低，可快速见效</li></ul>"
+            },
+            {
+              label: "方案B：架构重构",
+              html: "<h3>高收益结构性变革</h3><ul><li>重构核心系统，提升80%效率</li><li>预算：200万，周期9个月</li><li>风险：中，需要分阶段实施</li></ul>"
+            },
+            {
+              label: "方案C：外采成熟产品",
+              html: "<h3>快速落地第三方方案</h3><ul><li>采购成熟SaaS，立即上线</li><li>预算：80万/年，周期1个月</li><li>风险：高，供应商依赖度大</li></ul>"
+            }
+          ]
+        }
+      ]
+    },
+
+    // ===== preview Block：iframe案例预览（杀手锏） =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "Block 09 · 杀手锏",
+          title: "iframe案例预览模态框",
+          sub: "演示中嵌入真实系统 · 保持上下文不跳转"
+        },
+        {
+          type: "preview",
+          title: "在线体验真实案例",
+          items: [
+            { label: "黑石日报Demo", href: "https://example.com/daily-report.html", icon: "📊" },
+            { label: "运营周报Demo", href: "https://example.com/weekly-report.html", icon: "📈" },
+            { label: "经营看板Demo", href: "https://example.com/dashboard.html", icon: "📉" }
+          ]
+        },
+        {
+          type: "quote",
+          text: "点击按钮 → 全屏模态框 → iframe加载真实HTML。顶部标题栏 + 三种关闭方式（关闭按钮/ESC键/点击遮罩）。",
+          by: "核心特性"
+        }
+      ]
+    },
+
+    // ===== 全功能综合展示页 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "综合展示",
+          title: "21种Block，无限组合可能"
+        },
+        {
+          type: "bullets",
+          title: "基础Block (12种)",
+          items: [
+            "hero · metric · bullets · compare · timeline · quote",
+            "chart · media · tabs · flow · gallery · preview"
+          ]
+        },
+        {
+          type: "bullets",
+          title: "商业Block (7种)",
+          items: [
+            "swot · okr · gantt · fishbone · bcg · kanban · pyramid"
+          ]
+        },
+        {
+          type: "bullets",
+          title: "自定义Block (2种)",
+          items: [
+            "orgchart · process",
+            "用户可通过BlockRegistry.register()扩展更多"
+          ]
+        }
+      ]
+    },
+
+    // ===== 6大叙事框架 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "AI核心能力",
+          title: "6大叙事框架自动识别",
+          sub: "从自然语言提取结构 · 无需手工组织"
+        },
+        {
+          type: "compare",
+          left: {
+            title: "数据驱动",
+            items: [
+              "关键指标突出（metric）",
+              "对比分析（compare/chart）",
+              "结论总结（quote）"
+            ]
+          },
+          right: {
+            title: "对比论证",
+            items: [
+              "两方案并列（compare/tabs）",
+              "优劣势分析（swot）",
+              "选择建议（bullets）"
+            ]
+          }
+        },
+        {
+          type: "compare",
+          left: {
+            title: "时间线叙事",
+            items: [
+              "历史回顾（timeline）",
+              "里程碑标记（metric）",
+              "未来展望（bullets）"
+            ]
+          },
+          right: {
+            title: "问题解决",
+            items: [
+              "现状问题（bullets）",
+              "根因分析（fishbone）",
+              "解决方案（flow/compare）"
+            ]
+          }
+        }
+      ]
+    },
+
+    // ===== 技术栈与性能 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "技术实现",
+          title: "轻量级技术栈 · 性能优先"
+        },
+        {
+          type: "bullets",
+          title: "核心技术",
+          items: [
+            "纯JS + CSS，零框架依赖",
+            "可选增强：GSAP动画 + Chart.js图表",
+            "单HTML文件，可完全离线运行",
+            "响应式设计，移动端友好",
+            "无障碍支持，完整ARIA标签",
+            "性能优化：GPU加速动画，requestAnimationFrame"
+          ],
+          stagger: true
+        }
+      ]
+    },
+
+    // ===== 适用场景 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "适用场景",
+          title: "从产品发布会到战略汇报"
+        },
+        {
+          type: "bullets",
+          title: "高管汇报",
+          items: [
+            "季度业绩汇报 · 数据+趋势+对比",
+            "战略规划汇报 · SWOT+路线图+目标",
+            "投资人路演 · 数据+愿景+团队"
+          ]
+        },
+        {
+          type: "bullets",
+          title: "产品演示",
+          items: [
+            "新品发布会 · 产品亮点+Demo+时间线",
+            "项目复盘 · 数据+问题+改进方案",
+            "技术分享 · 架构图+代码+图表"
+          ]
+        }
+      ]
+    },
+
+    // ===== 用户案例 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "真实案例",
+          title: "100%覆盖用户真实需求"
+        },
+        {
+          type: "timeline",
+          items: [
+            { time: "黑石家园", text: "AI实践演示 · 验证preview Block核心需求" },
+            { time: "能力O3", text: "笔试答卷 · 验证6档图片自适应必要性" },
+            { time: "WorkBuddy", text: "流程变革汇报 · 验证flow Block高频需求" }
+          ]
+        },
+        {
+          type: "metric",
+          items: [
+            { value: 5, unit: "个", label: "用户需求", delta: "全覆盖" },
+            { value: 3846, unit: "行", label: "黑石案例", delta: "真实验证" },
+            { value: 100, unit: "%", label: "覆盖率", delta: "0→100" }
+          ]
+        }
+      ]
+    },
+
+    // ===== 产品定位 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "产品哲学",
+          title: "AI驱动，但不失控制"
+        },
+        {
+          type: "quote",
+          text: "IND不是「演示软件编辑器」，而是「AI化的10年汇报经验萃取」。AI判断叙事框架，但用户保留完全控制权。",
+          by: "核心定位"
+        },
+        {
+          type: "compare",
+          left: {
+            title: "坚持做",
+            items: [
+              "AI自动判断叙事框架",
+              "Block组件化，配置驱动",
+              "选择性吸纳用户需求",
+              "保持「汇报」核心定位"
+            ]
+          },
+          right: {
+            title: "坚决不做",
+            items: [
+              "所见即所得拖拽编辑",
+              "完全自定义CSS",
+              "复杂交互组件",
+              "偏离「汇报」变「演示软件」"
+            ]
+          }
+        }
+      ]
+    },
+
+    // ===== 版本演进 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "版本历史",
+          title: "v3.1 → v3.5 的飞跃"
+        },
+        {
+          type: "flow",
+          items: [
+            "v3.1 基础版",
+            "v3.2 数字滚动",
+            "v3.3 flow Block",
+            "v3.4 图片自适应",
+            "v3.5 完整交互",
+            "v4.0 规划中"
+          ]
+        },
+        {
+          type: "metric",
+          items: [
+            { value: 18, label: "v3.1 Block数", delta: "起点" },
+            { value: 21, label: "v3.5 Block数", delta: "+16.7%" },
+            { value: 500, unit: "行", label: "新增代码", delta: "+33%" }
+          ]
+        }
+      ]
+    },
+
+    // ===== 立即开始 =====
+    {
+      layout: "center",
+      blocks: [
+        {
+          type: "hero",
+          kick: "立即开始",
+          title: "从一句话描述到专业演示",
+          sub: "AI理解你的意图 · 0代码生成炫酷汇报"
+        },
+        {
+          type: "bullets",
+          title: "3步快速上手",
+          items: [
+            "1️⃣ 描述汇报内容：「我们Q3营收增长30%，主要来自新产品线，需要展示数据对比和未来规划」",
+            "2️⃣ AI自动生成结构：选择叙事框架（数据驱动） + Block组合（metric+chart+timeline）",
+            "3️⃣ 一键输出HTML：单文件，可直接用浏览器打开，支持全屏演示"
+          ],
+          stagger: true
+        },
+        {
+          type: "quote",
+          text: "Interactive Narrative Deck - 让每一次汇报都专业炫酷。",
+          by: "IND v3.5.0 · 2026"
+        }
+      ]
+    }
+  ]
+};
+</script>
+</body>
+</html>
